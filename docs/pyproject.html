@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+ <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,300italic" rel="stylesheet" type="text/css">
+ <title>Python Documentation: pyproject</title>
+ <link href="docu.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+ <div class="back-title">
+  <h1 class="title">Python Documentation: pyproject</h1>
+ </div>
+ <div class="back-main">
+ <div class="main">
+ <div class="frame" id="nameframe">
+  <h4 class="frame-title">module name</h4>
+  <div class="frame-content">pyproject</div>
+ </div>
+ <div class="frame" id="nameframe">
+  <h4 class="frame-title">version</h4>
+  <div class="frame-content">1.0</div>
+ </div>
+ <div class="frame" id="descriptionframe">
+  <h4 class="frame-title">DESCRIPTION</h4>
+  <pre class="frame-content">.. module:: pyproject</br>.. moduleauthor:: Julien Spronck</br>.. created:: Apr 2015</br></br>Simple module to create files and directories in a python project</pre>
+ </div>
+ <div class="frame" id="modulesframe">
+  <h4 class="frame-title">dependent modules</h4>
+  <div class="frame-content">
+   <ul class="modules">
+    <li class="modules">os</li>
+   </ul>
+  </div>
+ </div>
+ <div class="frame" id="functionsframe">
+  <h4 class="frame-title">functions</h4>
+  <div class="frame-content">
+   <ul class="functions">
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_dirs</span>(<span class="function-args">rootdir</span>)</div>
+      <pre class="function-docstring">Creates directories</br></br>Args:</br>    modname (str): the module name</br>    the_dir (str): the directory where to save the file.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_file</span>(<span class="function-args">modname</span>, <span class="function-args">the_dir</span>)</div>
+      <pre class="function-docstring">Creates a module file</br></br>Args:</br>    modname (str): the module name</br>    the_dir (str): the directory where to save the file.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_gitignore_file</span>(<span class="function-args">modname</span>, <span class="function-args">the_dir</span>)</div>
+      <pre class="function-docstring">Creates .gitignore</br></br>Args:</br>    modname (str): the module name</br>    the_dir (str): the directory where to save the file.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_init_file</span>(<span class="function-args">modname</span>, <span class="function-args">the_dir</span>)</div>
+      <pre class="function-docstring">Creates __init__.py</br></br>Args:</br>    modname (str): the module name</br>    the_dir (str): the directory where to save the file.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_setup_file</span>(<span class="function-args">modname</span>, <span class="function-args">the_dir</span>)</div>
+      <pre class="function-docstring">Creates setup.py</br></br>Args:</br>    modname (str): the module name</br>    the_dir (str): the directory where to save the file.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_test_file</span>(<span class="function-args">modname</span>, <span class="function-args">the_dir</span>)</div>
+      <pre class="function-docstring">Creates test file</br></br>Args:</br>    modname (str): the module name</br>    the_dir (str): the directory where to save the file.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">gitignore_file_content</span>(<span class="function-args">modname</span>)</div>
+      <pre class="function-docstring">gitignore_file_content(modname): Returns a generator with .gitignore content</br></br>Args:</br>    modname (str): the module name</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">init_file_content</span>(<span class="function-args">modname</span>)</div>
+      <pre class="function-docstring">init_file_content(modname): Returns a generator with the standard lines that</br>    should go into an empty python module.</br></br>Args:</br>    modname (str): the module name</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">setup_file_content</span>(<span class="function-args">modname</span>)</div>
+      <pre class="function-docstring">setup_file_content(modname): Returns a generator with setup.py content</br></br>Args:</br>    modname (str): the module name</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">test_file_content</span>(<span class="function-args">modname</span>)</div>
+      <pre class="function-docstring">setup_file_content(modname): Returns a generator with content of test file</br></br>Args:</br>    modname (str): the module name</pre>
+     </div>
+    </li>
+   </ul>
+  </div>
+ </div> 
+</body>
+</html>
