@@ -6,7 +6,32 @@ DESCRIPTION
     .. moduleauthor:: Julien Spronck
     .. created:: Apr 2015
     
-    Simple module to create files and directories in a python project
+    Simple script to create files and directories in a python project. 
+    
+    IMPORTANT: The setup.py script will not install a python module but it
+    will install a executable script named `pyproject`.
+    
+ USAGE
+    
+    pyproject [OPTIONS] modname
+
+    Arguments:
+
+        modname: the name of the project you want to start or modify
+
+    Options:
+
+        -h, --help: prints the usage of the program with possible
+                    options.
+
+        -a, --add: adds a .py file to the module or current 
+                    directory.
+
+        -d, --dir: Specifies the directory where to save create
+                   the project files. By default, it is the
+                   current directory.
+        -s, --submodules: adds a submodule directory and
+                    __init__.py file.
 
 
 VERSION

@@ -12,12 +12,13 @@ setup(name="pyproject",
       version=pyproject.__version__,
       description="",
       long_description="""
-      Simple module to ...
+      Simple module to create files and directory structure necessary to 
+      start a python project.
       """,
       author="Julien Spronck",
       author_email="frenticb@hotmail.com",
       url="http://frenticb.com/",
-      packages=["pyproject"],
+#       packages=["pyproject"],
       scripts=['bin/pyproject'],
       license="Free for non-commercial use",
      )

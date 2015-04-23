@@ -121,6 +121,10 @@ def test_file_content(modname):
     yield "'''"
     yield "Tests for {0}".format(modname)
     yield "'''"
+    yield 'import sys'
+    yield 'import os'
+    yield 'sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))'
+    yield ''
     yield 'import {0}'.format(modname)
     yield 'import unittest'
     yield ''
@@ -262,7 +266,10 @@ if __name__ == '__main__':
         msg = "\npyproject sets up a python project by creating the directories"
         msg += " and files necessary to start new python project.\n\n"
         msg += "Usage: \n\n"
-        msg += "    [python] pyproject.py [OPTIONS]\n\n"
+        msg += "    pyproject [OPTIONS] modname\n\n"
+        msg += "Arguments:\n\n"
+        msg += "    modname: the name of the project you want to start or "
+        msg += "modify\n\n"
         msg += "Options:\n\n"
         msg += "    -h, --help: prints the usage of the program with possible\n"
         msg += "                options.\n\n"
