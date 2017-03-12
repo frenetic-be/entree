@@ -9,14 +9,20 @@
 Simple module to create files and directories in a python project
 """
 
+import os
+import imp
+
+config = imp.load_source('pyproject_config',
+                         os.path.join(os.path.expanduser("~"), '.config',
+                                      'pyproject_config.py'))
+
 __version__ = '1.0'
 
-import os
 
 def init_file_content(modname):
     '''
-    init_file_content(modname): Returns a generator with the standard lines that
-        should go into an empty python module.
+    init_file_content(modname): Returns a generator with the standard lines
+    that should go into an empty python module.
 
     Args:
         modname (str): the module name
@@ -27,7 +33,7 @@ def init_file_content(modname):
     yield ""
     yield "'''"
     yield ".. module:: {0}".format(modname)
-    yield ".. moduleauthor:: Julien Spronck"
+    yield ".. moduleauthor:: {0}".format(config.AUTHOR)
     yield ".. created:: {0}".format(datetime.datetime.now().strftime('%B %Y'))
     yield "'''"
     yield ""
@@ -46,23 +52,25 @@ def init_file_content(modname):
     yield "#"
     yield "#    # parse command line options/arguments"
     yield "#     try:"
-    yield "#         OPTS, ARGS = getopt.getopt(sys.argv[1:],"
+    yield "#         opts, args = getopt.getopt(sys.argv[1:],"
     yield "#                                    'hd:', ['help', 'dir='])"
     yield "#     except getopt.GetoptError:"
     yield "#         usage(2)"
     yield "#"
-    yield "#     for o, a in OPTS:"
-    yield "#         if o in ('-h', '--help'):"
+    yield "#     for opt, arg in opts:"
+    yield "#         if opt in ('-h', '--help'):"
     yield "#             usage(0)"
-    yield "#         if o in ('-d', '--dir'):"
-    yield "#             thedir = a"
+    yield "#         if opt in ('-d', '--dir'):"
+    yield "#             thedir = arg"
     yield ""
     yield "    pass"
     yield ""
 
+
 def gitignore_file_content(modname):
     '''
-    gitignore_file_content(modname): Returns a generator with .gitignore content
+    gitignore_file_content(modname): Returns a generator with .gitignore
+    content
 
     Args:
         modname (str): the module name
@@ -76,6 +84,10 @@ def gitignore_file_content(modname):
     yield 'dist/.DS_Store'
     yield 'build/'
     yield 'build/*'
+    yield modname+'.egg-info/'
+    yield modname+'.egg-info/*'
+    yield '*.pyc'
+
 
 def setup_file_content(modname):
     '''
@@ -91,6 +103,7 @@ def setup_file_content(modname):
     yield "Setup script for {0}".format(modname)
     yield "'''"
     yield 'import {0}'.format(modname)
+    yield '# import os'
     yield ''
     yield 'from distutils.core import setup'
     yield ''
@@ -100,13 +113,21 @@ def setup_file_content(modname):
     yield '      long_description="""'
     yield '      Simple module to ...'
     yield '      """,'
-    yield '      author="Julien Spronck",'
-    yield '      author_email="frenticb@hotmail.com",'
-    yield '      url="http://frenticb.com/",'
+    yield '      author="{0}",'.format(config.AUTHOR)
+    yield '      author_email="{0}@{1}",'.format(config.AUTHOR_EMAIL_PREFIX,
+                                                 config.AUTHOR_EMAIL_SUFFIX)
+    yield '      url="{0}",'.format(config.AUTHOR_URL)
     yield '      packages=["{0}"],'.format(modname)
+    yield '#       entry_points = {"console_scripts":["'+modname+' = '
+    yield ('#                                          '
+           '"'+modname+':main"]},')
+    yield ('#       data_files=[(os.path.join(os.path.expanduser("~"), '
+           '".config"),')
+    yield '#                   ["{0}/{0}_config.py"])],'.format(modname)
     yield '      license="Free for non-commercial use",'
     yield '     )'
     yield ''
+
 
 def test_file_content(modname):
     '''
@@ -146,6 +167,7 @@ def test_file_content(modname):
     yield '    unittest.main()'
     yield ''
 
+
 def create_init_file(modname, the_dir):
     '''
     Creates __init__.py
@@ -164,6 +186,7 @@ def create_init_file(modname, the_dir):
     with open(fname, 'w') as fil:
         for line in init_file_content(modname):
             fil.write(line+'\n')
+
 
 def create_file(modname, the_dir):
     '''
@@ -184,6 +207,7 @@ def create_file(modname, the_dir):
         for line in init_file_content(modname):
             fil.write(line+'\n')
 
+
 def create_gitignore_file(modname, the_dir):
     '''
     Creates .gitignore
@@ -202,6 +226,7 @@ def create_gitignore_file(modname, the_dir):
     with open(fname, 'w') as fil:
         for line in gitignore_file_content(modname):
             fil.write(line+'\n')
+
 
 def create_setup_file(modname, the_dir):
     '''
@@ -222,6 +247,7 @@ def create_setup_file(modname, the_dir):
         for line in setup_file_content(modname):
             fil.write(line+'\n')
 
+
 def create_test_file(modname, the_dir):
     '''
     Creates test file
@@ -241,6 +267,7 @@ def create_test_file(modname, the_dir):
         for line in test_file_content(modname):
             fil.write(line+'\n')
 
+
 def create_dirs(rootdir, *dirs):
     '''
     Creates directories
@@ -256,23 +283,27 @@ def create_dirs(rootdir, *dirs):
         if not os.path.exists(thedir):
             os.makedirs(thedir)
 
-if __name__ == '__main__':
+
+def main():
+    '''Main program
+    '''
 
     import sys
+
     def usage(exit_status):
         '''
         Displays the usage/help of this script
         '''
-        msg = "\npyproject sets up a python project by creating the directories"
-        msg += " and files necessary to start new python project.\n\n"
-        msg += "Usage: \n\n"
+        msg = "\npyproject sets up a python project by creating the "
+        msg += "directories and files necessary to start new python project.\n"
+        msg += "\nUsage: \n\n"
         msg += "    pyproject [OPTIONS] modname\n\n"
         msg += "Arguments:\n\n"
         msg += "    modname: the name of the project you want to start or "
         msg += "modify\n\n"
         msg += "Options:\n\n"
-        msg += "    -h, --help: prints the usage of the program with possible\n"
-        msg += "                options.\n\n"
+        msg += "    -h, --help: prints the usage of the program with possible"
+        msg += "\n                options.\n\n"
         msg += "    -a, --add: adds a .py file to the module or current \n"
         msg += "                directory.\n\n"
         msg += "    -d, --dir: Specifies the directory where to save create\n"
@@ -286,57 +317,60 @@ if __name__ == '__main__':
 
     import getopt
 
-   # parse command line options/arguments
+    # Parse command line options/arguments
     try:
-        OPTS, ARGS = getopt.getopt(sys.argv[1:],
-                                   "ha:d:s:", ["help", "add=", "dir=", "submodule="])
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   "ha:d:s:",
+                                   ["help", "add=", "dir=", "submodule="])
     except getopt.GetoptError:
         usage(2)
 
-    OTHERMODULE = ''
-    SUBMODULE = ''
-    ROOTDIR = './'
-    for o, a in OPTS:
-        if o in ("-h", "--help"):
+    other_module = ''
+    submodule = ''
+    rootdir = './'
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
             usage(0)
-        if o in ("-a", "--add"):
-            OTHERMODULE = a
-        if o in ("-d", "--dir"):
-            ROOTDIR = a
-        if o in ("-s", "--submodule"):
-            SUBMODULE = a
+        if opt in ("-a", "--add"):
+            other_module = arg
+        if opt in ("-d", "--dir"):
+            rootdir = arg
+        if opt in ("-s", "--submodule"):
+            submodule = arg
 
-    if len(ARGS) == 0:
-        if not OTHERMODULE and not SUBMODULE:
+    if len(args) == 0:
+        if not other_module and not submodule:
             usage(2)
         else:
-            MODNAME = ''
+            modname = ''
     else:
-        MODNAME = ARGS[0]
+        modname = args[0]
 
-    CODEDIR = os.path.join(ROOTDIR, MODNAME, MODNAME)
-    GENDIR = os.path.join(ROOTDIR, MODNAME)
+    codedir = os.path.join(rootdir, modname, modname)
+    gendir = os.path.join(rootdir, modname)
 
-    if OTHERMODULE:
-        create_file(OTHERMODULE, CODEDIR)
+    if other_module:
+        create_file(other_module, codedir)
         sys.exit()
 
-    if SUBMODULE:
-        SUBDIR = os.path.join(CODEDIR, SUBMODULE)
-        if os.path.exists(SUBDIR):
+    if submodule:
+        subdir = os.path.join(codedir, submodule)
+        if os.path.exists(subdir):
             raise IOError('Submodule directory already exists')
-        create_init_file(SUBMODULE, SUBDIR)
+        create_init_file(submodule, subdir)
         sys.exit()
 
-    if os.path.exists(GENDIR):
+    if os.path.exists(gendir):
         raise IOError('Project directory already exists. Will not overwrite')
 
+    testdir = os.path.join(rootdir, modname, 'tests')
+    docdir = os.path.join(rootdir, modname, 'docs')
 
-    TESTDIR = os.path.join(ROOTDIR, MODNAME, 'tests')
-    DOCDIR = os.path.join(ROOTDIR, MODNAME, 'docs')
+    create_dirs(rootdir, gendir, codedir, testdir, docdir)
+    create_init_file(modname, codedir)
+    create_gitignore_file(modname, gendir)
+    create_setup_file(modname, gendir)
+    create_test_file(modname, testdir)
 
-    create_dirs(ROOTDIR, GENDIR, CODEDIR, TESTDIR, DOCDIR)
-    create_init_file(MODNAME, CODEDIR)
-    create_gitignore_file(MODNAME, GENDIR)
-    create_setup_file(MODNAME, GENDIR)
-    create_test_file(MODNAME, TESTDIR)
+if __name__ == '__main__':
+    main()

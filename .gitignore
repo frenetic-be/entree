@@ -7,3 +7,7 @@ dist/pyproject-1.0*
 dist/.DS_Store
 build/
 build/*
+pyproject.egg-info/
+pyproject.egg-info/*
+pyproject/__init__.pyc
+*.pyc

@@ -8,8 +8,9 @@ DESCRIPTION
     
     Simple script to create files and directories in a python project. 
     
-    IMPORTANT: The setup.py script will not install a python module but it
-    will install a executable script named `pyproject`.
+    This program is meant to be used as a console script, rather than as a
+    python module. The author information (name, e-mail address and URL) can
+    be configured in the config file located at `~/.config/pyproject_config.py`.
     
  USAGE
     
