@@ -4,14 +4,17 @@
 '''
 Setup script for pyproject
 '''
-import pyproject
 import os
 
 # from distutils.core import setup
 from setuptools import setup
 
+_USERNAME = os.getenv("SUDO_USER") or os.getenv("USER")
+_HOME = os.path.expanduser('~'+_USERNAME)
+_CONFIGDIR = os.path.join(_HOME, ".config")
+
 setup(name="pyproject",
-      version=pyproject.__version__,
+      version="1.0",
       description="",
       long_description="""
       Simple module to create files and directory structure necessary to 
@@ -22,8 +25,7 @@ setup(name="pyproject",
       url="http://frenetic.be/",
       packages=["pyproject"],
       entry_points = {'console_scripts':['pyproject = pyproject:main']},
-      data_files=[(os.path.join(os.path.expanduser("~"), '.config'),
-                  ['pyproject/pyproject_config.py'])],
+      data_files=[(_CONFIGDIR, ['pyproject/pyproject_config.py'])],
       license="Free for non-commercial use",
      )
 
