@@ -12,9 +12,11 @@ Simple module to create files and directories in a python project
 import os
 import imp
 
+_USERNAME = os.getenv("SUDO_USER") or os.getenv("USER")
+_HOME = os.path.expanduser('~'+_USERNAME)
+_CONFIGDIR = os.path.join(_HOME, ".config")
 config = imp.load_source('pyproject_config',
-                         os.path.join(os.path.expanduser("~"), '.config',
-                                      'pyproject_config.py'))
+                         os.path.join(_CONFIGDIR, 'pyproject_config.py'))
 
 __version__ = '1.0'
 
@@ -102,13 +104,17 @@ def setup_file_content(modname):
     yield "'''"
     yield "Setup script for {0}".format(modname)
     yield "'''"
-    yield 'import {0}'.format(modname)
+#     yield 'import {0}'.format(modname)
     yield '# import os'
+    yield '# _USERNAME = os.getenv("SUDO_USER") or os.getenv("USER")'
+    yield '# _HOME = os.path.expanduser("~"+_USERNAME)'
+    yield '# _CONFIGDIR = os.path.join(_HOME, ".config")'
     yield ''
     yield 'from distutils.core import setup'
     yield ''
     yield 'setup(name="{0}",'.format(modname)
-    yield '      version={0}.__version__,'.format(modname)
+#     yield '      version={0}.__version__,'.format(modname)
+    yield '      version="1.0",'
     yield '      description="",'
     yield '      long_description="""'
     yield '      Simple module to ...'
@@ -121,9 +127,8 @@ def setup_file_content(modname):
     yield '#       entry_points = {"console_scripts":["'+modname+' = '
     yield ('#                                          '
            '"'+modname+':main"]},')
-    yield ('#       data_files=[(os.path.join(os.path.expanduser("~"), '
-           '".config"),')
-    yield '#                   ["{0}/{0}_config.py"])],'.format(modname)
+    yield ('#       data_files=[(_CONFIGDIR, '
+           '["{0}/{0}_config.py"])],').format(modname)
     yield '      license="Free for non-commercial use",'
     yield '     )'
     yield ''
