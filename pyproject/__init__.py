@@ -110,7 +110,7 @@ def setup_file_content(modname):
     yield '# _HOME = os.path.expanduser("~"+_USERNAME)'
     yield '# _CONFIGDIR = os.path.join(_HOME, ".config")'
     yield ''
-    yield 'from distutils.core import setup'
+    yield 'from setuptools import setup'
     yield ''
     yield 'setup(name="{0}",'.format(modname)
 #     yield '      version={0}.__version__,'.format(modname)
@@ -124,7 +124,7 @@ def setup_file_content(modname):
                                                  config.AUTHOR_EMAIL_SUFFIX)
     yield '      url="{0}",'.format(config.AUTHOR_URL)
     yield '      packages=["{0}"],'.format(modname)
-    yield '#       entry_points = {"console_scripts":["'+modname+' = '
+    yield '#       entry_points = {"console_scripts":["'+modname+' = "'
     yield ('#                                          '
            '"'+modname+':main"]},')
     yield ('#       data_files=[(_CONFIGDIR, '
