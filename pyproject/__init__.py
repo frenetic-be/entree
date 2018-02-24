@@ -9,32 +9,84 @@
 Simple module to create files and directories in a python project
 """
 
+import json
 import os
 import sys
 import six
-if six.PY2:
-    import imp
-else:
-    from importlib.machinery import SourceFileLoader
-    import importlib.util
 
-_USERNAME = os.getenv("SUDO_USER") or os.getenv("USER")
-_HOME = os.path.expanduser('~'+_USERNAME)
-_CONFIGDIR = os.path.join(_HOME, ".config")
-_CONFIGFILE = os.path.join(_CONFIGDIR, 'pyproject_config.py')
-if not os.path.exists(_CONFIGFILE):
-    _CONFIGDIR, _ = os.path.split(__file__)
-    _CONFIGFILE = os.path.join(_CONFIGDIR, 'pyproject_config.py')
 
-if six.PY2:
-    config = imp.load_source('pyproject_config', _CONFIGFILE)
-else:
-    _LOADER = SourceFileLoader('pyproject_config', _CONFIGFILE)
-    _SPEC = importlib.util.spec_from_loader(_LOADER.name, _LOADER)
-    config = importlib.util.module_from_spec(_SPEC)
-    _LOADER.exec_module(config)
+__version__ = '1.1'
 
-__version__ = '1.0'
+CONFIG_FILE_NAME = 'pyproject_config.json'
+
+
+def get_config_dir():
+    '''Returns path for the config directory.
+    '''
+    username = os.getenv("SUDO_USER") or os.getenv("USER")
+    homedir = os.path.expanduser('~'+username)
+    return os.path.join(homedir, ".config")
+
+
+def get_config_file():
+    '''Returns path of the config file.
+    '''
+    configdir = get_config_dir()
+    configfile = os.path.join(configdir, CONFIG_FILE_NAME)
+    return configfile
+
+
+def read_config():
+    '''Reads the config file
+
+    Returns:
+        config: namedtuple containing the configuration
+    '''
+    from collections import namedtuple
+
+    def _json_object_hook(dic):
+        '''Creates a named tuple from a dictionary dic
+        '''
+        return namedtuple('X', dic.keys())(*dic.values())
+
+    def json2obj(datafile):
+        '''Reads a JSON file and convert response to a named tuple
+        '''
+        return json.load(datafile, object_hook=_json_object_hook)
+
+    configfile = get_config_file()
+    if not os.path.exists(configfile):
+        set_config()
+    with open(configfile) as fil:
+        return json2obj(fil)
+
+
+def set_config(author='<UNDEFINED>',
+               author_email_prefix='<UNDEFINED>',
+               author_email_suffix='<UNDEFINED>',
+               author_url='<UNDEFINED>',
+               overwrite=False):
+    '''Sets the config parameters
+
+    Keyword Args:
+        author (str): author name,
+        author_email_prefix (str): author email prefix,
+        author_email_suffix (str): author email suffix,
+        author_url (str): author url,
+        overwrite (bool, default=False): Set to True to overwrite an existing
+            config file.
+    '''
+    config = {'AUTHOR': author,
+              'AUTHOR_EMAIL_PREFIX': author_email_prefix,
+              'AUTHOR_EMAIL_SUFFIX': author_email_suffix,
+              'AUTHOR_URL': author_url}
+    configdir = get_config_dir()
+    if not os.path.exists(configdir):
+        os.makedirs(configdir)
+    configfile = os.path.join(configdir, CONFIG_FILE_NAME)
+    if not os.path.exists(configfile) or overwrite:
+        with open(configfile, 'w') as fil:
+            json.dump(config, fil)
 
 
 def init_file_content(modname):
@@ -45,6 +97,7 @@ def init_file_content(modname):
     Args:
         modname (str): the module name
     '''
+    config = read_config()
     import datetime
     yield '#!/usr/bin/env python'
     yield "# -*- coding: utf-8 -*-"
@@ -114,6 +167,7 @@ def setup_file_content(modname):
     Args:
         modname (str): the module name
     '''
+    config = read_config()
     yield '#!/usr/bin/env python'
     yield "# -*- coding: utf-8 -*-"
     yield ""

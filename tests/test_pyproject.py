@@ -35,15 +35,74 @@ def random_string(num_chars):
 class TestConfig(unittest.TestCase):
     '''Testing if config file was imported
     '''
-
-    def test_config(self):
-        '''Test config import
+    def test_get_config_dir(self):
+        '''Test get_config_dir()
         '''
-        self.assertTrue(hasattr(pyproject, 'config'))
-        self.assertTrue(hasattr(pyproject.config, 'AUTHOR'))
-        self.assertTrue(hasattr(pyproject.config, 'AUTHOR_EMAIL_PREFIX'))
-        self.assertTrue(hasattr(pyproject.config, 'AUTHOR_EMAIL_SUFFIX'))
-        self.assertTrue(hasattr(pyproject.config, 'AUTHOR_URL'))
+        username = os.getenv("SUDO_USER") or os.getenv("USER")
+        homedir = os.path.expanduser('~'+username)
+        configdir = os.path.join(homedir, ".config")
+        self.assertEqual(configdir, pyproject.get_config_dir())
+
+    def test_get_config_file(self):
+        '''Test get_config_file()
+        '''
+        configdir = pyproject.get_config_dir()
+        configfile = os.path.join(configdir, pyproject.CONFIG_FILE_NAME)
+        self.assertEqual(configfile, pyproject.get_config_file())
+
+    def test_create_config_inexisting(self):
+        '''Test set_config() and read_config() when config file does not exist
+        '''
+        configdir = pyproject.get_config_dir()
+        configfile = os.path.join(configdir, pyproject.CONFIG_FILE_NAME)
+
+        author = 'Julien Spronck'
+        author_email_prefix = 'github'
+        author_email_suffix = 'frenetic.be'
+        author_url = 'http://frenetic.be'
+
+        old_config = {}
+
+        if os.path.exists(configfile):
+            old_config = pyproject.read_config()
+            os.remove(configfile)
+
+        config = pyproject.read_config()
+        self.assertTrue(os.path.exists(configfile))
+        self.assertEqual(config.AUTHOR, '<UNDEFINED>')
+        self.assertEqual(config.AUTHOR_EMAIL_PREFIX, '<UNDEFINED>')
+        self.assertEqual(config.AUTHOR_EMAIL_SUFFIX, '<UNDEFINED>')
+        self.assertEqual(config.AUTHOR_URL, '<UNDEFINED>')
+        os.remove(configfile)
+
+        pyproject.set_config(author=author,
+                             author_email_prefix=author_email_prefix,
+                             author_email_suffix=author_email_suffix,
+                             author_url=author_url)
+        self.assertTrue(os.path.exists(configfile))
+        config = pyproject.read_config()
+        self.assertEqual(config.AUTHOR, author)
+        self.assertEqual(config.AUTHOR_EMAIL_PREFIX, author_email_prefix)
+        self.assertEqual(config.AUTHOR_EMAIL_SUFFIX, author_email_suffix)
+        self.assertEqual(config.AUTHOR_URL, author_url)
+
+        pyproject.set_config(overwrite=True)
+        self.assertTrue(os.path.exists(configfile))
+        config = pyproject.read_config()
+        self.assertEqual(config.AUTHOR, '<UNDEFINED>')
+        self.assertEqual(config.AUTHOR_EMAIL_PREFIX, '<UNDEFINED>')
+        self.assertEqual(config.AUTHOR_EMAIL_SUFFIX, '<UNDEFINED>')
+        self.assertEqual(config.AUTHOR_URL, '<UNDEFINED>')
+
+        os.remove(configfile)
+
+        if old_config:
+            pyproject.set_config(
+                author=old_config.AUTHOR,
+                author_email_prefix=old_config.AUTHOR_EMAIL_PREFIX,
+                author_email_suffix=old_config.AUTHOR_EMAIL_SUFFIX,
+                author_url=old_config.AUTHOR_URL
+            )
 
 
 class TestFileCreation(unittest.TestCase):

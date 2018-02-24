@@ -25,6 +25,5 @@ setup(name="pyproject",
       url="http://frenetic.be/",
       packages=["pyproject"],
       entry_points={'console_scripts': ['pyproject = pyproject:main']},
-      data_files=[(_CONFIGDIR, ['pyproject/pyproject_config.py'])],
-      license="Free for non-commercial use",
-     )
+      data_files=[(_CONFIGDIR, ['pyproject/pyproject_config.json'])],
+      license="Free for non-commercial use")
