@@ -14,58 +14,30 @@ import sys
 import six
 from .utils import (CONFIG_FILE_NAME, get_config_dir,
                     get_config_file, read_config, set_config,
-                    create_general_file, create_dirs)
+                    create_general_file, create_dirs,
+                    render_template)
 
 __version__ = '1.1'
+
+TEMPLATE_DIR = 'templates/python/'
 
 
 def init_file_content(modname):
     '''
-    init_file_content(modname): Returns a generator with the standard lines
-    that should go into an empty python module.
+    init_file_content(modname): Returns the content of a standard empty
+    python module.
 
     Args:
         modname (str): the module name
     '''
     config = read_config()
     import datetime
-    yield '#!/usr/bin/env python'
-    yield "# -*- coding: utf-8 -*-"
-    yield ""
-    yield "'''"
-    yield ".. module:: {0}".format(modname)
-    yield ".. moduleauthor:: {0}".format(config.AUTHOR)
-    yield ".. created:: {0}".format(datetime.datetime.now().strftime('%B %Y'))
-    yield "'''"
-    yield ""
-    yield "__version__ = '1.0'"
-    yield ""
-    yield "if __name__ == '__main__':"
-    yield ""
-    yield "#     import sys"
-    yield "#     def usage(exit_status):"
-    yield r"#         msg = '\n ... \n'"
-    yield "#"
-    yield "#         print(msg)"
-    yield "#         sys.exit(exit_status)"
-    yield "#"
-    yield "#     import getopt"
-    yield "#"
-    yield "#    # parse command line options/arguments"
-    yield "#     try:"
-    yield "#         opts, args = getopt.getopt(sys.argv[1:],"
-    yield "#                                    'hd:', ['help', 'dir='])"
-    yield "#     except getopt.GetoptError:"
-    yield "#         usage(2)"
-    yield "#"
-    yield "#     for opt, arg in opts:"
-    yield "#         if opt in ('-h', '--help'):"
-    yield "#             usage(0)"
-    yield "#         if opt in ('-d', '--dir'):"
-    yield "#             thedir = arg"
-    yield ""
-    yield "    pass"
-    yield ""
+    creation_date = datetime.datetime.now().strftime('%B %Y')
+
+    template_file = os.path.join(os.path.split(__file__)[0],
+                                 TEMPLATE_DIR, '__init__.py')
+    return render_template(template_file, modname=modname, config=config,
+                           creation_date=creation_date)
 
 
 def gitignore_file_content(modname):
@@ -76,18 +48,9 @@ def gitignore_file_content(modname):
     Args:
         modname (str): the module name
     '''
-    yield '.gitignore~'
-    yield 'MANIFEST'
-    yield '.DS_Store'
-    yield 'dist/'
-    yield 'dist/'+modname+'-1.0/*'
-    yield 'dist/'+modname+'-1.0'
-    yield 'dist/.DS_Store'
-    yield 'build/'
-    yield 'build/*'
-    yield modname+'.egg-info/'
-    yield modname+'.egg-info/*'
-    yield '*.pyc'
+    template_file = os.path.join(os.path.split(__file__)[0],
+                                 TEMPLATE_DIR, 'gitignore')
+    return render_template(template_file, modname=modname)
 
 
 def setup_file_content(modname):
@@ -98,40 +61,9 @@ def setup_file_content(modname):
         modname (str): the module name
     '''
     config = read_config()
-    yield '#!/usr/bin/env python'
-    yield "# -*- coding: utf-8 -*-"
-    yield ""
-    yield "'''"
-    yield "Setup script for {0}".format(modname)
-    yield "'''"
-#     yield 'import {0}'.format(modname)
-    yield '# import os'
-    yield '# _USERNAME = os.getenv("SUDO_USER") or os.getenv("USER")'
-    yield '# _HOME = os.path.expanduser("~"+_USERNAME)'
-    yield '# _CONFIGDIR = os.path.join(_HOME, ".config")'
-    yield ''
-    yield 'from setuptools import setup'
-    yield ''
-    yield 'setup(name="{0}",'.format(modname)
-#     yield '      version={0}.__version__,'.format(modname)
-    yield '      version="1.0",'
-    yield '      description="",'
-    yield '      long_description="""'
-    yield '      Simple module to ...'
-    yield '      """,'
-    yield '      author="{0}",'.format(config.AUTHOR)
-    yield '      author_email="{0}@{1}",'.format(config.AUTHOR_EMAIL_PREFIX,
-                                                 config.AUTHOR_EMAIL_SUFFIX)
-    yield '      url="{0}",'.format(config.AUTHOR_URL)
-    yield '      packages=["{0}"],'.format(modname)
-    yield '#       entry_points = {"console_scripts":["'+modname+' = "'
-    yield ('#                                          '
-           '"'+modname+':main"]},')
-    yield ('#       data_files=[(_CONFIGDIR, '
-           '["{0}/{0}_config.py"])],').format(modname)
-    yield '      license="Free for non-commercial use",'
-    yield '     )'
-    yield ''
+    template_file = os.path.join(os.path.split(__file__)[0],
+                                 TEMPLATE_DIR, 'setup.py')
+    return render_template(template_file, modname=modname, config=config)
 
 
 def test_file_content(modname):
@@ -141,36 +73,9 @@ def test_file_content(modname):
     Args:
         modname (str): the module name
     '''
-    yield '#!/usr/bin/env python'
-    yield "# -*- coding: utf-8 -*-"
-    yield ""
-    yield "'''"
-    yield "Tests for {0}".format(modname)
-    yield "'''"
-    yield 'import sys'
-    yield 'import os'
-    yield 'sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))'
-    yield ''
-    yield 'import {0}'.format(modname)
-    yield 'import unittest'
-    yield ''
-    yield 'class TestStringMethods(unittest.TestCase):'
-    yield ''
-    yield '    def test_upper(self):'
-    yield '        self.assertEqual(\'foo\'.upper(), \'FOO\')'
-    yield ''
-    yield '    def test_isupper(self):'
-    yield '        self.assertTrue(\'FOO\'.isupper())'
-    yield '        self.assertFalse(\'Foo\'.isupper())'
-    yield ''
-    yield '    def test_split(self):'
-    yield '        s = \'hello world\''
-    yield '        with self.assertRaises(TypeError):'
-    yield '            s.split(2)'
-    yield ''
-    yield 'if __name__ == \'__main__\':'
-    yield '    unittest.main()'
-    yield ''
+    template_file = os.path.join(os.path.split(__file__)[0],
+                                 TEMPLATE_DIR, 'unittest.py')
+    return render_template(template_file, modname=modname)
 
 
 def create_init_file(modname, dirname):

@@ -143,10 +143,9 @@ class TestFileCreation(unittest.TestCase):
         self.assertTrue(os.path.exists(file_path))
         self.assertTrue(os.path.isfile(file_path))
         with open(file_path) as fil:
-            lines = fil.readlines()
-        content = list(pyproject.init_file_content(self.project))
-        for j, line in enumerate(lines):
-            self.assertEqual(line, content[j]+'\n')
+            lines = fil.read()
+        content = pyproject.init_file_content(self.project)
+        self.assertEqual(lines, content)
 
     def test_create_init(self):
         '''Test if __init__.py is created
@@ -156,10 +155,9 @@ class TestFileCreation(unittest.TestCase):
         self.assertTrue(os.path.exists(file_path))
         self.assertTrue(os.path.isfile(file_path))
         with open(file_path) as fil:
-            lines = fil.readlines()
-        content = list(pyproject.init_file_content(self.project))
-        for j, line in enumerate(lines):
-            self.assertEqual(line, content[j]+'\n')
+            lines = fil.read()
+        content = pyproject.init_file_content(self.project)
+        self.assertEqual(lines, content)
 
     def test_create_gitignore(self):
         '''Test if .gitignore is created
@@ -169,10 +167,9 @@ class TestFileCreation(unittest.TestCase):
         self.assertTrue(os.path.exists(file_path))
         self.assertTrue(os.path.isfile(file_path))
         with open(file_path) as fil:
-            lines = fil.readlines()
-        content = list(pyproject.gitignore_file_content(self.project))
-        for j, line in enumerate(lines):
-            self.assertEqual(line, content[j]+'\n')
+            lines = fil.read()
+        content = pyproject.gitignore_file_content(self.project)
+        self.assertEqual(lines, content)
 
     def test_create_setup(self):
         '''Test if setup.py is created
@@ -182,10 +179,9 @@ class TestFileCreation(unittest.TestCase):
         self.assertTrue(os.path.exists(file_path))
         self.assertTrue(os.path.isfile(file_path))
         with open(file_path) as fil:
-            lines = fil.readlines()
-        content = list(pyproject.setup_file_content(self.project))
-        for j, line in enumerate(lines):
-            self.assertEqual(line, content[j]+'\n')
+            lines = fil.read()
+        content = pyproject.setup_file_content(self.project)
+        self.assertEqual(lines, content)
 
     def test_create_test(self):
         '''Test if test file is created
@@ -196,10 +192,9 @@ class TestFileCreation(unittest.TestCase):
         self.assertTrue(os.path.exists(file_path))
         self.assertTrue(os.path.isfile(file_path))
         with open(file_path) as fil:
-            lines = fil.readlines()
-        content = list(pyproject.test_file_content(self.project))
-        for j, line in enumerate(lines):
-            self.assertEqual(line, content[j]+'\n')
+            lines = fil.read()
+        content = pyproject.test_file_content(self.project)
+        self.assertEqual(lines, content)
 
     def test_module_exists(self):
         '''Test what happens when module file already exists

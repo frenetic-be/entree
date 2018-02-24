@@ -101,7 +101,7 @@ def create_general_file(fname, dirname, file_content):
 
     with open(fname, 'w') as fil:
         for line in file_content:
-            fil.write(line+'\n')
+            fil.write(line)
 
 
 def create_dirs(rootdir, *dirs):
