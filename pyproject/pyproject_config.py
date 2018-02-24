@@ -8,11 +8,11 @@ constants like, the project author name and e-mail address.
 """
 
 #: Project author
-AUTHOR = "Julien Spronck"
+AUTHOR = "******* *********"
 
 #: Project author e-mail address (`AUTHOR_EMAIL_PREFIX@AUTHOR_EMAIL_SUFFIX`)
-AUTHOR_EMAIL_PREFIX = "github"
-AUTHOR_EMAIL_SUFFIX = "frenetic.be"
+AUTHOR_EMAIL_PREFIX = "*****"
+AUTHOR_EMAIL_SUFFIX = "*****.***"
 
 #: URL of author's website
-AUTHOR_URL = "http://frenetic.be"
+AUTHOR_URL = "http://********.*****"

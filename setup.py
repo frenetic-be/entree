@@ -17,15 +17,14 @@ setup(name="pyproject",
       version="1.0",
       description="",
       long_description="""
-      Simple module to create files and directory structure necessary to 
-      start a python project.
+      Simple module to create files and directory structure necessary to
+       start a python project.
       """,
       author="Julien Spronck",
       author_email="github@frenetic.be",
       url="http://frenetic.be/",
       packages=["pyproject"],
-      entry_points = {'console_scripts':['pyproject = pyproject:main']},
+      entry_points={'console_scripts': ['pyproject = pyproject:main']},
       data_files=[(_CONFIGDIR, ['pyproject/pyproject_config.py'])],
       license="Free for non-commercial use",
      )
-

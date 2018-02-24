@@ -10,13 +10,29 @@ Simple module to create files and directories in a python project
 """
 
 import os
-import imp
+import sys
+import six
+if six.PY2:
+    import imp
+else:
+    from importlib.machinery import SourceFileLoader
+    import importlib.util
 
 _USERNAME = os.getenv("SUDO_USER") or os.getenv("USER")
 _HOME = os.path.expanduser('~'+_USERNAME)
 _CONFIGDIR = os.path.join(_HOME, ".config")
-config = imp.load_source('pyproject_config',
-                         os.path.join(_CONFIGDIR, 'pyproject_config.py'))
+_CONFIGFILE = os.path.join(_CONFIGDIR, 'pyproject_config.py')
+if not os.path.exists(_CONFIGFILE):
+    _CONFIGDIR, _ = os.path.split(__file__)
+    _CONFIGFILE = os.path.join(_CONFIGDIR, 'pyproject_config.py')
+
+if six.PY2:
+    config = imp.load_source('pyproject_config', _CONFIGFILE)
+else:
+    _LOADER = SourceFileLoader('pyproject_config', _CONFIGFILE)
+    _SPEC = importlib.util.spec_from_loader(_LOADER.name, _LOADER)
+    config = importlib.util.module_from_spec(_SPEC)
+    _LOADER.exec_module(config)
 
 __version__ = '1.0'
 
@@ -47,7 +63,7 @@ def init_file_content(modname):
     yield "#     def usage(exit_status):"
     yield r"#         msg = '\n ... \n'"
     yield "#"
-    yield "#         print msg"
+    yield "#         print(msg)"
     yield "#         sys.exit(exit_status)"
     yield "#"
     yield "#     import getopt"
@@ -173,104 +189,84 @@ def test_file_content(modname):
     yield ''
 
 
-def create_init_file(modname, the_dir):
+def create_general_file(fname, dirname, file_content):
+    '''Creates a file.
+
+    Args:
+        - fname (str): file name
+        - dirname (str): directory name
+        - file_content (iterator): generator/iterator containing
+            the file content.
+    '''
+    if os.path.exists(fname):
+        raise IOError('File already exists. Will not overwrite')
+
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
+
+    with open(fname, 'w') as fil:
+        for line in file_content:
+            fil.write(line+'\n')
+
+
+def create_init_file(modname, dirname):
     '''
     Creates __init__.py
 
     Args:
         modname (str): the module name
-        the_dir (str): the directory where to save the file.
+        dirname (str): the directory where to save the file.
     '''
-    fname = os.path.join(the_dir, '__init__.py')
-    if os.path.exists(fname):
-        raise IOError('File already exists. Will not overwrite')
-
-    if not os.path.exists(the_dir):
-        os.makedirs(the_dir)
-
-    with open(fname, 'w') as fil:
-        for line in init_file_content(modname):
-            fil.write(line+'\n')
+    fname = os.path.join(dirname, '__init__.py')
+    create_general_file(fname, dirname, init_file_content(modname))
 
 
-def create_file(modname, the_dir):
+def create_file(modname, dirname):
     '''
     Creates a module file
 
     Args:
         modname (str): the module name
-        the_dir (str): the directory where to save the file.
+        dirname (str): the directory where to save the file.
     '''
-    fname = os.path.join(the_dir, modname+'.py')
-    if os.path.exists(fname):
-        raise IOError('File already exists. Will not overwrite')
-
-    if not os.path.exists(the_dir):
-        os.makedirs(the_dir)
-
-    with open(fname, 'w') as fil:
-        for line in init_file_content(modname):
-            fil.write(line+'\n')
+    fname = os.path.join(dirname, modname+'.py')
+    create_general_file(fname, dirname, init_file_content(modname))
 
 
-def create_gitignore_file(modname, the_dir):
+def create_gitignore_file(modname, dirname):
     '''
     Creates .gitignore
 
     Args:
         modname (str): the module name
-        the_dir (str): the directory where to save the file.
+        dirname (str): the directory where to save the file.
     '''
-    fname = os.path.join(the_dir, '.gitignore')
-    if os.path.exists(fname):
-        raise IOError('File already exists. Will not overwrite')
-
-    if not os.path.exists(the_dir):
-        os.makedirs(the_dir)
-
-    with open(fname, 'w') as fil:
-        for line in gitignore_file_content(modname):
-            fil.write(line+'\n')
+    fname = os.path.join(dirname, '.gitignore')
+    create_general_file(fname, dirname, gitignore_file_content(modname))
 
 
-def create_setup_file(modname, the_dir):
+def create_setup_file(modname, dirname):
     '''
     Creates setup.py
 
     Args:
         modname (str): the module name
-        the_dir (str): the directory where to save the file.
+        dirname (str): the directory where to save the file.
     '''
-    fname = os.path.join(the_dir, 'setup.py')
-    if os.path.exists(fname):
-        raise IOError('File already exists. Will not overwrite')
-
-    if not os.path.exists(the_dir):
-        os.makedirs(the_dir)
-
-    with open(fname, 'w') as fil:
-        for line in setup_file_content(modname):
-            fil.write(line+'\n')
+    fname = os.path.join(dirname, 'setup.py')
+    create_general_file(fname, dirname, setup_file_content(modname))
 
 
-def create_test_file(modname, the_dir):
+def create_test_file(modname, dirname):
     '''
     Creates test file
 
     Args:
         modname (str): the module name
-        the_dir (str): the directory where to save the file.
+        dirname (str): the directory where to save the file.
     '''
-    fname = os.path.join(the_dir, 'test_'+modname+'.py')
-    if os.path.exists(fname):
-        raise IOError('File already exists. Will not overwrite')
-
-    if not os.path.exists(the_dir):
-        os.makedirs(the_dir)
-
-    with open(fname, 'w') as fil:
-        for line in test_file_content(modname):
-            fil.write(line+'\n')
+    fname = os.path.join(dirname, 'test_'+modname+'.py')
+    create_general_file(fname, dirname, test_file_content(modname))
 
 
 def create_dirs(rootdir, *dirs):
@@ -279,7 +275,7 @@ def create_dirs(rootdir, *dirs):
 
     Args:
         modname (str): the module name
-        the_dir (str): the directory where to save the file.
+        dirs (str): directories to create
     '''
     if not os.path.exists(rootdir):
         raise IOError('Root directory not found: "'+rootdir+'"')
@@ -289,11 +285,46 @@ def create_dirs(rootdir, *dirs):
             os.makedirs(thedir)
 
 
+def create_all_files_and_dirs(rootdir, modname, other_module, submodule):
+    '''Creates all project files and directories
+
+    Args:
+        rootdir (str): the root directory
+        modname (str): the module name
+        other_module (str): the module name where you wish to add a project
+            file
+        submodule (str): the submodule name
+    '''
+    gendir = os.path.join(rootdir, modname)
+    codedir = os.path.join(gendir, modname)
+
+    if other_module:
+        create_file(other_module, codedir)
+        return
+
+    if submodule:
+        subdir = os.path.join(codedir, submodule)
+        if os.path.exists(subdir):
+            raise IOError('Submodule directory already exists')
+        create_init_file(submodule, subdir)
+        return
+
+    if os.path.exists(gendir):
+        raise IOError('Project directory already exists. Will not overwrite')
+
+    testdir = os.path.join(gendir, 'tests')
+    docdir = os.path.join(gendir, 'docs')
+
+    create_dirs(rootdir, gendir, codedir, testdir, docdir)
+    create_init_file(modname, codedir)
+    create_gitignore_file(modname, gendir)
+    create_setup_file(modname, gendir)
+    create_test_file(modname, testdir)
+
+
 def main():
     '''Main program
     '''
-
-    import sys
 
     def usage(exit_status):
         '''
@@ -317,7 +348,7 @@ def main():
         msg += "    -s, --submodules: adds a submodule directory and\n"
         msg += "                __init__.py file.\n\n"
 
-        print msg
+        six.print_(msg)
         sys.exit(exit_status)
 
     import getopt
@@ -343,7 +374,7 @@ def main():
         if opt in ("-s", "--submodule"):
             submodule = arg
 
-    if len(args) == 0:
+    if not args:
         if not other_module and not submodule:
             usage(2)
         else:
@@ -351,31 +382,7 @@ def main():
     else:
         modname = args[0]
 
-    codedir = os.path.join(rootdir, modname, modname)
-    gendir = os.path.join(rootdir, modname)
-
-    if other_module:
-        create_file(other_module, codedir)
-        sys.exit()
-
-    if submodule:
-        subdir = os.path.join(codedir, submodule)
-        if os.path.exists(subdir):
-            raise IOError('Submodule directory already exists')
-        create_init_file(submodule, subdir)
-        sys.exit()
-
-    if os.path.exists(gendir):
-        raise IOError('Project directory already exists. Will not overwrite')
-
-    testdir = os.path.join(rootdir, modname, 'tests')
-    docdir = os.path.join(rootdir, modname, 'docs')
-
-    create_dirs(rootdir, gendir, codedir, testdir, docdir)
-    create_init_file(modname, codedir)
-    create_gitignore_file(modname, gendir)
-    create_setup_file(modname, gendir)
-    create_test_file(modname, testdir)
+    create_all_files_and_dirs(rootdir, modname, other_module, submodule)
 
 if __name__ == '__main__':
     main()
