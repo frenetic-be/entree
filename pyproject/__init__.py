@@ -12,9 +12,7 @@ Simple module to create files and directories in a python project
 import os
 import sys
 import six
-from .utils import (CONFIG_FILE_NAME, get_config_dir,
-                    get_config_file, read_config, set_config,
-                    create_general_file, create_dirs,
+from .utils import (read_config, create_general_file, create_dirs,
                     render_template)
 
 __version__ = '1.1'

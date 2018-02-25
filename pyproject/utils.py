@@ -10,9 +10,11 @@ Simple module to create files and directories in a programming project
 """
 import os
 import json
+import six
 from jinja2 import Template
 
 CONFIG_FILE_NAME = 'pyproject_config.json'
+FILES_TO_RENDER = ['app.py', '.gitignore', 'index.html', 'style.css', 'app.js']
 
 
 def get_config_dir():
@@ -96,7 +98,7 @@ def create_general_file(fname, dirname, file_content):
     if os.path.exists(fname):
         raise IOError('File already exists. Will not overwrite')
 
-    if not os.path.exists(dirname):
+    if dirname and not os.path.exists(dirname):
         os.makedirs(dirname)
 
     with open(fname, 'w') as fil:
@@ -109,7 +111,7 @@ def create_dirs(rootdir, *dirs):
     Creates directories
 
     Args:
-        modname (str): the module name
+        rootdir (str): the root directory
         dirs (str): directories to create
     '''
     if not os.path.exists(rootdir):
@@ -136,3 +138,31 @@ def render_template(filename, **kwargs):
         template = Template(fil.read())
 
     return template.render(**kwargs)
+
+
+def copy_file_structure(rootdir, path, **kwargs):
+    '''Walks through the file structure and copy all directories and files.
+
+    Args:
+        rootdir (str): the root directory where the files will be copied to
+        path (str): the path to walk through and reproduce
+
+    Keyword args:
+        **kwargs: dictionary containing the variables for templating
+    '''
+    if not os.path.exists(rootdir):
+        raise IOError('Root directory not found: "'+rootdir+'"')
+
+    for fname in os.listdir(path):
+        src = os.path.join(path, fname)
+        dst = os.path.join(rootdir, fname)
+        if os.path.isdir(src):
+            if not os.path.exists(dst):
+                os.makedirs(dst)
+            copy_file_structure(dst, src, **kwargs)
+        elif os.path.isfile(src):
+            if fname in FILES_TO_RENDER:
+                file_content = render_template(src, **kwargs)
+                create_general_file(dst, None, file_content)
+            else:
+                six.print_('File ignored: `{0}`'.format(fname))
