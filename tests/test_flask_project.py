@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 '''
-Tests for pyproject
+Tests for entree
 '''
 import os
 import shutil
 import unittest
 
-import pyproject.flask_project as flp
+import entree.flask_project as flp
 from utilities import get_file_content, random_string
 
 import six

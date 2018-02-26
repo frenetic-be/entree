@@ -1,8 +1,8 @@
 NAME
-    pyproject
+    entree
 
 DESCRIPTION
-    .. module:: pyproject
+    .. module:: entree
     .. moduleauthor:: Julien Spronck
     .. created:: Apr 2015
     

@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 '''
-Tests for pyproject
+Tests for entree
 '''
 import os
 import shutil
 import unittest
 
-import pyproject.python_project as pyp
+import entree.python_project as pyp
 from utilities import get_file_content, random_string
 
 import six

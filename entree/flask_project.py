@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: pyproject.flask_project
+.. module:: entree.flask_project
 .. moduleauthor:: Julien Spronck
 .. created:: February 2017
 
@@ -13,7 +13,7 @@ import datetime
 import os
 import sys
 import six
-from pyproject.utils import (read_config, copy_file_structure, create_dirs)
+from entree.utils import (read_config, copy_file_structure, create_dirs)
 
 __version__ = '1.0'
 
@@ -64,7 +64,7 @@ def main():
         msg = "\nSets up a Python Flask project by creating the "
         msg += "directories and files necessary to start new project.\n"
         msg += "\nUsage: \n\n"
-        msg += "    pyproject_flask[OPTIONS] modname\n\n"
+        msg += "    entree_flask[OPTIONS] modname\n\n"
         msg += "Arguments:\n\n"
         msg += "    modname: the name of the project you want to start or "
         msg += "modify\n\n"
@@ -101,7 +101,7 @@ def main():
         if opt in ("-d", "--dir"):
             rootdir = arg
         if opt in ("-v", "--version"):
-            six.print_('pyproject.flask_project {0}'.format(__version__))
+            six.print_('entree.flask_project {0}'.format(__version__))
             sys.exit()
 
     if not args:

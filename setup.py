@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Setup script for pyproject
+Setup script for entree
 '''
 import os
 
@@ -26,9 +26,9 @@ def get_template_dirs(path, basename='templates'):
             dirs.extend(get_template_dirs(subpath, basename=newbasename))
     return dirs
 TEMPLATE_PATHS = [os.path.join(directory, '*') for directory in ['templates'] +
-                  get_template_dirs('pyproject/templates')]
+                  get_template_dirs('entree/templates')]
 
-setup(name="pyproject",
+setup(name="entree",
       version="2.0",
       description="",
       long_description="""
@@ -40,11 +40,11 @@ setup(name="pyproject",
       url="http://frenetic.be/",
       packages=find_packages(),
       entry_points={
-          'console_scripts': ['pyproject = pyproject:main']
+          'console_scripts': ['entree = entree:main']
       },
-      data_files=[(_CONFIGDIR, ['pyproject/pyproject_config.json'])],
+      data_files=[(_CONFIGDIR, ['entree/entree_config.json'])],
       package_data={
-          'pyproject': TEMPLATE_PATHS,
+          'entree': TEMPLATE_PATHS,
       },
       install_requires=[
           'Jinja2==2.10',
