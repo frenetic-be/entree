@@ -25,8 +25,14 @@ def get_template_dirs(path, basename='templates'):
             dirs.append(newbasename)
             dirs.extend(get_template_dirs(subpath, basename=newbasename))
     return dirs
+
 TEMPLATE_PATHS = [os.path.join(directory, '*') for directory in ['templates'] +
                   get_template_dirs('entree/templates')]
+
+if os.path.exists(os.path.join(_CONFIGDIR, 'entree_config.json')):
+    DATA_FILES = []
+else:
+    DATA_FILES = [(_CONFIGDIR, ['entree/entree_config.json'])]
 
 setup(name="entree",
       version="2.0",
@@ -42,7 +48,7 @@ setup(name="entree",
       entry_points={
           'console_scripts': ['entree = entree:main']
       },
-      data_files=[(_CONFIGDIR, ['entree/entree_config.json'])],
+      data_files=DATA_FILES,
       package_data={
           'entree': TEMPLATE_PATHS,
       },
