@@ -46,4 +46,9 @@ setup(name="pyproject",
       package_data={
           'pyproject': TEMPLATE_PATHS,
       },
+      install_requires=[
+          'Jinja2==2.10',
+          'MarkupSafe==1.0',
+          'six==1.11.0',
+      ],
       license="Free for non-commercial use")
