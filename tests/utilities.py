@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 '''
-Test utilities for pyproject
+Test utilities for entree
 '''
 import datetime
 # import os
 import random
 import string
 
-import pyproject.utils as pyutils
+import entree.utils as pyutils
 
 
 def get_file_content(project, filepath, templatepath):

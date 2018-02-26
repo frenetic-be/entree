@@ -1,16 +1,16 @@
 NAME
-    pyproject
+    entree
 
 DESCRIPTION
-    .. module:: pyproject
+    .. module:: entree
     .. moduleauthor:: Julien Spronck
     .. created:: Apr 2015
     
-    Simple script to create files and directories in a python project. 
+    Simple script to create files and directories in a programming project. 
     
     This program is meant to be used as a console script, rather than as a
     python module. The author information (name, e-mail address and URL) can
-    be configured in the config file located at `~/.config/pyproject_config.py`.
+    be configured in the config file located at `~/.config/entree_config.json`.
     
  USAGE
     

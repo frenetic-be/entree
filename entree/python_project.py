@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: pyproject.python_project
+.. module:: entree.python_project
 .. moduleauthor:: Julien Spronck
 .. created:: February 2017
 
@@ -13,7 +13,7 @@ import datetime
 import os
 import sys
 import six
-from pyproject.utils import (read_config, copy_file_structure, create_dirs)
+from entree.utils import (read_config, copy_file_structure, create_dirs)
 
 __version__ = '1.0'
 
@@ -65,10 +65,10 @@ def main():
         '''
         Displays the usage/help of this script
         '''
-        msg = "\npyproject sets up a python project by creating the "
+        msg = "\nentree sets up a python project by creating the "
         msg += "directories and files necessary to start new python project.\n"
         msg += "\nUsage: \n\n"
-        msg += "    pyproject [OPTIONS] modname\n\n"
+        msg += "    entree [OPTIONS] modname\n\n"
         msg += "Arguments:\n\n"
         msg += "    modname: the name of the project you want to start or "
         msg += "modify\n\n"
@@ -111,7 +111,7 @@ def main():
         # if opt in ("-s", "--submodule"):
         #     submodule = arg
         if opt in ("-v", "--version"):
-            six.print_('pyproject.python_project {0}'.format(__version__))
+            six.print_('entree.python_project {0}'.format(__version__))
             sys.exit()
 
     if not args:

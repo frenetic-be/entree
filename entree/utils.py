@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: pyproject.utils
+.. module:: entree.utils
 .. moduleauthor:: Julien Spronck
 .. created:: Feb 2018
 
@@ -13,7 +13,7 @@ import json
 import six
 from jinja2 import Template
 
-CONFIG_FILE_NAME = 'pyproject_config.json'
+CONFIG_FILE_NAME = 'entree_config.json'
 FILES_TO_IGNORE = ['.DS_Store']
 
 
