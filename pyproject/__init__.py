@@ -207,8 +207,9 @@ def main():
     # Parse command line options/arguments
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "ha:d:s:",
-                                   ["help", "add=", "dir=", "submodule="])
+                                   "ha:d:s:v",
+                                   ["help", "add=", "dir=", "submodule=",
+                                    "version"])
     except getopt.GetoptError:
         usage(2)
 
@@ -224,6 +225,9 @@ def main():
             rootdir = arg
         if opt in ("-s", "--submodule"):
             submodule = arg
+        if opt in ("-v", "--version"):
+            six.print_(__version__)
+            sys.exit()
 
     if not args:
         if not other_module and not submodule:
