@@ -25,11 +25,11 @@ def get_template_dirs(path, basename='templates'):
             dirs.append(newbasename)
             dirs.extend(get_template_dirs(subpath, basename=newbasename))
     return dirs
-# TEMPLATE_PATHS = [os.path.join(directory, '*') for directory in ['templates'] +
-                  # get_template_dirs('pyproject/templates')]
+TEMPLATE_PATHS = [os.path.join(directory, '*') for directory in ['templates'] +
+                  get_template_dirs('pyproject/templates')]
 
 setup(name="pyproject",
-      version="1.1",
+      version="2.0",
       description="",
       long_description="""
       Simple module to create files and directory structure necessary to
@@ -39,9 +39,11 @@ setup(name="pyproject",
       author_email="github@frenetic.be",
       url="http://frenetic.be/",
       packages=find_packages(),
-      entry_points={'console_scripts': ['pyproject = pyproject:main']},
+      entry_points={
+          'console_scripts': ['pyproject = pyproject:main']
+      },
       data_files=[(_CONFIGDIR, ['pyproject/pyproject_config.json'])],
-      # package_data={
-      #     'pyproject': TEMPLATE_PATHS,
-      # },
+      package_data={
+          'pyproject': TEMPLATE_PATHS,
+      },
       license="Free for non-commercial use")

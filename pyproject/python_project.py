@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: pyproject.flask_project
+.. module:: pyproject.python_project
 .. moduleauthor:: Julien Spronck
 .. created:: February 2017
 
@@ -18,7 +18,7 @@ from pyproject.utils import (read_config, copy_file_structure, create_dirs)
 __version__ = '1.0'
 
 # Template directory
-TEMPLATE_DIR = 'templates/python-flask/'
+TEMPLATE_DIR = 'templates/python/'
 TEMPLATE_DIR = os.path.join(os.path.split(__file__)[0],
                             TEMPLATE_DIR)
 
@@ -47,8 +47,12 @@ def create_all_files_and_dirs(rootdir, modname, add_to_existing=False):
 
     # Copy entire file structure from template directory to the project
     # directory
+    testfilename = 'test_{0}.py'.format(modname)
     copy_file_structure(projectdir, TEMPLATE_DIR,
-                        replace={'app_py.template': 'app.py'},
+                        replace={'__init___py.template': '__init__.py',
+                                 'setup_py.template': 'setup.py',
+                                 'unittest_py.template': testfilename,
+                                 'src': modname},
                         modname=modname, config=config,
                         creation_date=creation_date)
 
@@ -61,21 +65,24 @@ def main():
         '''
         Displays the usage/help of this script
         '''
-        msg = "\nSets up a Python Flask project by creating the "
-        msg += "directories and files necessary to start new project.\n"
+        msg = "\npyproject sets up a python project by creating the "
+        msg += "directories and files necessary to start new python project.\n"
         msg += "\nUsage: \n\n"
-        msg += "    pyproject_flask[OPTIONS] modname\n\n"
+        msg += "    pyproject [OPTIONS] modname\n\n"
         msg += "Arguments:\n\n"
         msg += "    modname: the name of the project you want to start or "
         msg += "modify\n\n"
         msg += "Options:\n\n"
         msg += "    -h, --help: prints the usage of the program with possible"
         msg += "\n                options.\n\n"
-        msg += "    -a, --add: adds the files to the directory specified \n"
-        msg += "                with the -d option or current directory.\n\n"
+        msg += "    -a, --add: adds a .py file to the module or current \n"
+        msg += "                directory.\n\n"
         msg += "    -d, --dir: Specifies the directory where to save create\n"
         msg += "               the project files. By default, it is the\n"
         msg += "               current directory.\n"
+        msg += "    -s, --submodules: adds a submodule directory and\n"
+        msg += "                __init__.py file.\n"
+        msg += "    -v, --version: diplays the version number.\n\n"
 
         six.print_(msg)
         sys.exit(exit_status)
@@ -92,6 +99,7 @@ def main():
         usage(2)
 
     add_to_existing = False
+    # submodule = ''
     rootdir = './'
     for opt, arg in opts:
         if opt in ("-h", "--help"):
@@ -100,8 +108,10 @@ def main():
             add_to_existing = True
         if opt in ("-d", "--dir"):
             rootdir = arg
+        # if opt in ("-s", "--submodule"):
+        #     submodule = arg
         if opt in ("-v", "--version"):
-            six.print_('pyproject.flask_project {0}'.format(__version__))
+            six.print_('pyproject.python_project {0}'.format(__version__))
             sys.exit()
 
     if not args:

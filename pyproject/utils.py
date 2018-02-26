@@ -14,7 +14,7 @@ import six
 from jinja2 import Template
 
 CONFIG_FILE_NAME = 'pyproject_config.json'
-FILES_TO_RENDER = ['app.py', '.gitignore', 'index.html', 'style.css', 'app.js']
+FILES_TO_IGNORE = ['.DS_Store']
 
 
 def get_config_dir():
@@ -140,7 +140,7 @@ def render_template(filename, **kwargs):
     return template.render(**kwargs)
 
 
-def copy_file_structure(rootdir, path, **kwargs):
+def copy_file_structure(rootdir, path, replace=None, **kwargs):
     '''Walks through the file structure and copy all directories and files.
 
     Args:
@@ -148,6 +148,8 @@ def copy_file_structure(rootdir, path, **kwargs):
         path (str): the path to walk through and reproduce
 
     Keyword args:
+        replace (dict, default=None): dictionary for file name replacement.
+            Keys are old file names and values are new file names.
         **kwargs: dictionary containing the variables for templating
     '''
     if not os.path.exists(rootdir):
@@ -155,13 +157,15 @@ def copy_file_structure(rootdir, path, **kwargs):
 
     for fname in os.listdir(path):
         src = os.path.join(path, fname)
+        if replace and fname in replace:
+            fname = replace[fname]
         dst = os.path.join(rootdir, fname)
         if os.path.isdir(src):
             if not os.path.exists(dst):
                 os.makedirs(dst)
-            copy_file_structure(dst, src, **kwargs)
+            copy_file_structure(dst, src, replace=replace, **kwargs)
         elif os.path.isfile(src):
-            if fname in FILES_TO_RENDER:
+            if fname not in FILES_TO_IGNORE:
                 file_content = render_template(src, **kwargs)
                 create_general_file(dst, None, file_content)
             else:

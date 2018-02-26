@@ -8,7 +8,7 @@ import os
 import shutil
 import unittest
 
-import pyproject.flask_project as flp
+import pyproject.python_project as pyp
 from utilities import get_file_content, random_string
 
 import six
@@ -33,15 +33,13 @@ class TestFileCreation(unittest.TestCase):
     def test_create_all_files_this_dir(self):
         '''Test that all files are created where they should be
         '''
-        flp.create_all_files_and_dirs('.', self.project)
+        pyp.create_all_files_and_dirs('.', self.project)
         gendir = os.path.join('.', self.project)
 
-        fnames = ['static', os.path.join('static', 'css'),
-                  os.path.join('static', 'css', 'style.css'),
-                  os.path.join('static', 'js'),
-                  os.path.join('static', 'js', 'app.js'),
-                  'templates', os.path.join('templates', 'index.html'),
-                  'app.py', '.gitignore']
+        fnames = ['docs', 'tests', self.project,
+                  os.path.join(self.project, '__init__.py'),
+                  os.path.join('tests', 'test_{0}.py'.format(self.project)),
+                  '.gitignore']
 
         for fname in fnames:
             path = os.path.join(gendir, fname)
@@ -54,15 +52,13 @@ class TestFileCreation(unittest.TestCase):
     def test_create_all_files_other_dir(self):
         '''Test that all files are created where they should be
         '''
-        flp.create_all_files_and_dirs(self.rootdir, self.project)
+        pyp.create_all_files_and_dirs(self.rootdir, self.project)
         gendir = os.path.join(self.rootdir, self.project)
 
-        fnames = ['static', os.path.join('static', 'css'),
-                  os.path.join('static', 'css', 'style.css'),
-                  os.path.join('static', 'js'),
-                  os.path.join('static', 'js', 'app.js'),
-                  'templates', os.path.join('templates', 'index.html'),
-                  'app.py', '.gitignore']
+        fnames = ['docs', 'tests', self.project,
+                  os.path.join(self.project, '__init__.py'),
+                  os.path.join('tests', 'test_{0}.py'.format(self.project)),
+                  '.gitignore']
 
         for fname in fnames:
             path = os.path.join(gendir, fname)
@@ -72,57 +68,44 @@ class TestFileCreation(unittest.TestCase):
                 six.print_('Path does not exist: {0}'.format(path))
                 raise
 
-    def test_content_app(self):
-        '''Test content of app.py
+    def test_content_setup(self):
+        '''Test content of setup.py
         '''
 
-        flp.create_all_files_and_dirs(self.rootdir, self.project)
+        pyp.create_all_files_and_dirs(self.rootdir, self.project)
 
         gendir = os.path.join(self.rootdir, self.project)
-        filepath = os.path.join(gendir, 'app.py')
-        templatepath = os.path.join(flp.TEMPLATE_DIR, 'app_py.template')
+        filepath = os.path.join(gendir, 'setup.py')
+        templatepath = os.path.join(pyp.TEMPLATE_DIR, 'setup_py.template')
         content1, content2 = get_file_content(self.project, filepath,
                                               templatepath)
 
         self.assertEqual(content1, content2)
 
-    def test_content_index(self):
-        '''Test content of index.html
+    def test_content_init(self):
+        '''Test content of __init__.py
         '''
-        flp.create_all_files_and_dirs(self.rootdir, self.project)
+        pyp.create_all_files_and_dirs(self.rootdir, self.project)
 
         gendir = os.path.join(self.rootdir, self.project)
-        filepath = os.path.join(gendir, 'templates', 'index.html')
-        templatepath = os.path.join(flp.TEMPLATE_DIR, 'templates',
-                                    'index.html')
+        filepath = os.path.join(gendir, self.project, '__init__.py')
+        templatepath = os.path.join(pyp.TEMPLATE_DIR, 'src',
+                                    '__init___py.template')
         content1, content2 = get_file_content(self.project, filepath,
                                               templatepath)
 
         self.assertEqual(content1, content2)
 
-    def test_content_style(self):
-        '''Test content of style.css
+    def test_content_test(self):
+        '''Test content of test_<project>.py
         '''
-        flp.create_all_files_and_dirs(self.rootdir, self.project)
+        pyp.create_all_files_and_dirs(self.rootdir, self.project)
 
         gendir = os.path.join(self.rootdir, self.project)
-        filepath = os.path.join(gendir, 'static', 'css', 'style.css')
-        templatepath = os.path.join(flp.TEMPLATE_DIR, 'static', 'css',
-                                    'style.css')
-        content1, content2 = get_file_content(self.project, filepath,
-                                              templatepath)
-
-        self.assertEqual(content1, content2)
-
-    def test_content_js(self):
-        '''Test content of app.js
-        '''
-        flp.create_all_files_and_dirs(self.rootdir, self.project)
-
-        gendir = os.path.join(self.rootdir, self.project)
-        filepath = os.path.join(gendir, 'static', 'js', 'app.js')
-        templatepath = os.path.join(flp.TEMPLATE_DIR, 'static', 'js',
-                                    'app.js')
+        filepath = os.path.join(gendir, 'tests',
+                                'test_{0}.py'.format(self.project))
+        templatepath = os.path.join(pyp.TEMPLATE_DIR, 'tests',
+                                    'unittest_py.template')
         content1, content2 = get_file_content(self.project, filepath,
                                               templatepath)
 
@@ -131,11 +114,11 @@ class TestFileCreation(unittest.TestCase):
     def test_content_gitignore(self):
         '''Test content of .gitignore
         '''
-        flp.create_all_files_and_dirs(self.rootdir, self.project)
+        pyp.create_all_files_and_dirs(self.rootdir, self.project)
 
         gendir = os.path.join(self.rootdir, self.project)
         filepath = os.path.join(gendir, '.gitignore')
-        templatepath = os.path.join(flp.TEMPLATE_DIR, '.gitignore')
+        templatepath = os.path.join(pyp.TEMPLATE_DIR, '.gitignore')
         content1, content2 = get_file_content(self.project, filepath,
                                               templatepath)
 
