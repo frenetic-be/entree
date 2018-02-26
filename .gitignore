@@ -11,3 +11,4 @@ pyproject.egg-info/
 pyproject.egg-info/*
 pyproject/__init__.pyc
 *.pyc
+install.log
