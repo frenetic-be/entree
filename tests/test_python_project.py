@@ -37,6 +37,7 @@ class TestFileCreation(unittest.TestCase):
         gendir = os.path.join('.', self.project)
 
         fnames = ['docs', 'tests', self.project,
+                  os.path.join('docs', 'README.md'),
                   os.path.join(self.project, '__init__.py'),
                   os.path.join('tests', 'test_{0}.py'.format(self.project)),
                   '.gitignore']
@@ -67,6 +68,20 @@ class TestFileCreation(unittest.TestCase):
             except AssertionError:
                 six.print_('Path does not exist: {0}'.format(path))
                 raise
+
+    def test_content_readme(self):
+        '''Test content of README.md
+        '''
+
+        pyp.create_all_files_and_dirs(self.rootdir, self.project)
+
+        gendir = os.path.join(self.rootdir, self.project)
+        filepath = os.path.join(gendir, 'docs', 'README.md')
+        templatepath = os.path.join(pyp.TEMPLATE_DIR, 'docs', 'README.md')
+        content1, content2 = get_file_content(self.project, filepath,
+                                              templatepath)
+
+        self.assertEqual(content1, content2)
 
     def test_content_setup(self):
         '''Test content of setup.py
