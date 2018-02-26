@@ -1,6 +1,11 @@
 language: python
+
 python:
-  - "3.6"
+  - 3.6
+
+script:
+  - python -m unittest discover tests/
+
 notifications:
   email:
     on_success: never
