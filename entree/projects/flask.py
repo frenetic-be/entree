@@ -14,6 +14,7 @@ __version__ = '0.0'
 FILEPATH, FILEBASE = os.path.split(__file__)
 BASENAME = os.path.splitext(FILEBASE)[0]
 TEMPLATE_DIR = os.path.join(FILEPATH, 'templates/python-flask/')
+SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'app_py.template')
 REPLACE = None
 DIRS = [
     'static',
@@ -43,6 +44,7 @@ class Flask(ProjectBase):
     '''
     project_type = BASENAME
     template_dir = TEMPLATE_DIR
+    single_file = SINGLE_FILE
     replace = REPLACE
     version = __version__
     directories = DIRS

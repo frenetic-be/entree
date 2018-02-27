@@ -14,6 +14,7 @@ __version__ = '0.0'
 FILEPATH, FILEBASE = os.path.split(__file__)
 BASENAME = os.path.splitext(FILEBASE)[0]
 TEMPLATE_DIR = os.path.join(FILEPATH, 'templates/python/')
+SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'src', '__init___py.template')
 REPLACE = {
     'unittest_py.template': 'test_{{ modname }}.py',
     'src': '{{ modname }}'
@@ -45,6 +46,7 @@ class Python(ProjectBase):
     '''
     project_type = BASENAME
     template_dir = TEMPLATE_DIR
+    single_file = SINGLE_FILE
     replace = REPLACE
     version = __version__
     directories = DIRS
