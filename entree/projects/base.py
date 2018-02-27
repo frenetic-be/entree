@@ -16,6 +16,7 @@ import six
 from entree.utils import (
     copy_file_structure,
     create_dirs,
+    create_single_file,
     read_config
 )
 
@@ -39,6 +40,9 @@ class ProjectBase(object):
 
     # Path to the template directory
     template_dir = ''
+
+    # Path to a single file that you want to create in single-file mode
+    single_file = None
 
     # Dictionary for mapping template file names to project file names
     replace = None
@@ -73,7 +77,10 @@ class ProjectBase(object):
         msg += "                without creating a project directory.\n\n"
         msg += "    -d, --dir: Specifies the directory where to save create\n"
         msg += "               the project files. By default, it is the\n"
-        msg += "               current directory.\n"
+        msg += "               current directory.\n\n"
+        if cls.single_file:
+            msg += "    -s, --single-file: creates a single file instead of\n"
+            msg += "                       a complete package.\n\n"
         msg += "    -v, --version: diplays the version number.\n\n"
 
         six.print_(msg)
@@ -113,8 +120,23 @@ class ProjectBase(object):
         return out
 
     @classmethod
-    def create_all_files_and_dirs(cls, rootdir, modname,
-                                  add_to_existing=False):
+    def create_one(cls, rootdir, modname):
+        '''Creates a single-file project
+
+        Args:
+            rootdir (str): the root directory
+            modname (str): the project name
+        '''
+        if cls.create_one:
+            # Read config file and set creation_date
+            config = read_config()
+            creation_date = datetime.datetime.now().strftime('%B %Y')
+            create_single_file(rootdir, modname, cls.single_file,
+                               config=config, creation_date=creation_date,
+                               modname=modname)
+
+    @classmethod
+    def create_all(cls, rootdir, modname, add_to_existing=False):
         '''Creates all project files and directories
 
         Args:
@@ -150,15 +172,28 @@ class ProjectBase(object):
         '''
 
         # Parse command line options/arguments
+        options = [
+            ('h', 'help'),
+            ('a:', 'add='),
+            ('d:', 'dir='),
+            ('v', 'version')
+        ]
+        if cls.single_file:
+            options.append(('s', 'single-file'))
+
+        short_options = ''.join(option[0] for option in options)
+        long_options = [option[1] for option in options]
+
         try:
-            opts, args = getopt.getopt(sys.argv[2:],
-                                       "ha:d:v",
-                                       ["help", "add=", "dir=", "version"])
+            opts, args = getopt.getopt(sys.argv[2:], short_options,
+                                       long_options)
+
         except getopt.GetoptError:
             cls.usage(2)
 
         add_to_existing = False
         rootdir = './'
+        single_file = False
         for opt, arg in opts:
             if opt in ("-h", "--help"):
                 cls.usage(0)
@@ -166,6 +201,8 @@ class ProjectBase(object):
                 add_to_existing = True
             if opt in ("-d", "--dir"):
                 rootdir = arg
+            if opt in ("-s", "--single-file"):
+                single_file = True
             if opt in ("-v", "--version"):
                 six.print_('entree.projects.{0} {1}'.format(cls.project_type,
                                                             cls.version))
@@ -179,5 +216,7 @@ class ProjectBase(object):
         else:
             modname = args[0]
 
-        cls.create_all_files_and_dirs(rootdir, modname,
-                                      add_to_existing=add_to_existing)
+        if single_file:
+            cls.create_one(rootdir, modname)
+        else:
+            cls.create_all(rootdir, modname, add_to_existing=add_to_existing)

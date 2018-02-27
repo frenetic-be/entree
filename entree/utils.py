@@ -174,3 +174,24 @@ def copy_file_structure(rootdir, path, replace=None, **kwargs):
                 create_general_file(dst, None, file_content)
             else:
                 six.print_('File ignored: `{0}`'.format(fname))
+
+
+def create_single_file(rootdir, newfilename, template_path, **kwargs):
+    '''Creates a single file from a template.
+
+    Args:
+        rootdir (str): the root directory where the file will be created
+        newfilename (str): name of the new file
+        template_path (str): the path for the template file
+
+    Keyword args:
+        **kwargs: dictionary containing the variables for templating
+    '''
+    if not os.path.exists(rootdir):
+        raise IOError('Root directory not found: "'+rootdir+'"')
+
+    file_content = render_template(template_path, **kwargs)
+
+    dst = os.path.join(rootdir, newfilename)
+
+    create_general_file(dst, None, file_content)

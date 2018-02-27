@@ -32,7 +32,7 @@ class TestFileCreation(unittest.TestCase):
                     six.print_('\n-------------------------------------------')
                     six.print_('Testing directories for class '
                                '`{0}`:'.format(project_cls.__name__))
-                    project_cls.create_all_files_and_dirs(rootdir, project)
+                    project_cls.create_all(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
                     dirmap = project_cls.dirmap(modname=project)
@@ -60,7 +60,7 @@ class TestFileCreation(unittest.TestCase):
                     six.print_('\n-------------------------------------------')
                     six.print_('Testing files for class '
                                '`{0}`:'.format(project_cls.__name__))
-                    project_cls.create_all_files_and_dirs(rootdir, project)
+                    project_cls.create_all(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
                     filemap = project_cls.filemap(modname=project)
@@ -86,7 +86,7 @@ class TestFileCreation(unittest.TestCase):
                     six.print_('\n-------------------------------------------')
                     six.print_('Testing file content for class '
                                '`{0}`:'.format(project_cls.__name__))
-                    project_cls.create_all_files_and_dirs(rootdir, project)
+                    project_cls.create_all(rootdir, project)
 
                     gendir = os.path.join(rootdir, project)
                     filemap = project_cls.filemap(modname=project)
