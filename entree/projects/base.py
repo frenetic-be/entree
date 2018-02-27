@@ -127,7 +127,7 @@ class ProjectBase(object):
             rootdir (str): the root directory
             modname (str): the project name
         '''
-        if cls.create_one:
+        if cls.single_file:
             # Read config file and set creation_date
             config = read_config()
             creation_date = datetime.datetime.now().strftime('%B %Y')

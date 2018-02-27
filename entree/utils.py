@@ -86,20 +86,19 @@ def set_config(author='<UNDEFINED>',
             json.dump(config, fil)
 
 
-def create_general_file(fname, dirname, file_content):
+def create_general_file(fname, file_content):
     '''Creates a file.
 
     Args:
         - fname (str): file name
-        - dirname (str): directory name
         - file_content (iterator): generator/iterator containing
             the file content.
     '''
     if os.path.exists(fname):
         raise IOError('File already exists. Will not overwrite')
 
-    if dirname and not os.path.exists(dirname):
-        os.makedirs(dirname)
+    # if dirname and not os.path.exists(dirname):
+    #     os.makedirs(dirname)
 
     with open(fname, 'w') as fil:
         for line in file_content:
@@ -171,7 +170,7 @@ def copy_file_structure(rootdir, path, replace=None, **kwargs):
         elif os.path.isfile(src):
             if fname not in FILES_TO_IGNORE:
                 file_content = render_template(src, **kwargs)
-                create_general_file(dst, None, file_content)
+                create_general_file(dst, file_content)
             else:
                 six.print_('File ignored: `{0}`'.format(fname))
 
@@ -194,4 +193,4 @@ def create_single_file(rootdir, newfilename, template_path, **kwargs):
 
     dst = os.path.join(rootdir, newfilename)
 
-    create_general_file(dst, None, file_content)
+    create_general_file(dst, file_content)

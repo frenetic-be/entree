@@ -10,6 +10,7 @@ import random
 import shutil
 import string
 
+import six
 import entree.utils as pyutils
 
 
@@ -80,3 +81,11 @@ class TMPFile(object):
         '''
         if os.path.exists(self.rootdir):
             shutil.rmtree(self.rootdir)
+
+
+def print_header(msg):
+    '''Prints a header
+    '''
+    six.print_('\n' + '-' * len(msg))
+    six.print_(msg)
+    six.print_('-' * len(msg))
