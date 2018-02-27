@@ -157,8 +157,12 @@ def copy_file_structure(rootdir, path, replace=None, **kwargs):
 
     for fname in os.listdir(path):
         src = os.path.join(path, fname)
+
         if replace and fname in replace:
             fname = replace[fname]
+        elif fname.endswith('_py.template'):
+            fname = fname[:-12]+'.py'
+
         dst = os.path.join(rootdir, fname)
         if os.path.isdir(src):
             if not os.path.exists(dst):

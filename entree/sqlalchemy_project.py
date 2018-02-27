@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: entree.flask_project
+.. module:: entree.sqlalchemy_project
 .. moduleauthor:: Julien Spronck
 .. created:: February 2017
 
@@ -18,7 +18,7 @@ from entree.utils import (read_config, copy_file_structure, create_dirs)
 __version__ = '1.0'
 
 # Template directory
-TEMPLATE_DIR = 'templates/python-flask/'
+TEMPLATE_DIR = 'templates/python-sqlalchemy/'
 TEMPLATE_DIR = os.path.join(os.path.split(__file__)[0],
                             TEMPLATE_DIR)
 
@@ -47,8 +47,9 @@ def create_all_files_and_dirs(rootdir, modname, add_to_existing=False):
 
     # Copy entire file structure from template directory to the project
     # directory
+    testfilename = 'test_{0}.py'.format(modname)
     copy_file_structure(projectdir, TEMPLATE_DIR,
-                        replace={'app_py.template': 'app.py'},
+                        replace={'unittest_py.template': testfilename},
                         modname=modname, config=config,
                         creation_date=creation_date)
 
@@ -61,10 +62,10 @@ def main():
         '''
         Displays the usage/help of this script
         '''
-        msg = "\nSets up a Python Flask project by creating the "
+        msg = "\nSets up a Python SQLAlchemy project by creating the "
         msg += "directories and starter files.\n"
         msg += "\nUsage: \n\n"
-        msg += "    entree flask [OPTIONS] <modname>\n\n"
+        msg += "    entree sqlalchemy [OPTIONS] <modname>\n\n"
         msg += "Arguments:\n\n"
         msg += "    modname: the name of the project you want to start or "
         msg += "modify\n\n"
@@ -102,7 +103,7 @@ def main():
         if opt in ("-d", "--dir"):
             rootdir = arg
         if opt in ("-v", "--version"):
-            six.print_('entree.flask_project {0}'.format(__version__))
+            six.print_('entree.sqlalchemy_project {0}'.format(__version__))
             sys.exit()
 
     if not args:

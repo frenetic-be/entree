@@ -66,9 +66,9 @@ def main():
         Displays the usage/help of this script
         '''
         msg = "\nentree sets up a python project by creating the "
-        msg += "directories and files necessary to start new python project.\n"
+        msg += "directories and starter files.\n"
         msg += "\nUsage: \n\n"
-        msg += "    entree [OPTIONS] modname\n\n"
+        msg += "    entree python [OPTIONS] <modname>\n\n"
         msg += "Arguments:\n\n"
         msg += "    modname: the name of the project you want to start or "
         msg += "modify\n\n"
@@ -80,8 +80,6 @@ def main():
         msg += "    -d, --dir: Specifies the directory where to save create\n"
         msg += "               the project files. By default, it is the\n"
         msg += "               current directory.\n"
-        msg += "    -s, --submodules: adds a submodule directory and\n"
-        msg += "                __init__.py file.\n"
         msg += "    -v, --version: diplays the version number.\n\n"
 
         six.print_(msg)

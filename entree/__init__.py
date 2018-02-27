@@ -11,10 +11,11 @@ Simple module to create files and directories in a python project
 
 import entree.python_project
 import entree.flask_project
+import entree.sqlalchemy_project
 
 __version__ = '2.0'
 
-KNOWN_MODULES = ['python', 'flask']
+KNOWN_MODULES = ['python', 'flask', 'sqlalchemy']
 
 
 def main():
@@ -36,6 +37,7 @@ def main():
         msg += "\n        Available project types:\n"
         msg += "            - python: type `entree python -h` for help\n"
         msg += "            - flask: type `entree flask -h` for help\n"
+        msg += "            - sqlalchemy: type `entree sqlalchemy -h` for help\n"
         msg += "\nOptions:\n\n"
         msg += "    Available options are specific to each project type\n\n"
 
@@ -71,7 +73,8 @@ def main():
         entree.python_project.main()
     elif submodule == 'flask':
         entree.flask_project.main()
-
+    elif submodule == 'sqlalchemy':
+        entree.sqlalchemy_project.main()
 
 if __name__ == '__main__':
     main()
