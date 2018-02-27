@@ -9,13 +9,11 @@
 Simple module to create files and directories in a python project
 """
 
-import entree.python_project
-import entree.flask_project
-import entree.sqlalchemy_project
+import entree.projects
 
-__version__ = '2.0'
+__version__ = '2.1'
 
-KNOWN_MODULES = ['python', 'flask', 'sqlalchemy']
+CLASSES = entree.projects.CLASSES
 
 
 def main():
@@ -31,14 +29,17 @@ def main():
         msg = "\nentree sets up starter files for different types of \n"
         msg += "programming projects.\n\n"
         msg += "\nUsage: \n\n"
-        msg += "    entree <PROJECT_TYPE> [OPTIONS] ...\n\n"
+        msg += "    entree [OPTIONS] <PROJECT_TYPE> [PROJECT_OPTIONS] ...\n\n"
         msg += "Arguments:\n\n"
         msg += "    PROJECT_TYPE: the type of the project you want to start\n"
         msg += "\n        Available project types:\n"
-        msg += "            - python: type `entree python -h` for help\n"
-        msg += "            - flask: type `entree flask -h` for help\n"
-        msg += "            - sqlalchemy: type `entree sqlalchemy -h` for help\n"
-        msg += "\nOptions:\n\n"
+        for submodule in CLASSES:
+            msg += "            - {0}: type `entree {0} -h`".format(submodule)
+            msg += " for help\n"
+        msg += "\nOPTIONS:\n\n"
+        msg += "    -m, --modules: list available project types.\n\n"
+        msg += "    -v, --version: diplays the version number.\n\n"
+        msg += "PROJECT_OPTIONS:\n\n"
         msg += "    Available options are specific to each project type\n\n"
 
         six.print_(msg)
@@ -49,14 +50,20 @@ def main():
     # Parse command line options/arguments
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "hv",
-                                   ["help", "version"])
+                                   "hmv",
+                                   ["help", "modules", "version"])
     except getopt.GetoptError:
         usage(2)
 
     for opt, _ in opts:
         if opt in ("-h", "--help"):
             usage(0)
+        if opt in ("-m", "--module"):
+            six.print_('\nList of available modules:\n')
+            for submodule in CLASSES:
+                six.print_('- ' + submodule)
+            six.print_()
+            sys.exit()
         if opt in ("-v", "--version"):
             six.print_('entree {0}'.format(__version__))
             sys.exit()
@@ -66,15 +73,10 @@ def main():
 
     submodule = args[0]
 
-    if submodule not in KNOWN_MODULES:
+    if submodule in CLASSES:
+        CLASSES[submodule].main()
+    else:
         usage(3)
-
-    if submodule == 'python':
-        entree.python_project.main()
-    elif submodule == 'flask':
-        entree.flask_project.main()
-    elif submodule == 'sqlalchemy':
-        entree.sqlalchemy_project.main()
 
 if __name__ == '__main__':
     main()
