@@ -159,7 +159,7 @@ def copy_file_structure(rootdir, path, replace=None, **kwargs):
         src = os.path.join(path, fname)
 
         if replace and fname in replace:
-            fname = replace[fname]
+            fname = Template(replace[fname]).render(**kwargs)
         elif fname.endswith('_py.template'):
             fname = fname[:-12]+'.py'
 

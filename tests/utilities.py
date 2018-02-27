@@ -5,8 +5,9 @@
 Test utilities for entree
 '''
 import datetime
-# import os
+import os
 import random
+import shutil
 import string
 
 import entree.utils as pyutils
@@ -50,3 +51,32 @@ def random_string(num_chars):
     '''
     return ''.join(random.choice(string.ascii_uppercase + string.digits)
                    for _ in range(num_chars))
+
+
+class TMPFile(object):
+    '''Creates a context manager to create a temporary folder and delete it
+    afterwards.
+    '''
+
+    def __init__(self):
+        '''Initialization
+
+        Args:
+            dirname (str): directlory name
+        '''
+        num_chars = 16
+        self.rootdir = random_string(num_chars)
+        while os.path.exists(self.rootdir):
+            self.rootdir = random_string(num_chars)
+
+    def __enter__(self):
+        '''Create a random directory
+        '''
+        os.makedirs(self.rootdir)
+        return self.rootdir
+
+    def __exit__(self, *args):
+        '''Deletes the random directory
+        '''
+        if os.path.exists(self.rootdir):
+            shutil.rmtree(self.rootdir)
