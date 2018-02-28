@@ -20,7 +20,6 @@ REPLACE = {
     'src': '{{ modname }}'
 }
 DIRS = [
-    'docs',
     'tests',
     'src'
 ]
