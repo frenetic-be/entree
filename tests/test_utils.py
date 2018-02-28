@@ -106,7 +106,7 @@ class TestCreateDirsAndFiles(unittest.TestCase):
         '''
         rootdir = random_string(16)
         path_a = os.path.join(rootdir, 'a')
-        with self.assertRaises(OSError):
+        with self.assertRaises(IOError):
             entree.utils.create_general_file(path_a, "AAAAA")
         self.assertFalse(os.path.exists(path_a))
 
@@ -130,7 +130,7 @@ class TestCreateDirsAndFiles(unittest.TestCase):
         path_a = os.path.join(rootdir, 'a')
         path_b = os.path.join(rootdir, 'b')
         path_c = os.path.join(rootdir, 'c')
-        with self.assertRaises(OSError):
+        with self.assertRaises(IOError):
             entree.utils.create_dirs(rootdir, path_a, path_b, path_c)
         self.assertFalse(os.path.exists(rootdir))
         self.assertFalse(os.path.exists(path_a))
@@ -172,7 +172,7 @@ class TestCreateDirsAndFiles(unittest.TestCase):
         '''
         rootdir = random_string(16)
         path_a = os.path.join(rootdir, 'a')
-        with self.assertRaises(OSError):
+        with self.assertRaises(IOError):
             entree.utils.create_single_file(path_a, '', '')
 
 
