@@ -1,7 +1,7 @@
 '''
 .. module:: {{ modname }}.models.users
 .. moduleauthor:: {{ config.AUTHOR }}
-.. created:: {{ creation_date }}
+.. created:: {{ creation_date.strftime('%B %Y') }}
 
 Module containing the User database model.
 '''

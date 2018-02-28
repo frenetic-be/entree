@@ -11,7 +11,7 @@ import shutil
 import string
 
 import six
-import entree.utils as pyutils
+import entree.utils
 
 
 def get_file_content(project, filepath, templatepath):
@@ -27,8 +27,8 @@ def get_file_content(project, filepath, templatepath):
         tuple with content of both files
     '''
     modname = project
-    config = pyutils.read_config()
-    creation_date = datetime.datetime.now().strftime('%B %Y')
+    config = entree.utils.read_config()
+    creation_date = datetime.datetime.now()
     data = {
         'modname': modname,
         'config': config,
@@ -37,7 +37,7 @@ def get_file_content(project, filepath, templatepath):
 
     with open(filepath) as file1:
         content1 = file1.read()
-    content2 = pyutils.render_template(templatepath, **data)
+    content2 = entree.utils.render_template(templatepath, **data)
     return content1, content2
 
 
@@ -59,7 +59,7 @@ class TMPFile(object):
     afterwards.
     '''
 
-    def __init__(self):
+    def __init__(self, root=None):
         '''Initialization
 
         Args:
@@ -67,13 +67,22 @@ class TMPFile(object):
         '''
         num_chars = 16
         self.rootdir = random_string(num_chars)
-        while os.path.exists(self.rootdir):
+        if root:
+            self.fulldir = os.path.join(root, self.rootdir)
+        else:
+            self.fulldir = self.rootdir
+
+        while os.path.exists(self.fulldir):
             self.rootdir = random_string(num_chars)
+            if root:
+                self.fulldir = os.path.join(root, self.rootdir)
+            else:
+                self.fulldir = self.rootdir
 
     def __enter__(self):
         '''Create a random directory
         '''
-        os.makedirs(self.rootdir)
+        os.makedirs(self.fulldir)
         return self.rootdir
 
     def __exit__(self, *args):

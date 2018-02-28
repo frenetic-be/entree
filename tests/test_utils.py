@@ -4,6 +4,7 @@
 '''
 Tests for entree
 '''
+import datetime
 import os
 import shutil
 import unittest
@@ -143,11 +144,15 @@ class TestCreateDirsAndFiles(unittest.TestCase):
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
             template_string = ("My name is {{ name }}, I'm {{ blah['age'] }} "
-                               "years old")
+                               "years old. This is year "
+                               "{{ date.strftime('%Y') }}.")
             entree.utils.create_general_file(path_a, template_string)
+            date = datetime.datetime(2018, 1, 1)
             content = entree.utils.render_template(path_a, name="Lily",
-                                                   blah={'age': 19})
-            self.assertEqual(content, 'My name is Lily, I\'m 19 years old')
+                                                   blah={'age': 19},
+                                                   date=date)
+            self.assertEqual(content, 'My name is Lily, I\'m 19 years old. '
+                             'This is year 2018.')
 
     def test_create_single_file(self):
         '''Test create_single_file()
@@ -326,7 +331,7 @@ class TestCopyFileStructure(unittest.TestCase):
                 content = fil.read()
                 self.assertEqual(content, "I'm 19 years old.")
 
-    def test_cfs_with_replace_dir_template(self):
+    def test_cfs_with_replace_dir_templ(self):
         '''Test create_dirs()
         '''
         with TMPFile() as rootdir:

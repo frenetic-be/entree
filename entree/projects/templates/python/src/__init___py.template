@@ -4,7 +4,7 @@
 '''
 .. module:: {{ modname }}
 .. moduleauthor:: {{ config.AUTHOR }}
-.. created:: {{ creation_date }}
+.. created:: {{ creation_date.strftime('%B %Y') }}
 '''
 
 __version__ = '1.0'

@@ -28,8 +28,8 @@ class TestFileCreation(unittest.TestCase):
             # Create temporary rootdir
             with TMPFile() as rootdir:
                 # Create temporary project directory
-                with TMPFile() as project:
-                    print_header('Testing directories for class '
+                with TMPFile(root=rootdir) as project:
+                    print_header('Testing directory creation for class '
                                  '`{0}`:'.format(project_cls.__name__))
                     project_cls.create_all(rootdir, project)
                     gendir = os.path.join(rootdir, project)
@@ -55,8 +55,8 @@ class TestFileCreation(unittest.TestCase):
             # Create temporary rootdir
             with TMPFile() as rootdir:
                 # Create temporary project directory
-                with TMPFile() as project:
-                    print_header('Testing files for class '
+                with TMPFile(root=rootdir) as project:
+                    print_header('Testing file creation for class '
                                  '`{0}`:'.format(project_cls.__name__))
                     project_cls.create_all(rootdir, project)
                     gendir = os.path.join(rootdir, project)
@@ -64,6 +64,33 @@ class TestFileCreation(unittest.TestCase):
                     filemap = project_cls.filemap(modname=project)
 
                     for _, fname in filemap.items():
+                        six.print_('- Testing file `{0}`:'.format(fname))
+                        path = os.path.join(gendir, fname)
+                        try:
+                            self.assertTrue(os.path.exists(path))
+                        except AssertionError:
+                            six.print_('\nERROR: Path does not exist: '
+                                       '{0}'.format(path))
+                            raise
+
+    def test_common_file_creation(self):
+        '''Test that all common files are created where they should be
+        for all child classes of the ProjectBase class.
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            # Create temporary rootdir
+            with TMPFile() as rootdir:
+                # Create temporary project directory
+                with TMPFile(root=rootdir) as project:
+                    print_header('Testing common file creation for class '
+                                 '`{0}`:'.format(project_cls.__name__))
+                    project_cls.create_common_files(rootdir, project)
+                    gendir = os.path.join(rootdir, project)
+
+                    files = ['README.md', 'requirements.txt', 'License.md']
+
+                    for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))
                         path = os.path.join(gendir, fname)
                         try:
@@ -83,11 +110,12 @@ class TestFileCreation(unittest.TestCase):
                 # Create temporary rootdir
                 with TMPFile() as rootdir:
                     # Create temporary project directory
-                    with TMPFile() as project:
-                        print_header('Testing single-file mode for class '
+                    with TMPFile(root=rootdir) as project:
+                        print_header('Testing single-file creation for class '
                                      '`{0}`:'.format(project_cls.__name__))
-                        project_cls.create_one(rootdir, project)
-                        path = os.path.join(rootdir, project)
+                        gendir = os.path.join(rootdir, project)
+                        project_cls.create_one(gendir, 'somefile.txt')
+                        path = os.path.join(gendir, 'somefile.txt')
                         try:
                             self.assertTrue(os.path.exists(path))
                         except AssertionError:
@@ -95,14 +123,14 @@ class TestFileCreation(unittest.TestCase):
                                        '{0}'.format(path))
                             raise
 
-    def test_content_app(self):
+    def test_file_content(self):
         '''Test file content for all files for all child classes of the
         ProjectBase class.
         '''
 
         for project_cls in CLASSES:
             with TMPFile() as rootdir:
-                with TMPFile() as project:
+                with TMPFile(root=rootdir) as project:
                     print_header('Testing file content for class '
                                  '`{0}`:'.format(project_cls.__name__))
                     project_cls.create_all(rootdir, project)
@@ -113,8 +141,8 @@ class TestFileCreation(unittest.TestCase):
                         six.print_('- Testing file content for '
                                    '`{0}`:'.format(fname))
                         filepath = os.path.join(gendir, fname)
-                        templatepath = os.path.join(project_cls.template_dir,
-                                                    tname)
+                        templatepath = project_cls.template_path()
+                        templatepath = os.path.join(templatepath, tname)
                         content1, content2 = get_file_content(project,
                                                               filepath,
                                                               templatepath)
@@ -130,12 +158,43 @@ class TestFileCreation(unittest.TestCase):
                 # Create temporary rootdir
                 with TMPFile() as rootdir:
                     # Create temporary project directory
-                    with TMPFile() as project:
+                    with TMPFile(root=rootdir) as project:
                         print_header('Testing single-file content for class '
                                      '`{0}`:'.format(project_cls.__name__))
-                        project_cls.create_one(rootdir, project)
-                        filepath = os.path.join(rootdir, project)
-                        templatepath = project_cls.single_file
+                        gendir = os.path.join(rootdir, project)
+                        project_cls.create_one(gendir, 'somefile.txt')
+                        filepath = os.path.join(gendir, 'somefile.txt')
+                        templatepath = project_cls.single_file_path()
+                        content1, content2 = get_file_content('somefile',
+                                                              filepath,
+                                                              templatepath)
+                        self.assertEqual(content1, content2)
+
+    def test_common_file_content(self):
+        '''Test the content of the common files
+        for all child classes of the ProjectBase class.
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            # Create temporary rootdir
+            with TMPFile() as rootdir:
+                # Create temporary project directory
+                with TMPFile(root=rootdir) as project:
+                    print_header('Testing common file content for class '
+                                 '`{0}`:'.format(project_cls.__name__))
+
+                    project_cls.create_common_files(rootdir, project)
+                    gendir = os.path.join(rootdir, project)
+
+                    files = ['README.md', 'requirements.txt', 'License.md']
+
+                    for fname in files:
+                        six.print_('- Testing file `{0}`:'.format(fname))
+                        filepath = os.path.join(gendir, fname)
+                        templatepath = os.path.join(
+                            project_cls.common_template_path(),
+                            fname
+                        )
                         content1, content2 = get_file_content(project,
                                                               filepath,
                                                               templatepath)

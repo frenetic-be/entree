@@ -1,7 +1,7 @@
 '''
 .. module:: {{ modname }}.models
 .. moduleauthor:: {{ config.AUTHOR }}
-.. created:: {{ creation_date }}
+.. created:: {{ creation_date.strftime('%B %Y') }}
 
 Module for handling all database models.
 '''
