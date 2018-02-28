@@ -27,8 +27,7 @@ DIRS = [
 FILES = [
     os.path.join('src', '__init___py.template'),
     os.path.join('tests', 'unittest_py.template'),
-    'setup_py.template',
-    '.gitignore'
+    'setup_py.template'
 ]
 
 

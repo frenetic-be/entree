@@ -26,9 +26,7 @@ FILES = [
     os.path.join('models', 'statuses_py.template'),
     os.path.join('models', 'users_py.template'),
     os.path.join('tests', 'unittest_py.template'),
-    '__init___py.template',
-    '.gitignore'
-]
+    '__init___py.template']
 
 
 class SQLAlchemy(ProjectBase):

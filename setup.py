@@ -26,8 +26,10 @@ def get_template_dirs(path, basename='templates'):
             dirs.extend(get_template_dirs(subpath, basename=newbasename))
     return dirs
 
-TEMPLATE_PATHS = [os.path.join(directory, '*') for directory in ['templates'] +
+TEMPLATE_PATHS = [os.path.join(directory, '*')
+                  for directory in ['templates'] +
                   get_template_dirs('entree/projects/templates')]
+TEMPLATE_PATHS += [os.path.join('templates', 'common', '.gitignore')]
 
 if os.path.exists(os.path.join(_CONFIGDIR, 'entree_config.json')):
     DATA_FILES = []

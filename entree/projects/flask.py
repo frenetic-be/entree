@@ -26,9 +26,7 @@ FILES = [
     os.path.join('static', 'css', 'style.css'),
     os.path.join('static', 'js', 'app.js'),
     os.path.join('templates', 'index.html'),
-    'app_py.template',
-    '.gitignore'
-]
+    'app_py.template']
 
 
 class Flask(ProjectBase):

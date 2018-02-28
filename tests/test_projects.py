@@ -88,7 +88,8 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_common_files(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    files = ['README.md', 'requirements.txt', 'License.md']
+                    files = ['README.md', 'requirements.txt', 'License.md',
+                             '.gitignore']
 
                     for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))
@@ -186,7 +187,8 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_common_files(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    files = ['README.md', 'requirements.txt', 'License.md']
+                    files = ['README.md', 'requirements.txt', 'License.md',
+                             '.gitignore']
 
                     for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))
