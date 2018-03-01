@@ -16,17 +16,6 @@ BASENAME = os.path.splitext(FILEBASE)[0]
 TEMPLATE_DIR = 'python-flask'
 SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'app_py.template')
 REPLACE = None
-DIRS = [
-    'static',
-    os.path.join('static', 'css'),
-    os.path.join('static', 'js'),
-    'templates',
-]
-FILES = [
-    os.path.join('static', 'css', 'style.css'),
-    os.path.join('static', 'js', 'app.js'),
-    os.path.join('templates', 'index.html'),
-    'app_py.template']
 
 
 class Flask(ProjectBase):
@@ -44,15 +33,11 @@ class Flask(ProjectBase):
             names that should be replaced when creating the files. For
             example, {'unittest_py.template': 'test_project.py'}
         version (str): version number
-        directories (list): list of directories created by the class
-            (only for unit testing)
-        files (list): list of files created by the class
-            (only for unit testing)
+        files_to_test (dict): dict of files created by the class
+            (only for unit testing the file name templating)
     '''
     project_type = BASENAME
     template_dir = TEMPLATE_DIR
     single_file = SINGLE_FILE
     replace = REPLACE
     version = __version__
-    directories = DIRS
-    files = FILES

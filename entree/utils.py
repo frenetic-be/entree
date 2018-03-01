@@ -194,3 +194,9 @@ def create_single_file(rootdir, newfilename, template_path, **kwargs):
     dst = os.path.join(rootdir, newfilename)
 
     create_general_file(dst, file_content)
+
+
+# To do list:
+
+# - Add tests to check the file/dir creation for a few selected files/dirs
+# (check for templating i file/dir names)

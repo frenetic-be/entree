@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+'''
+Setup script for {{ modname }}
+'''
+# import os
+
+from setuptools import setup
+
+setup(
+    name='{{ modname }}',
+    version='1.0',
+    description='',
+    long_description='''
+    Simple module to ...
+    ''',
+    author='{{ config.AUTHOR }}',
+    author_email=('{{ config.AUTHOR_EMAIL_PREFIX }}@'
+                  '{{ config.AUTHOR_EMAIL_SUFFIX }}'),
+    url='{{ config.AUTHOR_URL }}',
+    packages=['{{ modname }}'],
+    include_package_data=True,
+    install_requires=[
+        'flask',
+    ],
+    # entry_points = {'console_scripts':['{{ modname }} = '
+    #                                    '{{ modname }}:main']},
+    license='Free for non-commercial use'
+)

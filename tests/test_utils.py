@@ -12,7 +12,12 @@ import unittest
 from jinja2.exceptions import UndefinedError
 import entree
 # import six
-from utilities import TMPFile, random_string
+from utilities import (
+    TMPFile,
+    random_string,
+    replace_pathname,
+    get_all_dirs_and_files
+)
 
 
 class TestConfig(unittest.TestCase):
@@ -179,6 +184,127 @@ class TestCreateDirsAndFiles(unittest.TestCase):
         path_a = os.path.join(rootdir, 'a')
         with self.assertRaises(IOError):
             entree.utils.create_single_file(path_a, '', '')
+
+
+class TestReplaceDirname(unittest.TestCase):
+    '''Testing replace_pathname
+    '''
+    def test_no_replace(self):
+        '''Testing replace_pathname when there is no replace dictionary
+        '''
+        dirname = 'blah'
+        newdirname = replace_pathname(dirname)
+        self.assertEqual(dirname, newdirname)
+
+    def test_empty_replace(self):
+        '''Testing replace_pathname when replace is empty
+        '''
+        dirname = 'blah'
+        newdirname = replace_pathname(dirname, {})
+        self.assertEqual(dirname, newdirname)
+
+    def test_replace_no_match(self):
+        '''Testing replace_pathname when dirname is not in replace
+        '''
+        dirname = 'blah'
+        newdirname = replace_pathname(dirname, {'bloh': 'yay'})
+        self.assertEqual(dirname, newdirname)
+
+    def test_replace_simple(self):
+        '''Testing replace_pathname when dirname is in replace
+        '''
+        dirname = 'blah'
+        newdirname = replace_pathname(dirname, {'blah': 'yay'})
+        self.assertEqual(newdirname, 'yay')
+
+    def test_replace_simple_template(self):
+        '''Testing replace_pathname when dirname is in replace
+        but needs templating
+        '''
+        dirname = 'src'
+        newdirname = replace_pathname(dirname, {
+            'src': '{{ modname }}'
+        }, modname="yay")
+        self.assertEqual(newdirname, 'yay')
+
+    def test_replace_complex_template(self):
+        '''Testing replace_pathname when dirname is in replace
+        but is complex and needs templating
+        '''
+        dirname = os.path.join('src', 'blah', 'src', 'blah', 'src')
+        newdirname = replace_pathname(dirname, {
+            'src': '{{ modname }}'
+        }, modname="yay")
+        self.assertEqual(newdirname,
+                         os.path.join('yay', 'blah', 'yay', 'blah', 'yay'))
+
+    def test_replace_python_file(self):
+        '''Testing replace_pathname when dirname is a python template
+        '''
+        dirname = 'yay_py.template'
+        newdirname = replace_pathname(dirname, {
+            'src': '{{ modname }}'
+        }, modname="yay")
+        self.assertEqual(newdirname, 'yay.py')
+
+    def test_replace_py_file_simple_dir(self):
+        '''Testing replace_pathname when dirname is a python template
+        inside a dir
+        '''
+        dirname = os.path.join('blah', 'yay_py.template')
+        newdirname = replace_pathname(dirname, {
+            'src': '{{ modname }}'
+        }, modname="yay")
+        self.assertEqual(newdirname, os.path.join('blah', 'yay.py'))
+
+    def test_replace_py_file_in_dir(self):
+        '''Testing replace_pathname when dirname is a python template
+        inside a dir
+        '''
+        dirname = os.path.join('src', 'blah', 'src', 'blah', 'yay_py.template')
+        newdirname = replace_pathname(dirname, {
+            'src': '{{ modname }}'
+        }, modname="yay")
+        self.assertEqual(newdirname,
+                         os.path.join('yay', 'blah', 'yay', 'blah', 'yay.py'))
+
+
+class TestGetAllDirsAndFiles(unittest.TestCase):
+    '''Testing get_all_dirs_and_files
+    '''
+    def test_get_all_dirs_and_files(self):
+        '''Testing get_all_dirs_and_files
+        '''
+        dirs = ['src', 'src/static', 'src/static/css', 'src/static/js',
+                'src/templates', 'tests']
+        files = [
+            'setup_py.template',
+            'src/__init___py.template',
+            'src/models_py.template',
+            'src/static/css/style.css',
+            'src/static/js/app.js',
+            'src/templates/index.html',
+            'src/views_py.template',
+            'tests/unittest_py.template'
+        ]
+        tpath = entree.projects.FlaskLarge.template_path()
+        fldirs, flfiles = get_all_dirs_and_files(tpath)
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
+    def test_get_all_dirs_and_files2(self):
+        '''Testing get_all_dirs_and_files
+        '''
+        dirs = ['docs', 'src', 'tests']
+        files = [
+            'setup_py.template',
+            'src/__init___py.template',
+            'tests/unittest_py.template'
+        ]
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = get_all_dirs_and_files(tpath)
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
 
 
 class TestCopyFileStructure(unittest.TestCase):

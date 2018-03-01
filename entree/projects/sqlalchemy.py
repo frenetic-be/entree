@@ -17,16 +17,6 @@ TEMPLATE_DIR = 'python-sqlalchemy'
 REPLACE = {
     'unittest_py.template': 'test_{{ modname }}.py',
 }
-DIRS = [
-    'models',
-    'tests',
-]
-FILES = [
-    os.path.join('models', '__init___py.template'),
-    os.path.join('models', 'statuses_py.template'),
-    os.path.join('models', 'users_py.template'),
-    os.path.join('tests', 'unittest_py.template'),
-    '__init___py.template']
 
 
 class SQLAlchemy(ProjectBase):
@@ -44,14 +34,10 @@ class SQLAlchemy(ProjectBase):
             names that should be replaced when creating the files. For
             example, {'unittest_py.template': 'test_project.py'}
         version (str): version number
-        directories (list): list of directories created by the class
-            (only for unit testing)
-        files (list): list of files created by the class
-            (only for unit testing)
+        files_to_test (dict): dict of files created by the class
+            (only for unit testing the file name templating)
     '''
     project_type = BASENAME
     template_dir = TEMPLATE_DIR
     replace = REPLACE
     version = __version__
-    directories = DIRS
-    files = FILES

@@ -8,7 +8,13 @@ import os
 import unittest
 
 import entree.projects.base as base
-from utilities import get_file_content, TMPFile, print_header
+from utilities import (
+    get_file_content,
+    TMPFile,
+    print_header,
+    get_all_dirs_and_files,
+    filemap
+)
 
 import six
 
@@ -34,7 +40,10 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_all(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    dirmap = project_cls.dirmap(modname=project)
+                    tpath = project_cls.template_path()
+                    dirs, _ = get_all_dirs_and_files(tpath)
+                    dirmap = filemap(dirs, replace=project_cls.replace,
+                                     modname=project)
 
                     for _, dname in dirmap.items():
                         six.print_('- Testing directory `{0}`:'.format(dname))
@@ -61,9 +70,11 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_all(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    filemap = project_cls.filemap(modname=project)
-
-                    for _, fname in filemap.items():
+                    tpath = project_cls.template_path()
+                    _, files = get_all_dirs_and_files(tpath)
+                    filmap = filemap(files, replace=project_cls.replace,
+                                     modname=project)
+                    for _, fname in filmap.items():
                         six.print_('- Testing file `{0}`:'.format(fname))
                         path = os.path.join(gendir, fname)
                         try:
@@ -137,8 +148,11 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_all(rootdir, project)
 
                     gendir = os.path.join(rootdir, project)
-                    filemap = project_cls.filemap(modname=project)
-                    for tname, fname in filemap.items():
+                    tpath = project_cls.template_path()
+                    _, files = get_all_dirs_and_files(tpath)
+                    filmap = filemap(files, replace=project_cls.replace,
+                                     modname=project)
+                    for tname, fname in filmap.items():
                         six.print_('- Testing file content for '
                                    '`{0}`:'.format(fname))
                         filepath = os.path.join(gendir, fname)
@@ -201,6 +215,33 @@ class TestFileCreation(unittest.TestCase):
                                                               filepath,
                                                               templatepath)
                         self.assertEqual(content1, content2)
+
+
+class TestProjectPaths(unittest.TestCase):
+    '''Testing if the template path, the single-file path and the common files
+    files path exists
+    '''
+    def test_common_template_path(self):
+        '''Testing common template path
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            self.assertTrue(os.path.exists(project_cls.common_template_path()))
+
+    def test_template_path(self):
+        '''Testing template path
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            self.assertTrue(os.path.exists(project_cls.template_path()))
+
+    def test_singlefile_path(self):
+        '''Testing single-file path
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            if project_cls.single_file:
+                self.assertTrue(os.path.exists(project_cls.single_file_path()))
 
 if __name__ == '__main__':
     unittest.main()

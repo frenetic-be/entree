@@ -1,9 +1,9 @@
 '''
-.. module:: entree.projects.python
+.. module:: entree.projects.flask_large
 .. moduleauthor:: Julien Spronck
 .. created:: Feb 2018
 
-Module for Python projects
+Module for large Flask projects
 '''
 
 import os
@@ -11,21 +11,18 @@ from entree.projects.base import ProjectBase
 
 __version__ = '0.0'
 
-FILEPATH, FILEBASE = os.path.split(__file__)
+_, FILEBASE = os.path.split(__file__)
 BASENAME = os.path.splitext(FILEBASE)[0]
-TEMPLATE_DIR = 'python'
-SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'src', '__init___py.template')
+TEMPLATE_DIR = 'python-flask-large'
+SINGLE_FILE = None
 REPLACE = {
     'unittest_py.template': 'test_{{ modname }}.py',
     'src': '{{ modname }}'
 }
-# FILES_TO_TEST = [
-#     ('src', 'yay', {'modname': 'yay'})
-# ]
 
 
-class Python(ProjectBase):
-    '''Class for Python projects
+class FlaskLarge(ProjectBase):
+    '''Class for large Flask projects
 
     Class attributes:
         project_type (str): project type (e.g. flask)

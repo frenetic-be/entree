@@ -11,13 +11,12 @@ import getopt
 import os
 import sys
 
-from jinja2 import Template
 import six
 from entree.utils import (
     copy_file_structure,
     create_dirs,
     create_single_file,
-    read_config
+    read_config,
 )
 
 __version__ = '0.0'
@@ -42,10 +41,8 @@ class ProjectBase(object):
             names that should be replaced when creating the files. For
             example, {'unittest_py.template': 'test_project.py'}
         version (str): version number
-        directories (list): list of directories created by the class
-            (only for unit testing)
-        files (list): list of files created by the class
-            (only for unit testing)
+        files_to_test (dict): dict of files created by the class
+            (only for unit testing the file name templating)
     '''
 
     # Project type (typically the python module containing the class)
@@ -66,11 +63,8 @@ class ProjectBase(object):
     # Project version
     version = __version__
 
-    # List of directories created by the class (only for unit testing)
-    directories = []
-
-    # List of files created by the class (only for unit testing)
-    files = []
+    # dict of files to test if they were properly created by the class
+    # files_to_test = {}
 
     @classmethod
     def usage(cls, exit_status):
@@ -131,39 +125,6 @@ class ProjectBase(object):
             A string containing the full singe-file path
         '''
         return os.path.join(TEMPLATE_ROOT, cls.single_file)
-
-    @classmethod
-    def dirmap(cls, **kwargs):
-        '''Mapping between directory names and their template
-        for testing purposes.
-        '''
-        out = {}
-        for dirname in cls.directories:
-            if cls.replace and dirname in cls.replace:
-                template = Template(cls.replace[dirname])
-                out[dirname] = template.render(**kwargs)
-            else:
-                out[dirname] = dirname
-        return out
-
-    @classmethod
-    def filemap(cls, **kwargs):
-        '''Mapping between file names and their template
-        for testing purposes.
-        '''
-        out = {}
-        for filename in cls.files:
-            path, basename = os.path.split(filename)
-            if cls.replace and path in cls.replace:
-                path = Template(cls.replace[path]).render(**kwargs)
-            if cls.replace and basename in cls.replace:
-                template = Template(cls.replace[basename])
-                out[filename] = os.path.join(path, template.render(**kwargs))
-            elif filename.endswith('_py.template'):
-                out[filename] = os.path.join(path, basename[:-12]+'.py')
-            else:
-                out[filename] = os.path.join(path, basename)
-        return out
 
     @classmethod
     def create_one(cls, rootdir, filename):
