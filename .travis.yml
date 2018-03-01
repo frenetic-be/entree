@@ -4,8 +4,11 @@ python:
   # - 2.7
   - 3.6
 
-script:
+before_script:
   - python setup.py install
+
+script:
+  - entree python blah
   # - python -m unittest discover tests/
 
 notifications:
