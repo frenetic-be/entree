@@ -38,6 +38,72 @@ class TestConfig(unittest.TestCase):
         configfile = os.path.join(configdir, entree.utils.CONFIG_FILE_NAME)
         self.assertEqual(configfile, entree.utils.get_config_file())
 
+    def test_get_config_param_shen(self):
+        '''Test get_config_param()
+        '''
+        shenanigan = entree.utils.get_config_param('shenanigan', 'BLAH')
+        self.assertEqual(shenanigan, 'BLAH')
+
+    def test_get_config_param_author(self):
+        '''Test get_config_param()
+        This is not properly tested.
+        '''
+
+        configdir = entree.utils.get_config_dir()
+        configfile = os.path.join(configdir, entree.utils.CONFIG_FILE_NAME)
+
+        author = 'Julien Spronick'
+
+        old_config = {}
+
+        if os.path.exists(configfile):
+            old_config = entree.utils.read_config()
+            os.remove(configfile)
+
+        entree.utils.set_config(author=author)
+        author = entree.utils.get_config_param('author', 'BLAH')
+        self.assertEqual(author, 'Julien Spronick')
+
+        os.remove(configfile)
+
+        if old_config:
+            entree.utils.set_config(**old_config)
+
+    def test_get_config_param_project(self):
+        '''Test get_config_param()
+        This is not properly tested.
+        '''
+
+        configdir = entree.utils.get_config_dir()
+        configfile = os.path.join(configdir, entree.utils.CONFIG_FILE_NAME)
+
+        author = 'Julien Spronick'
+
+        old_config = {}
+
+        if os.path.exists(configfile):
+            old_config = entree.utils.read_config()
+            os.remove(configfile)
+
+        entree.utils.set_config(
+            author=author,
+            project_config={
+                'Flask': {
+                    'author': 'Spronick Julien'
+                }
+            })
+        author = entree.utils.get_config_param('author', value='BLAH')
+        self.assertEqual(author, 'Julien Spronick')
+
+        author = entree.utils.get_config_param('author', value='BLAH',
+                                               project_type='Flask')
+        self.assertEqual(author, 'Spronick Julien')
+
+        os.remove(configfile)
+
+        if old_config:
+            entree.utils.set_config(**old_config)
+
     def test_create_config_inexisting(self):
         '''Test set_config() and read_config() when config file does not exist
         '''
@@ -57,10 +123,10 @@ class TestConfig(unittest.TestCase):
 
         config = entree.utils.read_config()
         self.assertTrue(os.path.exists(configfile))
-        self.assertEqual(config.AUTHOR, '<UNDEFINED>')
-        self.assertEqual(config.AUTHOR_EMAIL_PREFIX, '<UNDEFINED>')
-        self.assertEqual(config.AUTHOR_EMAIL_SUFFIX, '<UNDEFINED>')
-        self.assertEqual(config.AUTHOR_URL, '<UNDEFINED>')
+        self.assertEqual(config['author'], '<UNDEFINED>')
+        self.assertEqual(config['author_email_prefix'], '<UNDEFINED>')
+        self.assertEqual(config['author_email_suffix'], '<UNDEFINED>')
+        self.assertEqual(config['author_url'], '<UNDEFINED>')
         os.remove(configfile)
 
         entree.utils.set_config(author=author,
@@ -69,28 +135,124 @@ class TestConfig(unittest.TestCase):
                                 author_url=author_url)
         self.assertTrue(os.path.exists(configfile))
         config = entree.utils.read_config()
-        self.assertEqual(config.AUTHOR, author)
-        self.assertEqual(config.AUTHOR_EMAIL_PREFIX, author_email_prefix)
-        self.assertEqual(config.AUTHOR_EMAIL_SUFFIX, author_email_suffix)
-        self.assertEqual(config.AUTHOR_URL, author_url)
+        self.assertEqual(config['author'], author)
+        self.assertEqual(config['author_email_prefix'], author_email_prefix)
+        self.assertEqual(config['author_email_suffix'], author_email_suffix)
+        self.assertEqual(config['author_url'], author_url)
 
         entree.utils.set_config(overwrite=True)
         self.assertTrue(os.path.exists(configfile))
         config = entree.utils.read_config()
-        self.assertEqual(config.AUTHOR, '<UNDEFINED>')
-        self.assertEqual(config.AUTHOR_EMAIL_PREFIX, '<UNDEFINED>')
-        self.assertEqual(config.AUTHOR_EMAIL_SUFFIX, '<UNDEFINED>')
-        self.assertEqual(config.AUTHOR_URL, '<UNDEFINED>')
+        self.assertEqual(config['author'], '<UNDEFINED>')
+        self.assertEqual(config['author_email_prefix'], '<UNDEFINED>')
+        self.assertEqual(config['author_email_suffix'], '<UNDEFINED>')
+        self.assertEqual(config['author_url'], '<UNDEFINED>')
 
         os.remove(configfile)
 
         if old_config:
-            entree.utils.set_config(
-                author=old_config.AUTHOR,
-                author_email_prefix=old_config.AUTHOR_EMAIL_PREFIX,
-                author_email_suffix=old_config.AUTHOR_EMAIL_SUFFIX,
-                author_url=old_config.AUTHOR_URL
-            )
+            entree.utils.set_config(**old_config)
+
+
+class TesProjectConfig(unittest.TestCase):
+    '''Testing project-specific configuration
+    '''
+    def setUp(self):
+        '''Create a fake file structure to test
+        '''
+        self.configdir = entree.utils.get_config_dir()
+        self.configfile = os.path.join(self.configdir,
+                                       entree.utils.CONFIG_FILE_NAME)
+
+        self.old_config = {}
+
+        if os.path.exists(self.configfile):
+            self.old_config = entree.utils.read_config()
+            os.remove(self.configfile)
+
+        config = {
+            'author': 'aaa',
+            'author_email_prefix': 'bbb',
+            'author_email_suffix': 'ccc',
+            'author_url': 'ddd',
+            'project_config': {
+                'Flask': {},
+                'FlaskLarge': {
+                    'author': 'eee'
+                },
+                'SQLAlchemy': {
+                    'author': 'fff',
+                    'newfield': 'ggg'
+                }
+            }
+        }
+        entree.utils.set_config(**config)
+
+    def test_general_config(self):
+        '''Test create_dirs()
+        '''
+        theclass = entree.projects.Python
+        config = theclass.get_config()
+        self.assertEqual(config['author'], 'aaa')
+        self.assertEqual(config['author_email_prefix'], 'bbb')
+        self.assertEqual(config['author_email_suffix'], 'ccc')
+        self.assertEqual(config['author_url'], 'ddd')
+        self.assertListEqual(sorted(config.keys()), [
+            'author', 'author_email_prefix', 'author_email_suffix',
+            'author_url'
+        ])
+
+    def test_empty_project_config(self):
+        '''Test create_dirs()
+        '''
+        theclass = entree.projects.Flask
+        config = theclass.get_config()
+        self.assertEqual(config['author'], 'aaa')
+        self.assertEqual(config['author_email_prefix'], 'bbb')
+        self.assertEqual(config['author_email_suffix'], 'ccc')
+        self.assertEqual(config['author_url'], 'ddd')
+        self.assertListEqual(sorted(config.keys()), [
+            'author', 'author_email_prefix', 'author_email_suffix',
+            'author_url'
+        ])
+
+    def test_project_config(self):
+        '''Test create_dirs()
+        '''
+        theclass = entree.projects.FlaskLarge
+        config = theclass.get_config()
+        self.assertEqual(config['author'], 'eee')
+        self.assertEqual(config['author_email_prefix'], 'bbb')
+        self.assertEqual(config['author_email_suffix'], 'ccc')
+        self.assertEqual(config['author_url'], 'ddd')
+        self.assertListEqual(sorted(config.keys()), [
+            'author', 'author_email_prefix', 'author_email_suffix',
+            'author_url'
+        ])
+
+    def test_project_config_newkey(self):
+        '''Test create_dirs()
+        '''
+        theclass = entree.projects.SQLAlchemy
+        config = theclass.get_config()
+        self.assertEqual(config['author'], 'fff')
+        self.assertEqual(config['author_email_prefix'], 'bbb')
+        self.assertEqual(config['author_email_suffix'], 'ccc')
+        self.assertEqual(config['author_url'], 'ddd')
+        self.assertEqual(config['newfield'], 'ggg')
+        self.assertListEqual(sorted(config.keys()), [
+            'author', 'author_email_prefix', 'author_email_suffix',
+            'author_url', 'newfield'
+        ])
+
+    def tearDown(self):
+        '''Get rid of the temporary file structure
+        '''
+        if os.path.exists(self.configfile):
+            os.remove(self.configfile)
+
+        if self.old_config:
+            entree.utils.set_config(**self.old_config)
 
 
 class TestCreateDirsAndFiles(unittest.TestCase):

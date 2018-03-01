@@ -1,1 +1,14 @@
-{"AUTHOR": "<UNDEFINED>", "AUTHOR_EMAIL_PREFIX": "<UNDEFINED>", "AUTHOR_EMAIL_SUFFIX": "<UNDEFINED>", "AUTHOR_URL": "<UNDEFINED>"}
+{
+    "author": "<UNDEFINED>",
+    "author_email_prefix": "<UNDEFINED>",
+    "author_email_suffix": "<UNDEFINED>",
+    "author_url": "<UNDEFINED>",
+    "files_to_ignore": [
+        ".DS_Store"
+    ],
+    "project_config": {
+        "Flask": {},
+        "Python": {},
+        "SQLAlchemy": {}
+    }
+}

@@ -124,6 +124,21 @@ class ProjectBase(object):
         return ''
 
     @classmethod
+    def get_config(cls):
+        '''Gets project-specific configuration
+        '''
+        config = read_config()
+        if 'project_config' not in config:
+            return config
+        if cls.__name__ not in config['project_config']:
+            del config['project_config']
+            return config
+        for key, value in config['project_config'][cls.__name__].items():
+            config[key] = value
+        del config['project_config']
+        return config
+
+    @classmethod
     def create_one(cls, rootdir, filename):
         '''Creates a single-file project
 
@@ -133,7 +148,7 @@ class ProjectBase(object):
         '''
         if cls.single_file:
             # Read config file and set creation_date
-            config = read_config()
+            config = cls.get_config()
             creation_date = datetime.datetime.now()
             modname = os.path.splitext(os.path.basename(filename))[0]
             create_single_file(rootdir, filename, cls.single_file_path(),
@@ -162,7 +177,7 @@ class ProjectBase(object):
             raise IOError('Directory not found: `'+projectdir+'`')
 
         # Read config file and set creation_date
-        config = read_config()
+        config = cls.get_config()
         creation_date = datetime.datetime.now()
 
         # Copy entire file structure from template directory to the project
@@ -192,7 +207,7 @@ class ProjectBase(object):
             create_dirs(rootdir, projectdir)
 
         # Read config file and set creation_date
-        config = read_config()
+        config = cls.get_config()
         creation_date = datetime.datetime.now()
 
         # Copy entire file structure from template directory to the project

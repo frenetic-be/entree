@@ -1,6 +1,6 @@
 '''
 .. module:: {{ modname }}.models.statuses
-.. moduleauthor:: {{ config.AUTHOR }}
+.. moduleauthor:: {{ config['author'] }}
 .. created:: {{ creation_date.strftime('%B %Y') }}
 
 Module containing the User database model.

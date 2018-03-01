@@ -71,7 +71,7 @@ Versioning notes.
 
 ## Authors
 
-* **{{ config.AUTHOR }}** - *Initial work* - [{{ config.AUTHOR_URL }}]({{ config.AUTHOR_URL }})
+* **{{ config['author'] }}** - *Initial work* - [{{ config['author_url'] }}]({{ config['author_url'] }})
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
