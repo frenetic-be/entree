@@ -1,11 +1,12 @@
 language: python
 
 python:
-  - 2.7
+  # - 2.7
   - 3.6
 
 script:
-  - python -m unittest discover tests/
+  - python setup.py install
+  # - python -m unittest discover tests/
 
 notifications:
   email:

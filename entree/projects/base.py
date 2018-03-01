@@ -83,6 +83,8 @@ class ProjectBase(object):
         msg += "    -d, --dir: Specifies the directory where to save create\n"
         msg += "               the project files. By default, it is the\n"
         msg += "               current directory.\n\n"
+        msg += "    -n, --no-common: if specified, files common to all\n"
+        msg += "               project types will not be created.\n\n"
         if cls.single_file:
             msg += "    -s, --single-file: creates a single file instead of\n"
             msg += "                       a complete package.\n\n"
@@ -237,6 +239,7 @@ class ProjectBase(object):
             ('h', 'help'),
             ('a:', 'add='),
             ('d:', 'dir='),
+            ('n', 'no-common'),
             ('v', 'version')
         ]
         if cls.single_file:
@@ -252,6 +255,7 @@ class ProjectBase(object):
         except getopt.GetoptError:
             cls.usage(2)
 
+        no_common = False
         add_to_existing = False
         rootdir = './'
         single_file = False
@@ -262,6 +266,8 @@ class ProjectBase(object):
                 add_to_existing = True
             if opt in ("-d", "--dir"):
                 rootdir = arg
+            if opt in ("-n", "--no-common"):
+                no_common = True
             if opt in ("-s", "--single-file"):
                 single_file = True
             if opt in ("-v", "--version"):
@@ -281,5 +287,6 @@ class ProjectBase(object):
             cls.create_one(rootdir, modname)
         else:
             cls.create_all(rootdir, modname, add_to_existing=add_to_existing)
-            cls.create_common_files(rootdir, modname,
-                                    add_to_existing=add_to_existing)
+            if not no_common:
+                cls.create_common_files(rootdir, modname,
+                                        add_to_existing=add_to_existing)
