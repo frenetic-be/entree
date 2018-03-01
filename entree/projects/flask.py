@@ -12,10 +12,10 @@ from entree.projects.base import ProjectBase
 __version__ = '0.0'
 
 _, FILEBASE = os.path.split(__file__)
-BASENAME = os.path.splitext(FILEBASE)[0]
+
+PROJECT_TYPE = os.path.splitext(FILEBASE)[0]
 TEMPLATE_DIR = 'python-flask'
 SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'app_py.template')
-REPLACE = None
 
 
 class Flask(ProjectBase):
@@ -36,8 +36,7 @@ class Flask(ProjectBase):
         files_to_test (dict): dict of files created by the class
             (only for unit testing the file name templating)
     '''
-    project_type = BASENAME
+    project_type = PROJECT_TYPE
     template_dir = TEMPLATE_DIR
     single_file = SINGLE_FILE
-    replace = REPLACE
     version = __version__

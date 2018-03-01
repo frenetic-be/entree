@@ -12,16 +12,14 @@ from entree.projects.base import ProjectBase
 __version__ = '0.0'
 
 FILEPATH, FILEBASE = os.path.split(__file__)
-BASENAME = os.path.splitext(FILEBASE)[0]
+
+PROJECT_TYPE = os.path.splitext(FILEBASE)[0]
 TEMPLATE_DIR = 'python'
 SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'src', '__init___py.template')
 REPLACE = {
     'unittest_py.template': 'test_{{ modname }}.py',
     'src': '{{ modname }}'
 }
-# FILES_TO_TEST = [
-#     ('src', 'yay', {'modname': 'yay'})
-# ]
 
 
 class Python(ProjectBase):
@@ -39,10 +37,8 @@ class Python(ProjectBase):
             names that should be replaced when creating the files. For
             example, {'unittest_py.template': 'test_project.py'}
         version (str): version number
-        files_to_test (dict): dict of files created by the class
-            (only for unit testing the file name templating)
     '''
-    project_type = BASENAME
+    project_type = PROJECT_TYPE
     template_dir = TEMPLATE_DIR
     single_file = SINGLE_FILE
     replace = REPLACE

@@ -41,8 +41,6 @@ class ProjectBase(object):
             names that should be replaced when creating the files. For
             example, {'unittest_py.template': 'test_project.py'}
         version (str): version number
-        files_to_test (dict): dict of files created by the class
-            (only for unit testing the file name templating)
     '''
 
     # Project type (typically the python module containing the class)
@@ -62,9 +60,6 @@ class ProjectBase(object):
 
     # Project version
     version = __version__
-
-    # dict of files to test if they were properly created by the class
-    # files_to_test = {}
 
     @classmethod
     def usage(cls, exit_status):
@@ -124,7 +119,9 @@ class ProjectBase(object):
         Returns:
             A string containing the full singe-file path
         '''
-        return os.path.join(TEMPLATE_ROOT, cls.single_file)
+        if cls.single_file:
+            return os.path.join(TEMPLATE_ROOT, cls.single_file)
+        return ''
 
     @classmethod
     def create_one(cls, rootdir, filename):
