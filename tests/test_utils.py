@@ -295,7 +295,7 @@ class TestGetAllDirsAndFiles(unittest.TestCase):
     def test_get_all_dirs_and_files2(self):
         '''Testing get_all_dirs_and_files
         '''
-        dirs = ['docs', 'src', 'tests']
+        dirs = ['src', 'tests']
         files = [
             'setup_py.template',
             'src/__init___py.template',
