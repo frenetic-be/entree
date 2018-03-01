@@ -7,6 +7,7 @@ Tests for entree.projects
 import os
 import unittest
 
+import entree.utils
 import entree.projects.base as base
 from utilities import (
     get_file_content,
@@ -99,8 +100,10 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_common_files(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    files = ['README.md', 'requirements.txt', 'License.md',
-                             '.gitignore']
+                    files = entree.utils.get_config_param(
+                        'general_files', [],
+                        project_type=project_cls.__name__
+                    )
 
                     for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))
@@ -203,8 +206,10 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_common_files(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    files = ['README.md', 'requirements.txt', 'License.md',
-                             '.gitignore']
+                    files = entree.utils.get_config_param(
+                        'general_files', [],
+                        project_type=project_cls.__name__
+                    )
 
                     for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))

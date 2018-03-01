@@ -180,11 +180,21 @@ class ProjectBase(object):
         config = cls.get_config()
         creation_date = datetime.datetime.now()
 
-        # Copy entire file structure from template directory to the project
-        # directory
-        copy_file_structure(projectdir, cls.common_template_path(),
-                            modname=modname, config=config,
-                            creation_date=creation_date)
+        common_files = []
+        if 'general_files' in config:
+            common_files = config['general_files']
+
+        for name in common_files:
+            if name in os.listdir(cls.common_template_path()):
+                template_path = os.path.join(cls.common_template_path(), name)
+                create_single_file(projectdir, name, template_path,
+                                   modname=modname, config=config,
+                                   creation_date=creation_date)
+        # # Copy entire file structure from template directory to the project
+        # # directory
+        # copy_file_structure(projectdir, cls.common_template_path(),
+        #                     modname=modname, config=config,
+        #                     creation_date=creation_date)
 
     @classmethod
     def create_all(cls, rootdir, modname, add_to_existing=False):
