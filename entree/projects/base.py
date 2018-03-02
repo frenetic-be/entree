@@ -225,8 +225,11 @@ class ProjectBase(object):
                             creation_date=creation_date)
 
     @classmethod
-    def main(cls):
+    def main(cls, modname=''):
         '''Main program
+
+        Keyword args:
+            modname (str, default=''): module/project name
         '''
 
         # Parse command line options/arguments
@@ -257,21 +260,24 @@ class ProjectBase(object):
         for opt, arg in opts:
             if opt in ("-h", "--help"):
                 cls.usage(0)
-            if opt in ("-a", "--add"):
+            elif opt in ("-a", "--add"):
                 add_to_existing = True
-            if opt in ("-d", "--dir"):
+            elif opt in ("-d", "--dir"):
                 rootdir = arg
-            if opt in ("-n", "--no-common"):
+            elif opt in ("-n", "--no-common"):
                 no_common = True
-            if opt in ("-s", "--single-file"):
+            elif opt in ("-s", "--single-file"):
                 single_file = True
-            if opt in ("-v", "--version"):
+            elif opt in ("-v", "--version"):
                 six.print_('entree.projects.{0} {1}'.format(cls.project_type,
                                                             cls.version))
                 sys.exit()
 
         if not args:
-            cls.usage(4)
+            if not modname:
+                cls.usage(4)
+        elif len(args) > 1:
+            cls.usage(6)
         else:
             modname = args[0]
 

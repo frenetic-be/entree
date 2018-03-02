@@ -8,8 +8,12 @@
 
 Simple module to create files and directories in a python project
 """
+import getopt
+import sys
 
 import entree.projects
+import entree.utils
+import six
 
 __version__ = '2.1'
 
@@ -19,8 +23,6 @@ CLASSES = entree.projects.CLASSES
 def main():
     '''Main program
     '''
-    import six
-    import sys
 
     def usage(exit_status):
         '''
@@ -50,8 +52,6 @@ def main():
 
         six.print_(msg)
         sys.exit(exit_status)
-
-    import getopt
 
     # Parse command line options/arguments
     options = [
@@ -93,6 +93,8 @@ def main():
         usage(4)
 
     if common_files:
+        if len(args) > 1:
+            usage(6)
         modname = args[0]
         entree.projects.ProjectBase.create_common_files(rootdir, modname,
                                                         add_to_existing=True)
@@ -103,7 +105,12 @@ def main():
     if submodule in CLASSES:
         CLASSES[submodule].main()
     else:
-        usage(5)
+        submodule = entree.utils.get_config_param('default_project_type',
+                                                  'python')
+        if submodule not in CLASSES:
+            raise ValueError('Invalid default project type. See `entree -m` '
+                             'for possible options.')
+        CLASSES[submodule].main(modname=args[0])
 
 if __name__ == '__main__':
     main()

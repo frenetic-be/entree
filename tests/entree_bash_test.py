@@ -148,6 +148,34 @@ class TestStatusMainSimple(unittest.TestCase):
             code = run_command('entree -c -d {0} {1}'.format(rootdir, modname))
             self.assertEqual(code, 0)
 
+    def test_default_projtype(self):
+        '''check status code of `entree blah`
+        '''
+        modname = random_string(16)
+        code = run_command('entree {0}'.format(modname))
+        self.assertEqual(code, 0)
+        if os.path.exists(modname):
+            shutil.rmtree(modname)
+
+    def test_no_projtype_single(self):
+        '''check status code of `entree blah.py -s`
+        '''
+        modname = random_string(16)
+        code = run_command('entree {0} -s'.format(modname))
+        self.assertEqual(code, 0)
+        if os.path.exists(modname):
+            os.remove(modname)
+
+    def test_no_projtype_dir(self):
+        '''check status code of `entree blah.py -d blah`
+        '''
+        with TMPFile() as rootdir:
+            modname = random_string(16)
+            code = run_command('entree {0} -d {1}'.format(modname, rootdir))
+            self.assertEqual(code, 0)
+            if os.path.exists(modname):
+                os.remove(modname)
+
 
 class TestStatusError(unittest.TestCase):
     '''Testing exit code status with errors
@@ -156,21 +184,15 @@ class TestStatusError(unittest.TestCase):
         '''check status code of `entree python`
         '''
         for project_cls in CLSNAMES:
-            modname = random_string(16)
             code = run_command('entree {0}'.format(project_cls))
             self.assertEqual(code, 4)
-            if os.path.exists(modname):
-                shutil.rmtree(modname)
 
     def test_wrong_option(self):
         '''check status code of `entree python -z`
         '''
         for project_cls in CLSNAMES:
-            modname = random_string(16)
             code = run_command('entree {0} -z'.format(project_cls))
             self.assertEqual(code, 3)
-            if os.path.exists(modname):
-                shutil.rmtree(modname)
 
     def test_single_rootdir_doesntexist(self):
         '''`entree python -d blah -s blah.py`
@@ -188,6 +210,17 @@ class TestStatusError(unittest.TestCase):
         code = run_command('entree python -d {0} blah'.format(rootdir))
         self.assertEqual(code, 1)
 
+    def test_toomany_args(self):
+        '''check status code of `entree python blah blah blah`
+        '''
+        for project_cls in CLSNAMES:
+            modname = random_string(16)
+            code = run_command('entree {0} {1} blah'.format(project_cls,
+                                                            modname))
+            self.assertEqual(code, 6)
+            if os.path.exists(modname):
+                shutil.rmtree(modname)
+
 
 class TestStatusMainError(unittest.TestCase):
     '''Testing exit code status from main script
@@ -204,11 +237,18 @@ class TestStatusMainError(unittest.TestCase):
         code = run_command('entree -z')
         self.assertEqual(code, 3)
 
-    def test_wrong_argument(self):
-        '''check status code of `entree pythonz`
+    # def test_wrong_argument(self):
+    #     '''check status code of `entree pythonz`
+    #     '''
+    #     code = run_command('entree pythonz')
+    #     self.assertEqual(code, 5)
+
+    def test_toomany_args(self):
+        '''check status code of `entree -c -d blah blah blah`
         '''
-        code = run_command('entree pythonz')
-        self.assertEqual(code, 5)
+        with TMPFile() as rootdir:
+            code = run_command('entree -c -d {0} blah blah'.format(rootdir))
+            self.assertEqual(code, 6)
 
 
 class TestOutputSimple(unittest.TestCase):
@@ -328,7 +368,7 @@ class TestOutputSimple(unittest.TestCase):
                 '.gitignore'
             ]
             for name in files:
-                self.assertTrue(os.path.exists(os.path.join(rootdir, name)))            
+                self.assertTrue(os.path.exists(os.path.join(rootdir, name)))
 
     def tearDown(self):
         '''Tearing down
