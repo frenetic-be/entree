@@ -237,7 +237,7 @@ class ProjectBase(object):
         # Parse command line options/arguments
         options = [
             ('h', 'help'),
-            ('a:', 'add='),
+            ('a', 'add'),
             ('d:', 'dir='),
             ('n', 'no-common'),
             ('v', 'version')
@@ -253,7 +253,7 @@ class ProjectBase(object):
                                        long_options)
 
         except getopt.GetoptError:
-            cls.usage(2)
+            cls.usage(3)
 
         no_common = False
         add_to_existing = False
@@ -276,10 +276,7 @@ class ProjectBase(object):
                 sys.exit()
 
         if not args:
-            if not add_to_existing:
-                cls.usage(2)
-            else:
-                modname = ''
+            cls.usage(4)
         else:
             modname = args[0]
 
