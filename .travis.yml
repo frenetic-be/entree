@@ -1,18 +1,17 @@
-
 language: python
 
 python:
   - 2.7
   - 3.6
 
-install:
-  - pip install pylint
+# install:
+#   - pip install pylint
 
 before_script:
   - python setup.py install
 
 script:
-  - pylint entree
+  # - pylint entree
   - python -m unittest discover tests/ -p "test_*.py"
   - python tests/entree_bash_test.py
 
