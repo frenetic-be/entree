@@ -80,7 +80,7 @@ class ProjectBase(object):
         msg += "    -a, --add: adds the files to the directory specified \n"
         msg += "                with the -d option or current directory\n"
         msg += "                without creating a project directory.\n\n"
-        msg += "    -d, --dir: Specifies the directory where to save create\n"
+        msg += "    -d, --dir: Specifies the directory where to create\n"
         msg += "               the project files. By default, it is the\n"
         msg += "               current directory.\n\n"
         msg += "    -n, --no-common: if specified, files common to all\n"
@@ -192,11 +192,6 @@ class ProjectBase(object):
                 create_single_file(projectdir, name, template_path,
                                    modname=modname, config=config,
                                    creation_date=creation_date)
-        # # Copy entire file structure from template directory to the project
-        # # directory
-        # copy_file_structure(projectdir, cls.common_template_path(),
-        #                     modname=modname, config=config,
-        #                     creation_date=creation_date)
 
     @classmethod
     def create_all(cls, rootdir, modname, add_to_existing=False):

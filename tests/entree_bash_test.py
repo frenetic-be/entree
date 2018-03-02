@@ -140,6 +140,14 @@ class TestStatusMainSimple(unittest.TestCase):
         code = run_command('entree -m')
         self.assertEqual(code, 0)
 
+    def test_common(self):
+        '''check status code of `entree -c`
+        '''
+        with TMPFile() as rootdir:
+            modname = random_string(16)
+            code = run_command('entree -c -d {0} {1}'.format(rootdir, modname))
+            self.assertEqual(code, 0)
+
 
 class TestStatusError(unittest.TestCase):
     '''Testing exit code status with errors
@@ -306,6 +314,21 @@ class TestOutputSimple(unittest.TestCase):
             ]
             for name in files:
                 self.assertTrue(os.path.exists(os.path.join(rootdir, name)))
+
+    def test_common(self):
+        '''check status code of `entree -c -d Blah MODNAME`
+        '''
+        with TMPFile() as rootdir:
+            modname = random_string(16)
+            run_command('entree -c -d {0} {1}'.format(rootdir, modname))
+            files = [
+                'License.md',
+                'requirements.txt',
+                'README.md',
+                '.gitignore'
+            ]
+            for name in files:
+                self.assertTrue(os.path.exists(os.path.join(rootdir, name)))            
 
     def tearDown(self):
         '''Tearing down
