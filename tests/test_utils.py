@@ -650,6 +650,31 @@ class TestCopyFileStructure(unittest.TestCase):
                 content = fil.read()
                 self.assertEqual(content, "I'm 19 years old.")
 
+    def test_cfs_partial(self):
+        '''Test create_dirs()
+        '''
+        with TMPFile() as rootdir:
+            path_a = os.path.join(rootdir, 'a')
+            path_b = os.path.join(rootdir, 'b')
+            path_c = os.path.join(rootdir, 'c')
+            file_a = os.path.join(path_a, 'a.txt')
+            file_b = os.path.join(path_b, 'b.md')
+            file_c = os.path.join(path_c, 'c.py')
+            partial = ['a', 'a/a.txt', 'c']
+            partial = [os.path.join(self.template_dir, name)
+                       for name in partial]
+            entree.utils.copy_file_structure(rootdir, self.template_dir,
+                                             partial=partial, blah={'age': 19})
+            self.assertTrue(os.path.exists(path_a))
+            self.assertFalse(os.path.exists(path_b))
+            self.assertTrue(os.path.exists(path_c))
+            self.assertTrue(os.path.exists(file_a))
+            self.assertFalse(os.path.exists(file_b))
+            self.assertFalse(os.path.exists(file_c))
+            with open(file_a) as fil:
+                content = fil.read()
+                self.assertEqual(content, "My name is")
+
     def tearDown(self):
         '''Get rid of the temporary file structure
         '''

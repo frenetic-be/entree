@@ -28,7 +28,7 @@ def run_command(cmd):
     split_cmd = cmd.split(' ')
     process = subprocess.Popen(split_cmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    process.communicate()
+    _, _ = process.communicate()
 
     # for line in out.splitlines():
     #     print(line)
@@ -116,6 +116,25 @@ class TestStatusSimple(unittest.TestCase):
                                                         modname)
                 code = run_command(cmd)
                 self.assertEqual(code, 0)
+
+    def test_partial(self):
+        '''check status code of `entree python -d dir -p partial blah`
+        Status should be 1 if there is no `partial_builds` in the project
+        config or if the partial name does not exist in `partial_builds`,
+        should be 0 otherwise.
+        '''
+        for project_cls in CLASSES:
+            clsname = project_cls.__name__.lower()
+            modname = random_string(16)
+            with TMPFile() as rootdir:
+                config = project_cls.get_config()
+                if 'partial_builds' in config:
+                    for partial in config['partial_builds']:
+                        cmd = 'entree {0} -d {1} -p {2} {3}'.format(
+                            clsname, rootdir, partial, modname
+                        )
+                        code = run_command(cmd)
+                        self.assertEqual(code, 0)
 
 
 class TestStatusMainSimple(unittest.TestCase):
@@ -220,6 +239,42 @@ class TestStatusError(unittest.TestCase):
             self.assertEqual(code, 6)
             if os.path.exists(modname):
                 shutil.rmtree(modname)
+
+    def test_partial(self):
+        '''check status code of `entree python -d dir -p partial blah`
+        Status should be 1 if there is no `partial_builds` in the project
+        config or if the partial name does not exist in `partial_builds`,
+        should be 0 otherwise.
+        '''
+        for project_cls in CLASSES:
+            clsname = project_cls.__name__
+            modname = random_string(16)
+            with TMPFile() as rootdir:
+                config = project_cls.get_config()
+                if 'partial_builds' not in config:
+                    cmd = 'entree {0} -d {1} -p blah {2}'.format(
+                        clsname, rootdir, modname
+                    )
+                    code = run_command(cmd)
+                    self.assertEqual(code, 1)
+
+    def test_partial2(self):
+        '''check status code of `entree python -d dir -p partial blah`
+        Status should be 1 if there is no `partial_builds` in the project
+        config or if the partial name does not exist in `partial_builds`,
+        should be 0 otherwise.
+        '''
+        for project_cls in CLASSES:
+            clsname = project_cls.__name__
+            modname = random_string(16)
+            with TMPFile() as rootdir:
+                config = project_cls.get_config()
+                if 'partial_builds' in config:
+                    cmd = 'entree {0} -d {1} -p {2} {2}'.format(
+                        clsname, rootdir, modname
+                    )
+                    code = run_command(cmd)
+                    self.assertEqual(code, 1)
 
 
 class TestStatusMainError(unittest.TestCase):

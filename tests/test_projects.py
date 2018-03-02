@@ -85,6 +85,71 @@ class TestFileCreation(unittest.TestCase):
                                        '{0}'.format(path))
                             raise
 
+    def test_partial_file_creation(self):
+        '''Test that all files are created where they should be
+        for all child classes of the ProjectBase class.
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            # Create temporary rootdir
+            config = project_cls.get_config()
+            if 'partial_builds' in config:
+                for partial_build in config['partial_builds']:
+                    with TMPFile() as rootdir:
+                        # Create temporary project directory
+                        with TMPFile(root=rootdir) as project:
+                            print_header('Testing partial file creation for '
+                                         'class '
+                                         '`{0}`:'.format(project_cls.__name__))
+                            project_cls.create_all(rootdir, project,
+                                                   partial=partial_build)
+                            gendir = os.path.join(rootdir, project)
+
+                            tpath = project_cls.template_path()
+                            _, files = get_all_dirs_and_files(tpath)
+                            filmap = filemap(files,
+                                             replace=project_cls.replace,
+                                             modname=project)
+                            partials = config['partial_builds'][partial_build]
+                            for tname, fname in filmap.items():
+                                six.print_('- Testing file '
+                                           '`{0}`:'.format(fname))
+                                path = os.path.join(gendir, fname)
+                                if tname in partials:
+                                    try:
+                                        self.assertTrue(os.path.exists(path))
+                                    except AssertionError:
+                                        six.print_('\nERROR: Path does not '
+                                                   'exist: {0}'.format(path))
+                                        raise
+                                else:
+                                    try:
+                                        self.assertFalse(os.path.exists(path))
+                                    except AssertionError:
+                                        six.print_('\nERROR: Path does '
+                                                   'exist: {0}'.format(path))
+                                        raise
+
+    def test_partial_file_creation_noconfig(self):
+        '''Test that all files are created where they should be
+        for all child classes of the ProjectBase class.
+        '''
+        # Loop through all classes available in entree.projects
+        for project_cls in CLASSES:
+            # Create temporary rootdir
+            config = project_cls.get_config()
+            with TMPFile() as rootdir:
+                # Create temporary project directory
+                with TMPFile(root=rootdir) as project:
+                    if 'partial_builds' not in config:
+                        with self.assertRaises(ValueError):
+                            project_cls.create_all(rootdir, project,
+                                                   partial='blah')
+                    else:
+                        with self.assertRaises(ValueError):
+                            project_cls.create_all(rootdir, project,
+                                                   partial=project)
+
     def test_common_file_creation(self):
         '''Test that all common files are created where they should be
         for all child classes of the ProjectBase class.

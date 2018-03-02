@@ -153,7 +153,7 @@ def render_template(filename, **kwargs):
 
 
 def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
-                        **kwargs):
+                        partial=None, **kwargs):
     '''Walks through the file structure and copy all directories and files.
 
     Args:
@@ -163,6 +163,9 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
     Keyword args:
         replace (dict, default=None): dictionary for file name replacement.
             Keys are old file names and values are new file names.
+        files_to_ignore (list, default=None): list of file names to ignore.
+        partial (list, default=None): list of paths for a partial build.
+            Only the paths in the lists will be created.
         **kwargs: dictionary containing the variables for templating
     '''
     if not os.path.exists(rootdir):
@@ -174,6 +177,10 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
     for fname in os.listdir(path):
         src = os.path.join(path, fname)
 
+        if partial and src not in partial:
+            # Partial build: only files and dirs in the partial list
+            # will be created
+            continue
         if replace and fname in replace:
             fname = Template(replace[fname]).render(**kwargs)
         elif fname.endswith('_py.template'):
@@ -183,7 +190,8 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
         if os.path.isdir(src):
             if not os.path.exists(dst):
                 os.makedirs(dst)
-            copy_file_structure(dst, src, replace=replace, **kwargs)
+            copy_file_structure(dst, src, replace=replace, partial=partial,
+                                **kwargs)
         elif os.path.isfile(src):
             if fname not in files_to_ignore:
                 file_content = render_template(src, **kwargs)

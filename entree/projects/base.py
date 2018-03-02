@@ -194,7 +194,7 @@ class ProjectBase(object):
                                    creation_date=creation_date)
 
     @classmethod
-    def create_all(cls, rootdir, modname, add_to_existing=False):
+    def create_all(cls, rootdir, modname, partial=None, add_to_existing=False):
         '''Creates all project files and directories
 
         Args:
@@ -217,10 +217,21 @@ class ProjectBase(object):
         config = cls.get_config()
         creation_date = datetime.datetime.now()
 
+        if partial:
+            if 'partial_builds' not in config:
+                raise ValueError('No `partial_builds` config parameter for '
+                                 'this project type')
+            if partial not in config['partial_builds']:
+                raise ValueError('Unknown partial build name: '
+                                 '`{0}`'.format(partial))
+            partial = config['partial_builds'][partial]
+            partial = [os.path.join(cls.template_path(), path)
+                       for path in partial]
+
         # Copy entire file structure from template directory to the project
         # directory
         copy_file_structure(projectdir, cls.template_path(),
-                            replace=cls.replace,
+                            replace=cls.replace, partial=partial,
                             modname=modname, config=config,
                             creation_date=creation_date)
 
@@ -238,6 +249,7 @@ class ProjectBase(object):
             ('a', 'add'),
             ('d:', 'dir='),
             ('n', 'no-common'),
+            ('p:', 'partial='),
             ('v', 'version')
         ]
         if cls.single_file:
@@ -257,6 +269,7 @@ class ProjectBase(object):
         add_to_existing = False
         rootdir = './'
         single_file = False
+        partial = None
         for opt, arg in opts:
             if opt in ("-h", "--help"):
                 cls.usage(0)
@@ -266,6 +279,8 @@ class ProjectBase(object):
                 rootdir = arg
             elif opt in ("-n", "--no-common"):
                 no_common = True
+            elif opt in ("-p", "--partial"):
+                partial = arg
             elif opt in ("-s", "--single-file"):
                 single_file = True
             elif opt in ("-v", "--version"):
@@ -284,7 +299,8 @@ class ProjectBase(object):
         if single_file:
             cls.create_one(rootdir, modname)
         else:
-            cls.create_all(rootdir, modname, add_to_existing=add_to_existing)
+            cls.create_all(rootdir, modname, add_to_existing=add_to_existing,
+                           partial=partial)
             if not no_common:
                 cls.create_common_files(rootdir, modname,
                                         add_to_existing=add_to_existing)
