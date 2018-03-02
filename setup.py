@@ -35,6 +35,7 @@ if os.path.exists(os.path.join(_CONFIGDIR, 'entree_config.json')):
     DATA_FILES = []
 else:
     DATA_FILES = [(_CONFIGDIR, ['entree/entree_config.json'])]
+DATA_FILES += [(_CONFIGDIR, ['entree_autocomplete'])]
 
 setup(
     name='entree',
