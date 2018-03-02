@@ -83,6 +83,8 @@ class ProjectBase(object):
         msg += "    -d, --dir: Specifies the directory where to save create\n"
         msg += "               the project files. By default, it is the\n"
         msg += "               current directory.\n\n"
+        msg += "    -n, --no-common: if specified, files common to all\n"
+        msg += "               project types will not be created.\n\n"
         if cls.single_file:
             msg += "    -s, --single-file: creates a single file instead of\n"
             msg += "                       a complete package.\n\n"
@@ -124,6 +126,21 @@ class ProjectBase(object):
         return ''
 
     @classmethod
+    def get_config(cls):
+        '''Gets project-specific configuration
+        '''
+        config = read_config()
+        if 'project_config' not in config:
+            return config
+        if cls.__name__ not in config['project_config']:
+            del config['project_config']
+            return config
+        for key, value in config['project_config'][cls.__name__].items():
+            config[key] = value
+        del config['project_config']
+        return config
+
+    @classmethod
     def create_one(cls, rootdir, filename):
         '''Creates a single-file project
 
@@ -133,7 +150,7 @@ class ProjectBase(object):
         '''
         if cls.single_file:
             # Read config file and set creation_date
-            config = read_config()
+            config = cls.get_config()
             creation_date = datetime.datetime.now()
             modname = os.path.splitext(os.path.basename(filename))[0]
             create_single_file(rootdir, filename, cls.single_file_path(),
@@ -162,14 +179,24 @@ class ProjectBase(object):
             raise IOError('Directory not found: `'+projectdir+'`')
 
         # Read config file and set creation_date
-        config = read_config()
+        config = cls.get_config()
         creation_date = datetime.datetime.now()
 
-        # Copy entire file structure from template directory to the project
-        # directory
-        copy_file_structure(projectdir, cls.common_template_path(),
-                            modname=modname, config=config,
-                            creation_date=creation_date)
+        common_files = []
+        if 'general_files' in config:
+            common_files = config['general_files']
+
+        for name in common_files:
+            if name in os.listdir(cls.common_template_path()):
+                template_path = os.path.join(cls.common_template_path(), name)
+                create_single_file(projectdir, name, template_path,
+                                   modname=modname, config=config,
+                                   creation_date=creation_date)
+        # # Copy entire file structure from template directory to the project
+        # # directory
+        # copy_file_structure(projectdir, cls.common_template_path(),
+        #                     modname=modname, config=config,
+        #                     creation_date=creation_date)
 
     @classmethod
     def create_all(cls, rootdir, modname, add_to_existing=False):
@@ -192,7 +219,7 @@ class ProjectBase(object):
             create_dirs(rootdir, projectdir)
 
         # Read config file and set creation_date
-        config = read_config()
+        config = cls.get_config()
         creation_date = datetime.datetime.now()
 
         # Copy entire file structure from template directory to the project
@@ -210,8 +237,9 @@ class ProjectBase(object):
         # Parse command line options/arguments
         options = [
             ('h', 'help'),
-            ('a:', 'add='),
+            ('a', 'add'),
             ('d:', 'dir='),
+            ('n', 'no-common'),
             ('v', 'version')
         ]
         if cls.single_file:
@@ -225,8 +253,9 @@ class ProjectBase(object):
                                        long_options)
 
         except getopt.GetoptError:
-            cls.usage(2)
+            cls.usage(3)
 
+        no_common = False
         add_to_existing = False
         rootdir = './'
         single_file = False
@@ -237,6 +266,8 @@ class ProjectBase(object):
                 add_to_existing = True
             if opt in ("-d", "--dir"):
                 rootdir = arg
+            if opt in ("-n", "--no-common"):
+                no_common = True
             if opt in ("-s", "--single-file"):
                 single_file = True
             if opt in ("-v", "--version"):
@@ -245,10 +276,7 @@ class ProjectBase(object):
                 sys.exit()
 
         if not args:
-            if not add_to_existing:
-                cls.usage(2)
-            else:
-                modname = ''
+            cls.usage(4)
         else:
             modname = args[0]
 
@@ -256,5 +284,6 @@ class ProjectBase(object):
             cls.create_one(rootdir, modname)
         else:
             cls.create_all(rootdir, modname, add_to_existing=add_to_existing)
-            cls.create_common_files(rootdir, modname,
-                                    add_to_existing=add_to_existing)
+            if not no_common:
+                cls.create_common_files(rootdir, modname,
+                                        add_to_existing=add_to_existing)

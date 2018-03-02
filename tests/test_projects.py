@@ -7,6 +7,7 @@ Tests for entree.projects
 import os
 import unittest
 
+import entree.utils
 import entree.projects.base as base
 from utilities import (
     get_file_content,
@@ -99,8 +100,10 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_common_files(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    files = ['README.md', 'requirements.txt', 'License.md',
-                             '.gitignore']
+                    files = entree.utils.get_config_param(
+                        'general_files', [],
+                        project_type=project_cls.__name__
+                    )
 
                     for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))
@@ -158,9 +161,10 @@ class TestFileCreation(unittest.TestCase):
                         filepath = os.path.join(gendir, fname)
                         templatepath = project_cls.template_path()
                         templatepath = os.path.join(templatepath, tname)
-                        content1, content2 = get_file_content(project,
-                                                              filepath,
-                                                              templatepath)
+                        content1, content2 = get_file_content(
+                            project, filepath, templatepath,
+                            project_cls=project_cls
+                        )
                         self.assertEqual(content1, content2)
 
     def test_single_file_content(self):
@@ -180,9 +184,10 @@ class TestFileCreation(unittest.TestCase):
                         project_cls.create_one(gendir, 'somefile.txt')
                         filepath = os.path.join(gendir, 'somefile.txt')
                         templatepath = project_cls.single_file_path()
-                        content1, content2 = get_file_content('somefile',
-                                                              filepath,
-                                                              templatepath)
+                        content1, content2 = get_file_content(
+                            'somefile', filepath, templatepath,
+                            project_cls=project_cls
+                        )
                         self.assertEqual(content1, content2)
 
     def test_common_file_content(self):
@@ -201,8 +206,10 @@ class TestFileCreation(unittest.TestCase):
                     project_cls.create_common_files(rootdir, project)
                     gendir = os.path.join(rootdir, project)
 
-                    files = ['README.md', 'requirements.txt', 'License.md',
-                             '.gitignore']
+                    files = entree.utils.get_config_param(
+                        'general_files', [],
+                        project_type=project_cls.__name__
+                    )
 
                     for fname in files:
                         six.print_('- Testing file `{0}`:'.format(fname))
@@ -211,9 +218,10 @@ class TestFileCreation(unittest.TestCase):
                             project_cls.common_template_path(),
                             fname
                         )
-                        content1, content2 = get_file_content(project,
-                                                              filepath,
-                                                              templatepath)
+                        content1, content2 = get_file_content(
+                            project, filepath, templatepath,
+                            project_cls=project_cls
+                        )
                         self.assertEqual(content1, content2)
 
 

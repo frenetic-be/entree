@@ -53,7 +53,7 @@ def main():
                                    "hmv",
                                    ["help", "modules", "version"])
     except getopt.GetoptError:
-        usage(2)
+        usage(3)
 
     for opt, _ in opts:
         if opt in ("-h", "--help"):
@@ -69,14 +69,14 @@ def main():
             sys.exit()
 
     if not args:
-        usage(2)
+        usage(4)
 
     submodule = args[0]
 
     if submodule in CLASSES:
         CLASSES[submodule].main()
     else:
-        usage(3)
+        usage(5)
 
 if __name__ == '__main__':
     main()

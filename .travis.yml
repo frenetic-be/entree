@@ -4,8 +4,12 @@ python:
   - 2.7
   - 3.6
 
+before_script:
+  - python setup.py install
+
 script:
-  - python -m unittest discover tests/
+  - python -m unittest discover tests/ -p "test_*.py"
+  - python tests/entree_bash_test.py
 
 notifications:
   email:

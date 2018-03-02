@@ -3,7 +3,7 @@
 
 '''
 .. module:: {{ modname }}.models
-.. moduleauthor:: {{ config.AUTHOR }}
+.. moduleauthor:: {{ config['author'] }}
 .. created:: {{ creation_date.strftime('%B %Y') }}
 '''
 

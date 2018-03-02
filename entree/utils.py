@@ -8,13 +8,13 @@
 
 Simple module to create files and directories in a programming project
 """
-import os
 import json
+import os
+
 import six
 from jinja2 import Template
 
 CONFIG_FILE_NAME = 'entree_config.json'
-FILES_TO_IGNORE = ['.DS_Store']
 
 
 def get_config_dir():
@@ -37,53 +37,66 @@ def read_config():
     '''Reads the config file
 
     Returns:
-        config: namedtuple containing the configuration
+        config: dict containing the configuration
     '''
-    from collections import namedtuple
-
-    def _json_object_hook(dic):
-        '''Creates a named tuple from a dictionary dic
-        '''
-        return namedtuple('Config', dic.keys())(*dic.values())
-
-    def json2obj(datafile):
-        '''Reads a JSON file and convert response to a named tuple
-        '''
-        return json.load(datafile, object_hook=_json_object_hook)
-
     configfile = get_config_file()
     if not os.path.exists(configfile):
         set_config()
     with open(configfile) as fil:
-        return json2obj(fil)
+        return json.load(fil)
 
 
-def set_config(author='<UNDEFINED>',
-               author_email_prefix='<UNDEFINED>',
-               author_email_suffix='<UNDEFINED>',
-               author_url='<UNDEFINED>',
-               overwrite=False):
+def get_config_param(param, value=None, project_type=None):
+    '''Gets a specific parameter from the config file
+
+    Args:
+        param: the name of the parameter to get from the config file
+
+    Keyword Args:
+        value (default=None): default value for the parameter if not found
+            in the config file
+        project_type (str, default=None): project type for project-specific
+            configuration
+
+    Returns:
+        config parameter
+    '''
+    config = read_config()
+    if (project_type and 'project_config' in config and
+            project_type in config['project_config']):
+        project = config['project_config'][project_type]
+        if param in project:
+            return project[param]
+        return value
+    if param in config:
+        return config[param]
+    return value
+
+
+def set_config(overwrite=False, **config):
     '''Sets the config parameters
 
     Keyword Args:
-        author (str): author name,
-        author_email_prefix (str): author email prefix,
-        author_email_suffix (str): author email suffix,
-        author_url (str): author url,
         overwrite (bool, default=False): Set to True to overwrite an existing
             config file.
+        **config: all other keyword args will be used
+            as config parameters in the config file.
     '''
-    config = {'AUTHOR': author,
-              'AUTHOR_EMAIL_PREFIX': author_email_prefix,
-              'AUTHOR_EMAIL_SUFFIX': author_email_suffix,
-              'AUTHOR_URL': author_url}
+    if 'author' not in config:
+        config['author'] = '<UNDEFINED>'
+    if 'author_email_prefix' not in config:
+        config['author_email_prefix'] = '<UNDEFINED>'
+    if 'author_email_suffix' not in config:
+        config['author_email_suffix'] = '<UNDEFINED>'
+    if 'author_url' not in config:
+        config['author_url'] = '<UNDEFINED>'
     configdir = get_config_dir()
     if not os.path.exists(configdir):
         os.makedirs(configdir)
     configfile = os.path.join(configdir, CONFIG_FILE_NAME)
     if not os.path.exists(configfile) or overwrite:
         with open(configfile, 'w') as fil:
-            json.dump(config, fil)
+            json.dump(config, fil, indent=4, sort_keys=True)
 
 
 def create_general_file(fname, file_content):
@@ -139,7 +152,8 @@ def render_template(filename, **kwargs):
     return template.render(**kwargs)
 
 
-def copy_file_structure(rootdir, path, replace=None, **kwargs):
+def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
+                        **kwargs):
     '''Walks through the file structure and copy all directories and files.
 
     Args:
@@ -153,6 +167,9 @@ def copy_file_structure(rootdir, path, replace=None, **kwargs):
     '''
     if not os.path.exists(rootdir):
         raise IOError('Root directory not found: "'+rootdir+'"')
+
+    if not files_to_ignore:
+        files_to_ignore = get_config_param('files_to_ignore', [])
 
     for fname in os.listdir(path):
         src = os.path.join(path, fname)
@@ -168,7 +185,7 @@ def copy_file_structure(rootdir, path, replace=None, **kwargs):
                 os.makedirs(dst)
             copy_file_structure(dst, src, replace=replace, **kwargs)
         elif os.path.isfile(src):
-            if fname not in FILES_TO_IGNORE:
+            if fname not in files_to_ignore:
                 file_content = render_template(src, **kwargs)
                 create_general_file(dst, file_content)
             else:

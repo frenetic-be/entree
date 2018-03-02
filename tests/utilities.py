@@ -15,7 +15,7 @@ import six
 import entree.utils
 
 
-def get_file_content(project, filepath, templatepath):
+def get_file_content(project, filepath, templatepath, project_cls=None):
     ''' Get the content of a file and of its template
 
     Args:
@@ -24,11 +24,17 @@ def get_file_content(project, filepath, templatepath):
         filepath (str): path for the file to check
         templatepath (str): path for the template file
 
+    Keyword args:
+        project_cls (ProjectBase class, default=None): project class
+
     Returns:
         tuple with content of both files
     '''
     modname = project
-    config = entree.utils.read_config()
+    if project_cls is None:
+        config = entree.utils.read_config()
+    else:
+        config = project_cls.get_config()
     creation_date = datetime.datetime.now()
     data = {
         'modname': modname,
@@ -136,6 +142,9 @@ def get_all_dirs_and_files(rootdir, basename=''):
     '''
     dirs = []
     files = []
+
+    files_to_ignore = entree.utils.get_config_param('files_to_ignore', [])
+
     for fname in os.listdir(rootdir):
         subpath = os.path.join(rootdir, fname)
         newbasename = os.path.join(basename, fname)
@@ -146,7 +155,7 @@ def get_all_dirs_and_files(rootdir, basename=''):
             dirs += newdirs
             files += newfiles
         elif (os.path.isfile(subpath) and
-              fname not in entree.utils.FILES_TO_IGNORE):
+              fname not in files_to_ignore):
             files.append(newbasename)
     return dirs, files
 
