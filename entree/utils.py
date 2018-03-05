@@ -202,7 +202,8 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
             if not os.path.exists(dst) and zipf is None:
                 os.makedirs(dst)
             copy_file_structure(dst, src, replace=replace, partial=partial,
-                                zipf=zipf, **kwargs)
+                                files_to_ignore=files_to_ignore, zipf=zipf,
+                                **kwargs)
         elif os.path.isfile(src):
             if fname not in files_to_ignore:
                 file_content = render_template(src, **kwargs)
