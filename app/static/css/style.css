@@ -7,12 +7,13 @@ website: https://frenetic.be
 
 body, html {
   width: 100%;
-  background-color: white;
+  background-color: steelblue;
+  color: white;
   font-family: 'Open Sans', sans-serif, Palatino;
   font-weight: 300;
 }
 
-#disclaimer, .main {
+#disclaimer {
   margin: 1em 0;
 }
 
@@ -21,8 +22,19 @@ header, footer {
   color: white;
 }
 
-.title {
+.main-row {
+  background-color: white;
+  color: steelblue;
   padding: 1em 0;
+}
+
+.disclaimer-row {
+  background-color: white;
+  color: steelblue;
+}
+
+.title {
+  padding: 1em 0 0;
 }
 
 .title a, .title a:visited, .title a:link {

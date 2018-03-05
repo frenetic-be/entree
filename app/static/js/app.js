@@ -13,7 +13,7 @@ $("#entree-form").submit(function(e){
     $(".alert")
         .removeClass("alert-danger alert-success")
         .addClass("alert-success")
-        .text("Yay! You're good to go. Thank you for using entree.")
+        .text("Yay! You're good to go. Thanks for using entree.")
         .show();
 });
 

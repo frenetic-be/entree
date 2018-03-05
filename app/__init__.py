@@ -47,6 +47,10 @@ def home():
 @app.route('/submit', methods=['POST'])
 def submit():
     try:
+        fields = sorted(list(request.form.keys()))
+        if fields != ['email', 'name', 'projectname', 'projecttype', 'url']:
+            raise ValueError('Wrong fields in request')
+
         # Get data from form
         # Project name and type
         modname = request.form['projectname']
