@@ -85,6 +85,7 @@ def submit():
             # directory
             copy_file_structure('.', project_cls.template_path(),
                                 replace=project_cls.replace, zipf=zipf,
+                                files_to_ignore=['.DS_Store'],
                                 modname=modname, config=config,
                                 creation_date=creation_date)
             # Create files common to all projects
