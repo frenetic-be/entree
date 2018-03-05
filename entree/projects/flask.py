@@ -14,6 +14,7 @@ __version__ = '0.0'
 _, FILEBASE = os.path.split(__file__)
 
 PROJECT_TYPE = os.path.splitext(FILEBASE)[0]
+PROJECT_LONG_NAME = 'Python - Flask'
 TEMPLATE_DIR = 'python-flask'
 SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'app_py.template')
 
@@ -23,6 +24,7 @@ class Flask(ProjectBase):
 
     Class attributes:
         project_type (str): project type (e.g. flask)
+        project_long_name (str): long name for a project (e.g. 'Large Flask')
         template_dir (str): path to the project template directory relative to
             the template root directory
         common_dir (str): path to the common template directory relative to
@@ -37,6 +39,7 @@ class Flask(ProjectBase):
             (only for unit testing the file name templating)
     '''
     project_type = PROJECT_TYPE
+    project_long_name = PROJECT_LONG_NAME
     template_dir = TEMPLATE_DIR
     single_file = SINGLE_FILE
     version = __version__

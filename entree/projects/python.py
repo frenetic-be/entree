@@ -14,6 +14,7 @@ __version__ = '0.0'
 FILEPATH, FILEBASE = os.path.split(__file__)
 
 PROJECT_TYPE = os.path.splitext(FILEBASE)[0]
+PROJECT_LONG_NAME = 'Python'
 TEMPLATE_DIR = 'python'
 SINGLE_FILE = os.path.join(TEMPLATE_DIR, 'src', '__init___py.template')
 REPLACE = {
@@ -27,6 +28,7 @@ class Python(ProjectBase):
 
     Class attributes:
         project_type (str): project type (e.g. flask)
+        project_long_name (str): long name for a project (e.g. 'Large Flask')
         template_dir (str): path to the project template directory relative to
             the template root directory
         common_dir (str): path to the common template directory relative to
@@ -39,6 +41,7 @@ class Python(ProjectBase):
         version (str): version number
     '''
     project_type = PROJECT_TYPE
+    project_long_name = PROJECT_LONG_NAME
     template_dir = TEMPLATE_DIR
     single_file = SINGLE_FILE
     replace = REPLACE

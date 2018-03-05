@@ -14,6 +14,7 @@ __version__ = '0.0'
 _, FILEBASE = os.path.split(__file__)
 
 PROJECT_TYPE = os.path.splitext(FILEBASE)[0]
+PROJECT_LONG_NAME = 'Python - Large Flask App'
 TEMPLATE_DIR = 'python-flask-large'
 REPLACE = {
     'unittest_py.template': 'test_{{ modname }}.py',
@@ -26,6 +27,7 @@ class FlaskLarge(ProjectBase):
 
     Class attributes:
         project_type (str): project type (e.g. flask)
+        project_long_name (str): long name for a project (e.g. 'Large Flask')
         template_dir (str): path to the project template directory relative to
             the template root directory
         common_dir (str): path to the common template directory relative to
@@ -38,6 +40,7 @@ class FlaskLarge(ProjectBase):
         version (str): version number
     '''
     project_type = PROJECT_TYPE
+    project_long_name = PROJECT_LONG_NAME
     template_dir = TEMPLATE_DIR
     replace = REPLACE
     version = __version__

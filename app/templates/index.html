@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <title>app</title>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <header class="row">
+      <div class="col-md-8 offset-md-2 title">
+          <h2>entree</h2>
+          <p class="definition">noun  en·tree  \ ˈän-ˌtrā also än-ˈtrā \ (origin French: entrance) a smaller dish served before the main course of a meal<p>
+          <p>
+            entree will get you started on a new programming project within seconds by providing the skeleton files and file structure. Get the shell script or check the code out on <a href="https://github.com/frenetic-be/entree">github</a>.
+          </p>
+      </div>
+    </header>
+    <div class="row main">
+      <div class="col-md-8 offset-md-2">
+        <form id="entree-form" method="POST" action="/submit">
+          <div class="form-group has-success has-feedback">
+            <label for="projectname">Project name</label>
+            <input type="text" class="form-control form-control-sm" name="projectname" id="projectname" placeholder="Enter project name" required pattern="[A-Za-z][A-Za-z0-9_]*">
+          </div>
+
+          <div class="form-group">
+              <label for="projecttype">Project type</label>
+              <select class="form-control form-control-sm" name="projecttype" id="projecttype">
+                {% for ptype in project_types %}
+                  <option value="{{ ptype }}"{% if ptype == 'Python' %} selected{% endif %}>{{ ptype }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          <div class="form-group">
+            <label for="name">Name (optional)</label>
+            <input type="text" class="form-control form-control-sm" name="name" id="name" placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email address (optional)</label>
+            <input type="email" class="form-control form-control-sm" name="email" id="email" placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label for="url">URL (optional)</label>
+            <input type="text" class="form-control form-control-sm" name="url" id="url" placeholder="Enter your website's URL">
+          </div>
+          <!-- <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+          </div> -->
+          
+          <small id="disclaimer" class="form-text text-muted">All information collected on this page is only used to create your template files. We'll never keep your data or share it with anyone else.</small>
+          <button type="submit" class="btn btn-primary" id="form-submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="alert alert-success text-center" role="alert">
+          This is a success alert—check it out!
+        </div>
+      </div>
+    </div>
+    <footer class="row">
+      <div class="col-md-8 offset-md-2">
+          <ul class="footer-links text-center">
+              <li><a href="https://twitter.com/frenetic_be">twitter</a></li>
+              <li><a href="https://github.com/frenetic-be">github</a></li>
+              <li><a href="https://stackoverflow.com/users/2184364/julien-spronck">stackoverflow</a></li>
+          </ul>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+  {% if error != '' %}
+    <script>displayError("{{ error }}")</script>
+  {% endif %}
+
+</body>
+</html>

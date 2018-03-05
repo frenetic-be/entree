@@ -10,6 +10,8 @@ Simple module to create files and directories in a programming project
 """
 import json
 import os
+import time
+import zipfile
 
 import six
 from jinja2 import Template
@@ -99,23 +101,31 @@ def set_config(overwrite=False, **config):
             json.dump(config, fil, indent=4, sort_keys=True)
 
 
-def create_general_file(fname, file_content):
+def create_general_file(fname, file_content, zipf=None):
     '''Creates a file.
 
     Args:
-        - fname (str): file name
-        - file_content (iterator): generator/iterator containing
+        fname (str): file name
+        file_content (iterator): generator/iterator containing
             the file content.
+
+    Keyword args:
+        zipf (zipfile.ZipFile, default=None)
     '''
-    if os.path.exists(fname):
-        raise IOError('File already exists. Will not overwrite')
 
     # if dirname and not os.path.exists(dirname):
     #     os.makedirs(dirname)
-
-    with open(fname, 'w') as fil:
-        for line in file_content:
-            fil.write(line)
+    if zipf is None:
+        if os.path.exists(fname):
+            raise IOError('File already exists. Will not overwrite')
+        with open(fname, 'w') as fil:
+            for line in file_content:
+                fil.write(line)
+    else:
+        data = zipfile.ZipInfo(fname)
+        data.date_time = time.localtime(time.time())[:6]
+        data.compress_type = zipfile.ZIP_DEFLATED
+        zipf.writestr(data, file_content)
 
 
 def create_dirs(rootdir, *dirs):
@@ -153,7 +163,7 @@ def render_template(filename, **kwargs):
 
 
 def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
-                        partial=None, **kwargs):
+                        partial=None, zipf=None, **kwargs):
     '''Walks through the file structure and copy all directories and files.
 
     Args:
@@ -166,9 +176,10 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
         files_to_ignore (list, default=None): list of file names to ignore.
         partial (list, default=None): list of paths for a partial build.
             Only the paths in the lists will be created.
+        zipf (zipfile.ZipFile, default=None)
         **kwargs: dictionary containing the variables for templating
     '''
-    if not os.path.exists(rootdir):
+    if not os.path.exists(rootdir) and zipf is None:
         raise IOError('Root directory not found: "'+rootdir+'"')
 
     if not files_to_ignore:
@@ -188,19 +199,20 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
 
         dst = os.path.join(rootdir, fname)
         if os.path.isdir(src):
-            if not os.path.exists(dst):
+            if not os.path.exists(dst) and zipf is None:
                 os.makedirs(dst)
             copy_file_structure(dst, src, replace=replace, partial=partial,
-                                **kwargs)
+                                zipf=zipf, **kwargs)
         elif os.path.isfile(src):
             if fname not in files_to_ignore:
                 file_content = render_template(src, **kwargs)
-                create_general_file(dst, file_content)
+                create_general_file(dst, file_content, zipf=zipf)
             else:
                 six.print_('File ignored: `{0}`'.format(fname))
 
 
-def create_single_file(rootdir, newfilename, template_path, **kwargs):
+def create_single_file(rootdir, newfilename, template_path, zipf=None,
+                       **kwargs):
     '''Creates a single file from a template.
 
     Args:
@@ -209,6 +221,7 @@ def create_single_file(rootdir, newfilename, template_path, **kwargs):
         template_path (str): the path for the template file
 
     Keyword args:
+        zipf (zipfile.ZipFile, default=None)
         **kwargs: dictionary containing the variables for templating
     '''
     if not os.path.exists(rootdir):
@@ -218,4 +231,4 @@ def create_single_file(rootdir, newfilename, template_path, **kwargs):
 
     dst = os.path.join(rootdir, newfilename)
 
-    create_general_file(dst, file_content)
+    create_general_file(dst, file_content, zipf=zipf)

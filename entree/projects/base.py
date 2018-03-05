@@ -31,6 +31,7 @@ class ProjectBase(object):
 
     Class attributes:
         project_type (str): project type (e.g. flask)
+        project_long_name (str): long name for a project (e.g. 'Large Flask')
         template_dir (str): path to the project template directory relative to
             the template root directory
         common_dir (str): path to the common template directory relative to
@@ -45,6 +46,9 @@ class ProjectBase(object):
 
     # Project type (typically the python module containing the class)
     project_type = ''
+
+    # Project long name
+    project_long_name = ''
 
     # Path to the template directory
     template_dir = ''
