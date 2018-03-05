@@ -14,6 +14,7 @@ import os
 import re
 import shutil
 import time
+import traceback
 import zipfile
 
 from flask import Flask, render_template, url_for
@@ -97,6 +98,7 @@ def submit():
         return send_file(memory_file, attachment_filename=modname+'.zip',
                          as_attachment=True)
     except:
+        traceback.print_exc()
         return redirect(url_for('home', error='Oh no! Looks like '
                                 'there was a problem.'))
     # return send_from_directory(directory=rootdir,
