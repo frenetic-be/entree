@@ -60,7 +60,6 @@ setup(
         'certifi==2018.1.18',
         'chardet==3.0.4',
         'click==6.7',
-        'entree==2.1',
         'Flask==0.12.2',
         'gunicorn==19.7.1',
         'idna==2.6',
