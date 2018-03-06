@@ -25,6 +25,10 @@ function displayError(msg){
         .show();
 }
 
+function hideAlert(){
+    $('.alert').hide();
+}
+
 function getFiles(){
     if ($('#projectname').is(':invalid')) {
         $('.files').html('');
@@ -138,3 +142,6 @@ function getFiles(){
 
 $('#projectname').on("change keyup paste", getFiles);
 $('#projecttype').on("change", getFiles);
+
+$('input').on('change keyup paste', hideAlert);
+$('#projecttype').on('change', hideAlert);
