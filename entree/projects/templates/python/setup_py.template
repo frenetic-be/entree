@@ -11,18 +11,20 @@ Setup script for {{ modname }}
 
 from setuptools import setup
 
-setup(name="{{ modname }}",
-      version="1.0",
-      description="",
-      long_description="""
-      Simple module to ...
-      """,
-      author="{{ config['author'] }}",
-      author_email="{{ config['author_email_prefix'] }}@{{ config['author_email_suffix'] }}",
-      url="{{ config['author_url'] }}",
-      packages=["{{ modname }}"],
-      #       entry_points = {"console_scripts":["{{ modname }} = "
-      #                                          "{{ modname }}:main"]},
-      #       data_files=[(_CONFIGDIR,
-      #                   ["{{ modname }}/{{ modname }}_config.py"])],
-      license="Free for non-commercial use")
+setup(
+    name="{{ modname }}",
+    version="1.0",
+    description="",
+    long_description="""
+    Simple module to ...
+    """,
+    author="{{ config['author'] }}",
+    author_email="{{ config['author_email_prefix'] }}@{{ config['author_email_suffix'] }}",
+    url="{{ config['author_url'] }}",
+    packages=["{{ modname }}"],
+    #       entry_points = {"console_scripts":["{{ modname }} = "
+    #                                          "{{ modname }}:main"]},
+    #       data_files=[(_CONFIGDIR,
+    #                   ["{{ modname }}/{{ modname }}_config.py"])],
+    license="Free for non-commercial use"
+)
