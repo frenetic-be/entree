@@ -15,7 +15,7 @@
 
   <div class="container-fluid main-container">
     <header class="row">
-      <div class="col-md-8 offset-md-2 title">
+      <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-sm-10 offset-sm-1 title">
           <h2>entree</h2>
           <p class="definition">noun  en·tree  \ ˈän-ˌtrā also än-ˈtrā \ (origin French: entrance) a smaller dish served before the main course of a meal</p>
           <p>
@@ -23,9 +23,10 @@
           </p>
       </div>
     </header>
-    <div class="row main-row">
-      <div class="col-md-8 offset-md-2">
-        <form id="entree-form" method="POST" action="/submit">
+    <form id="entree-form" method="POST" action="/submit">
+      <div class="row main-row">
+        <div class="col-lg-6 offset-lg-2 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
+        
           <div class="form-group has-success has-feedback">
             <label for="projectname">Project name</label>
             <input type="text" class="form-control form-control-sm" name="projectname" id="projectname" placeholder="Enter project name" required pattern="[A-Za-z][A-Za-z0-9_]*">
@@ -51,25 +52,25 @@
             <label for="url">URL (optional)</label>
             <input type="text" class="form-control form-control-sm" name="url" id="url" placeholder="Enter your website's URL">
           </div>
-          <!-- <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-          </div> -->
-          
           <small id="disclaimer" class="form-text text-muted">All information collected on this page is only used to create your template files. We'll never keep your data or share it with anyone else.</small>
           <button type="submit" class="btn btn-primary" id="form-submit">Submit</button>
-        </form>
+          <div class="vspacer"></div>
+        </div>
+        <div class="col-lg-2 offset-lg-0 col-md-8 offset-md-2 col-sm-10 offset-sm-1 generated-files">
+          <label>Files that will be generated:</label>
+          <div class="form-group files"></div>
+        </div>
       </div>
-    </div>
-    <div class="row disclaimer-row">
-      <div class="col-md-8 offset-md-2">
+    </form>
+    <div class="row alert-row">
+      <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
         <div class="alert alert-success text-center" role="alert">
           This is a success alert—check it out!
         </div>
       </div>
     </div>
     <footer class="row">
-      <div class="col-md-8 offset-md-2">
+      <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2">
           <ul class="footer-links text-center">
               <li><a href="https://twitter.com/frenetic_be">twitter</a></li>
               <li><a href="https://github.com/frenetic-be">github</a></li>

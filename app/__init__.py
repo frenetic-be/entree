@@ -21,13 +21,19 @@ from flask import Flask, render_template, url_for
 from flask import jsonify, request, redirect, send_file, send_from_directory
 
 from entree.projects import CLASSES, CLASS_LONG_NAMES
-from entree.utils import copy_file_structure, create_single_file
+from entree.utils import (
+    copy_file_structure,
+    create_single_file,
+    get_all_dirs_and_files,
+    filemap
+)
 
 __version__ = '1.0'
 
 app = Flask(__name__)
 
 FILEROOT, FILEBASE = os.path.split(__file__)
+FILES_TO_IGNORE = ['.DS_Store']
 
 
 # Routes
@@ -36,9 +42,9 @@ FILEROOT, FILEBASE = os.path.split(__file__)
 def home():
     '''Main flask route
     '''
-    error = request.args.get('error')
-    if error is None:
-        error = ''
+    error = request.args.get('error', default='')
+    # if error is None:
+    #     error = ''
     return render_template('index.html', project_types=CLASS_LONG_NAMES,
                            error=error)
 
@@ -47,9 +53,13 @@ def home():
 @app.route('/submit', methods=['POST'])
 def submit():
     try:
+        accepted_fields = ['email', 'name', 'projectname', 'projecttype',
+                           'url']
         fields = sorted(list(request.form.keys()))
-        if fields != ['email', 'name', 'projectname', 'projecttype', 'url']:
-            raise ValueError('Wrong fields in request')
+        for field in fields:
+            if (field not in accepted_fields and
+                    not field.startswith('cb_')):
+                raise ValueError('Wrong fields in request')
 
         # Get data from form
         # Project name and type
@@ -82,6 +92,21 @@ def submit():
         # Get the class corresponding to the given project type
         project_cls = [class_ for class_ in CLASSES.values()
                        if class_.project_long_name == project_type][0]
+
+        partial = [os.path.join(project_cls.template_path(), tname[3:])
+                   for tname in request.form
+                   if tname.startswith('cb_') and
+                   not tname.startswith('cb_common_')]
+
+        commons = [
+            [
+                tname[10:],
+                os.path.join(project_cls.common_template_path(), tname[10:])
+            ]
+            for tname in request.form
+            if tname.startswith('cb_common_')
+        ]
+
         # Create a zip file with the content
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w') as zipf:
@@ -89,13 +114,12 @@ def submit():
             # directory
             copy_file_structure('.', project_cls.template_path(),
                                 replace=project_cls.replace, zipf=zipf,
-                                files_to_ignore=['.DS_Store'],
+                                files_to_ignore=FILES_TO_IGNORE,
+                                partial=partial,
                                 modname=modname, config=config,
                                 creation_date=creation_date)
             # Create files common to all projects
-            for name in os.listdir(project_cls.common_template_path()):
-                tpath = project_cls.common_template_path()
-                template_path = os.path.join(tpath, name)
+            for name, template_path in commons:
                 create_single_file('.', name, template_path, zipf=zipf,
                                    modname=modname, config=config,
                                    creation_date=creation_date)
@@ -110,6 +134,37 @@ def submit():
     #                            filename=modname+'.zip')
     # # Redirect to home page
     # return redirect('/')
+
+
+# form submission route
+@app.route('/filestructure/<project_type>', methods=['GET'])
+def filestructure(project_type='Python'):
+    '''Returns file structure for a given project type
+    '''
+    if project_type not in CLASS_LONG_NAMES:
+        return redirect(url_for('home', error='Project type unsupported'))
+
+    modname = request.args.get('projectname', default='')
+    if modname == '':
+        modname = 'src'
+
+    # Get the class corresponding to the given project type
+    project_cls = [class_ for class_ in CLASSES.values()
+                   if class_.project_long_name == project_type][0]
+
+    dirs, files = get_all_dirs_and_files(project_cls.template_path(),
+                                         files_to_ignore=FILES_TO_IGNORE)
+    dirs = filemap(dirs, replace=project_cls.replace, modname=modname)
+    files = filemap(files, replace=project_cls.replace, modname=modname)
+    cdirs, cfiles = get_all_dirs_and_files(project_cls.common_template_path(),
+                                           files_to_ignore=FILES_TO_IGNORE)
+
+    return jsonify({
+        'dirs': dirs,
+        'files': files,
+        'common_dirs': cdirs,
+        'common_files': cfiles
+    })
 
 if __name__ == "__main__":
     app.run()
