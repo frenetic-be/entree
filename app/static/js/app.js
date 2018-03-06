@@ -118,6 +118,9 @@ function getFiles(){
         $('.files').html(items.join(''));
 
         $('input[type="checkbox"]').click(function(){
+
+            hideAlert();
+
             var isChecked = $(this).prop('checked');
             var isDir = $(this).hasClass('dirs');
             // If it is a directory, check or uncheck all of its children
@@ -142,6 +145,4 @@ function getFiles(){
 
 $('#projectname').on("change keyup paste", getFiles);
 $('#projecttype').on("change", getFiles);
-
-$('input').on('change keyup paste', hideAlert);
 $('#projecttype').on('change', hideAlert);
