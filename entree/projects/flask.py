@@ -35,8 +35,6 @@ class Flask(ProjectBase):
             names that should be replaced when creating the files. For
             example, {'unittest_py.template': 'test_project.py'}
         version (str): version number
-        files_to_test (dict): dict of files created by the class
-            (only for unit testing the file name templating)
     '''
     project_type = PROJECT_TYPE
     project_long_name = PROJECT_LONG_NAME
