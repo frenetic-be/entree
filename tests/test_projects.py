@@ -7,17 +7,15 @@ Tests for entree.projects
 import os
 import unittest
 
+import six
+
 import entree.utils
 import entree.projects.base as base
 from utilities import (
     get_file_content,
     TMPFile,
-    print_header,
-    get_all_dirs_and_files,
-    filemap
+    print_header
 )
-
-import six
 
 CLASSES = base.ProjectBase.__subclasses__()
 
@@ -42,9 +40,10 @@ class TestFileCreation(unittest.TestCase):
                     gendir = os.path.join(rootdir, project)
 
                     tpath = project_cls.template_path()
-                    dirs, _ = get_all_dirs_and_files(tpath)
-                    dirmap = filemap(dirs, replace=project_cls.replace,
-                                     modname=project)
+                    dirs, _ = entree.utils.get_all_dirs_and_files(tpath)
+                    dirmap = entree.utils.filemap(dirs,
+                                                  replace=project_cls.replace,
+                                                  modname=project)
 
                     for _, dname in dirmap.items():
                         six.print_('- Testing directory `{0}`:'.format(dname))
@@ -72,9 +71,10 @@ class TestFileCreation(unittest.TestCase):
                     gendir = os.path.join(rootdir, project)
 
                     tpath = project_cls.template_path()
-                    _, files = get_all_dirs_and_files(tpath)
-                    filmap = filemap(files, replace=project_cls.replace,
-                                     modname=project)
+                    _, files = entree.utils.get_all_dirs_and_files(tpath)
+                    filmap = entree.utils.filemap(files,
+                                                  replace=project_cls.replace,
+                                                  modname=project)
                     for _, fname in filmap.items():
                         six.print_('- Testing file `{0}`:'.format(fname))
                         path = os.path.join(gendir, fname)
@@ -106,10 +106,12 @@ class TestFileCreation(unittest.TestCase):
                             gendir = os.path.join(rootdir, project)
 
                             tpath = project_cls.template_path()
-                            _, files = get_all_dirs_and_files(tpath)
-                            filmap = filemap(files,
-                                             replace=project_cls.replace,
-                                             modname=project)
+                            files = entree.utils.get_all_dirs_and_files(tpath)
+                            filmap = entree.utils.filemap(
+                                files[1],
+                                replace=project_cls.replace,
+                                modname=project
+                            )
                             partials = config['partial_builds'][partial_build]
                             for tname, fname in filmap.items():
                                 six.print_('- Testing file '
@@ -217,9 +219,10 @@ class TestFileCreation(unittest.TestCase):
 
                     gendir = os.path.join(rootdir, project)
                     tpath = project_cls.template_path()
-                    _, files = get_all_dirs_and_files(tpath)
-                    filmap = filemap(files, replace=project_cls.replace,
-                                     modname=project)
+                    _, files = entree.utils.get_all_dirs_and_files(tpath)
+                    filmap = entree.utils.filemap(files,
+                                                  replace=project_cls.replace,
+                                                  modname=project)
                     for tname, fname in filmap.items():
                         six.print_('- Testing file content for '
                                    '`{0}`:'.format(fname))

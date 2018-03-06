@@ -1,0 +1,34 @@
+{   
+    "extends": "eslint:recommended",
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "globals": {
+            "$": true
+        },
+    "rules": {
+        "no-console":"off",
+
+        "curly": "warn",
+        "dot-location": ["warn", "property"],
+        "eqeqeq": "warn",
+        "no-eval":"warn",
+        "no-loop-func":"warn",
+        "no-multi-spaces":"warn",
+        "no-param-reassign":"warn",
+        "no-useless-return":"warn",
+        "vars-on-top":"off",
+
+        "array-bracket-newline":["warn", { "minItems": 3 }],
+        "array-bracket-spacing":["warn", "never"],
+        "brace-style":["warn", "1tbs"],
+        "camelcase":"warn",
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "indent": ["error", 4],
+
+        "semi":"warn",
+        "no-trailing-spaces": "warn"
+        
+    }
+ }

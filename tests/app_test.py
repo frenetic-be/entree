@@ -10,7 +10,8 @@ import unittest
 
 import requests
 
-SUBMIT_URL = 'http://localhost:5000/submit'
+BASE_URL = 'http://localhost:5000'
+SUBMIT_URL = BASE_URL + '/submit'
 
 
 class TestStatus(unittest.TestCase):
@@ -64,6 +65,37 @@ class TestStatus(unittest.TestCase):
         self.assertEqual(response.url,
                          'http://localhost:5000/?'
                          'error=Project+type+unsupported')
+
+
+class TestFileStructure(unittest.TestCase):
+    '''Testing filestructure endpoint
+    '''
+    def test_python(self):
+        '''check http status code
+        '''
+        url = BASE_URL + '/filestructure/Python?projectname=blahblah'
+        expected = {
+            'common_dirs': [],
+            'common_files': [
+                '.gitignore',
+                'License.md',
+                'README.md',
+                'requirements.txt'
+            ],
+            'dirs': {
+                'src': 'blahblah',
+                'tests': 'tests'
+            },
+            'files': {
+                'setup_py.template': 'setup.py',
+                'src/__init___py.template': 'blahblah/__init__.py',
+                'tests/unittest_py.template': 'tests/test_blahblah.py'
+            },
+        }
+        response = requests.get(url)
+        self.assertEqual(response.status_code, 200)
+        response = response.json()
+        self.assertDictEqual(response, expected)
 
 if __name__ == '__main__':
     unittest.main()

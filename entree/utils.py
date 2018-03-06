@@ -233,3 +233,68 @@ def create_single_file(rootdir, newfilename, template_path, zipf=None,
     dst = os.path.join(rootdir, newfilename)
 
     create_general_file(dst, file_content, zipf=zipf)
+
+
+def get_all_dirs_and_files(rootdir, basename='', files_to_ignore=None):
+    '''Get all path names for template directories
+    '''
+    dirs = []
+    files = []
+
+    if files_to_ignore is None:
+        files_to_ignore = get_config_param('files_to_ignore', [])
+
+    for fname in os.listdir(rootdir):
+        subpath = os.path.join(rootdir, fname)
+        newbasename = os.path.join(basename, fname)
+        if os.path.isdir(subpath):
+            dirs.append(newbasename)
+            newdirs, newfiles = get_all_dirs_and_files(
+                subpath,
+                basename=newbasename,
+                files_to_ignore=files_to_ignore
+            )
+            dirs += newdirs
+            files += newfiles
+        elif (os.path.isfile(subpath) and
+              fname not in files_to_ignore):
+            files.append(newbasename)
+    return dirs, files
+
+
+def replace_pathname(pathname, replace=None, **kwargs):
+    '''Replaces a directory name based on patterns defined in a dictionary
+
+    Args:
+        replace (dict, default=None): dictionary with replacement patterns
+
+    Returns:
+        new directory name (str)
+    '''
+    if not replace:
+        if pathname.endswith('_py.template'):
+            return pathname[:-12]+'.py'
+        return pathname
+
+    dirsplit = pathname.split(os.sep)
+    if len(dirsplit) > 1:
+        # Apply this function to all directory names in the path
+        dirsplit = [replace_pathname(dname, replace=replace, **kwargs)
+                    for dname in dirsplit]
+        return os.path.join(*dirsplit)
+    else:
+        if pathname in replace:
+            template = Template(replace[pathname])
+            return template.render(**kwargs)
+        if pathname.endswith('_py.template'):
+            return pathname[:-12]+'.py'
+        # No match in `replace` => returns the orginal name
+        return pathname
+
+
+def filemap(files, replace=None, **kwargs):
+    '''Mapping between file/dir names and their template
+    for testing purposes.
+    '''
+    return {name: replace_pathname(name, replace=replace, **kwargs)
+            for name in files}

@@ -28,13 +28,13 @@ header, footer {
   padding: 1em 0;
 }
 
-.disclaimer-row {
+.alert-row {
   background-color: white;
   color: steelblue;
 }
 
 .title {
-  padding: 1em 0 0;
+  padding: 1em 1em 0;
 }
 
 .title a, .title a:visited, .title a:link {
@@ -87,4 +87,30 @@ input#projectname:valid {
 input#projectname:invalid {
   color: red;
   outline: 2px solid red;
+}
+
+label.dirs {
+  font-weight: normal;
+}
+
+.dirgroup {
+  margin-bottom: 0;
+}
+
+.spacer {
+  padding: 0 0.5em;
+}
+
+.vspacer {
+  padding-top: 1em;
+}
+
+.files {
+  padding-left: 1.5em;
+}
+
+.generated-files {
+  background-color: #eee;
+  padding-top: 1em;
+  overflow-x: scroll;
 }

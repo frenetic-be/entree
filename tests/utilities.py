@@ -10,7 +10,6 @@ import random
 import shutil
 import string
 
-from jinja2 import Template
 import six
 import entree.utils
 
@@ -105,64 +104,3 @@ def print_header(msg):
     six.print_('\n' + '-' * len(msg))
     six.print_(msg)
     six.print_('-' * len(msg))
-
-
-def replace_pathname(pathname, replace=None, **kwargs):
-    '''Replaces a directory name based on patterns defined in a dictionary
-
-    Args:
-        replace (dict, default=None): dictionary with replacement patterns
-
-    Returns:
-        new directory name (str)
-    '''
-    if not replace:
-        if pathname.endswith('_py.template'):
-            return pathname[:-12]+'.py'
-        return pathname
-
-    dirsplit = pathname.split(os.sep)
-    if len(dirsplit) > 1:
-        # Apply this function to all directory names in the path
-        dirsplit = [replace_pathname(dname, replace=replace, **kwargs)
-                    for dname in dirsplit]
-        return os.path.join(*dirsplit)
-    else:
-        if pathname in replace:
-            template = Template(replace[pathname])
-            return template.render(**kwargs)
-        if pathname.endswith('_py.template'):
-            return pathname[:-12]+'.py'
-        # No match in `replace` => returns the orginal name
-        return pathname
-
-
-def get_all_dirs_and_files(rootdir, basename=''):
-    '''Get all path names for template directories
-    '''
-    dirs = []
-    files = []
-
-    files_to_ignore = entree.utils.get_config_param('files_to_ignore', [])
-
-    for fname in os.listdir(rootdir):
-        subpath = os.path.join(rootdir, fname)
-        newbasename = os.path.join(basename, fname)
-        if os.path.isdir(subpath):
-            dirs.append(newbasename)
-            newdirs, newfiles = get_all_dirs_and_files(subpath,
-                                                       basename=newbasename)
-            dirs += newdirs
-            files += newfiles
-        elif (os.path.isfile(subpath) and
-              fname not in files_to_ignore):
-            files.append(newbasename)
-    return dirs, files
-
-
-def filemap(files, replace=None, **kwargs):
-    '''Mapping between file/dir names and their template
-    for testing purposes.
-    '''
-    return {name: replace_pathname(name, replace=replace, **kwargs)
-            for name in files}
