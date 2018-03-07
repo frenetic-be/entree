@@ -255,6 +255,10 @@ Releases:
     - Replaced common file functionality by simple symlinks (treated as regular files)
     - Added support for HTML5
 
+- version 2.3:
+
+    - Full path and file patterns are now supported for files_to_ignore per project type
+
 ## Authors
 
 * **Julien Spronck** - *Initial work* - [frenetic.be](http://frenetic.be)
