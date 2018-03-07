@@ -8,7 +8,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-In order to install the `entree` shell script and the `entree` python package, download the .zip file from [GitHub](https://github.com/frenetic-be/entree) and navigate to the **entree** directory. For example,
+In order to install the `entree` shell script and the `entree` python package, simply use `pip`:
+
+```
+pip install entree
+```
+
+And that's it.
+
+Or, download the .zip file from [GitHub](https://github.com/frenetic-be/entree) and navigate to the **entree** directory. For example,
 
 ```
 cd ~/Downloads/entree-master/
