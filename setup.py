@@ -41,11 +41,18 @@ DATA_FILES += [(_CONFIGDIR, ['entree_autocomplete'])]
 
 setup(
     name='entree',
-    version='2.3',
+    version='2.3.1',
     description='',
     long_description='''
     Simple module to create files and directory structure necessary to
-    start a python project.
+    start a programming project.
+
+    Supported project types:
+    - HTML5
+    - Python
+    - Python - Flask
+    - Python - Large Flask App
+    - Python - SQLAlchemy
     ''',
     author='Julien Spronck',
     author_email='github@frenetic.be',
@@ -73,5 +80,6 @@ setup(
         'urllib3==1.22',
         'Werkzeug==0.14.1'
     ],
-    license='Free for non-commercial use'
+    license='Free for non-commercial use',
+    download_url='https://github.com/frenetic-be/entree/archive/2.3.tar.gz'
 )
