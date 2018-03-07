@@ -34,8 +34,6 @@ class ProjectBase(object):
         project_long_name (str): long name for a project (e.g. 'Large Flask')
         template_dir (str): path to the project template directory relative to
             the template root directory
-        common_dir (str): path to the common template directory relative to
-            the template root directory
         single_file (str): path to a single file that you want to create in
             single-file mode relative to the template root directory
         replace (dict, default=None): dictionary mapping template file
@@ -52,9 +50,6 @@ class ProjectBase(object):
 
     # Path to the template directory
     template_dir = ''
-
-    # Path to the template directory common to all projects
-    common_dir = 'common'
 
     # Path to a single file that you want to create in single-file mode
     single_file = None
@@ -87,8 +82,6 @@ class ProjectBase(object):
         msg += "    -d, --dir: Specifies the directory where to create\n"
         msg += "               the project files. By default, it is the\n"
         msg += "               current directory.\n\n"
-        msg += "    -n, --no-common: if specified, files common to all\n"
-        msg += "               project types will not be created.\n\n"
         if cls.single_file:
             msg += "    -s, --single-file: creates a single file instead of\n"
             msg += "                       a complete package.\n\n"
@@ -106,16 +99,6 @@ class ProjectBase(object):
             A string containing the full template path
         '''
         return os.path.join(TEMPLATE_ROOT, cls.template_dir)
-
-    @classmethod
-    def common_template_path(cls):
-        '''Builds the common template path based on the template
-        root directory and the common template directory
-
-        Returns:
-            A string containing the full common template path
-        '''
-        return os.path.join(TEMPLATE_ROOT, cls.common_dir)
 
     @classmethod
     def single_file_path(cls):
@@ -160,42 +143,6 @@ class ProjectBase(object):
             create_single_file(rootdir, filename, cls.single_file_path(),
                                config=config, creation_date=creation_date,
                                modname=modname)
-
-    @classmethod
-    def create_common_files(cls, rootdir, modname, add_to_existing=False):
-        '''Creates all project files and directories
-
-        Args:
-            rootdir (str): the root directory
-            modname (str): the module name
-
-        Keyword args:
-            add_to_existing (bool, default=False): True if you want to add
-                files without creating a project directory (add to existing
-                project)
-        '''
-        if add_to_existing:
-            projectdir = rootdir
-        else:
-            projectdir = os.path.join(rootdir, modname)
-
-        if not os.path.exists(projectdir):
-            raise IOError('Directory not found: `'+projectdir+'`')
-
-        # Read config file and set creation_date
-        config = cls.get_config()
-        creation_date = datetime.datetime.now()
-
-        common_files = []
-        if 'general_files' in config:
-            common_files = config['general_files']
-
-        for name in common_files:
-            if name in os.listdir(cls.common_template_path()):
-                template_path = os.path.join(cls.common_template_path(), name)
-                create_single_file(projectdir, name, template_path,
-                                   modname=modname, config=config,
-                                   creation_date=creation_date)
 
     @classmethod
     def create_all(cls, rootdir, modname, partial=None, add_to_existing=False):
@@ -252,7 +199,6 @@ class ProjectBase(object):
             ('h', 'help'),
             ('a', 'add'),
             ('d:', 'dir='),
-            ('n', 'no-common'),
             ('p:', 'partial='),
             ('v', 'version')
         ]
@@ -269,7 +215,6 @@ class ProjectBase(object):
         except getopt.GetoptError:
             cls.usage(3)
 
-        no_common = False
         add_to_existing = False
         rootdir = './'
         single_file = False
@@ -281,8 +226,6 @@ class ProjectBase(object):
                 add_to_existing = True
             elif opt in ("-d", "--dir"):
                 rootdir = arg
-            elif opt in ("-n", "--no-common"):
-                no_common = True
             elif opt in ("-p", "--partial"):
                 partial = arg
             elif opt in ("-s", "--single-file"):
@@ -305,6 +248,3 @@ class ProjectBase(object):
         else:
             cls.create_all(rootdir, modname, add_to_existing=add_to_existing,
                            partial=partial)
-            if not no_common:
-                cls.create_common_files(rootdir, modname,
-                                        add_to_existing=add_to_existing)

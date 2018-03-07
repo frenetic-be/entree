@@ -95,17 +95,7 @@ def submit():
 
         partial = [os.path.join(project_cls.template_path(), tname[3:])
                    for tname in request.form
-                   if tname.startswith('cb_') and
-                   not tname.startswith('cb_common_')]
-
-        commons = [
-            [
-                tname[10:],
-                os.path.join(project_cls.common_template_path(), tname[10:])
-            ]
-            for tname in request.form
-            if tname.startswith('cb_common_')
-        ]
+                   if tname.startswith('cb_')]
 
         # Create a zip file with the content
         memory_file = io.BytesIO()
@@ -118,11 +108,7 @@ def submit():
                                 partial=partial,
                                 modname=modname, config=config,
                                 creation_date=creation_date)
-            # Create files common to all projects
-            for name, template_path in commons:
-                create_single_file('.', name, template_path, zipf=zipf,
-                                   modname=modname, config=config,
-                                   creation_date=creation_date)
+
         memory_file.seek(0)
         return send_file(memory_file, attachment_filename=modname+'.zip',
                          as_attachment=True)
@@ -156,14 +142,10 @@ def filestructure(project_type='Python'):
                                          files_to_ignore=FILES_TO_IGNORE)
     dirs = filemap(dirs, replace=project_cls.replace, modname=modname)
     files = filemap(files, replace=project_cls.replace, modname=modname)
-    cdirs, cfiles = get_all_dirs_and_files(project_cls.common_template_path(),
-                                           files_to_ignore=FILES_TO_IGNORE)
 
     return jsonify({
         'dirs': dirs,
-        'files': files,
-        'common_dirs': cdirs,
-        'common_files': cfiles
+        'files': files
     })
 
 if __name__ == "__main__":

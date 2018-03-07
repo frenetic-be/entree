@@ -29,7 +29,9 @@ def get_template_dirs(path, basename='templates'):
 TEMPLATE_PATHS = [os.path.join(directory, '*')
                   for directory in ['templates'] +
                   get_template_dirs('entree/projects/templates')]
-TEMPLATE_PATHS += [os.path.join('templates', 'common', '.gitignore')]
+TEMPLATE_PATHS += [os.path.join(directory, '.gitignore')
+                   for directory in ['templates'] +
+                   get_template_dirs('entree/projects/templates')]
 
 if os.path.exists(os.path.join(_CONFIGDIR, 'entree_config.json')):
     DATA_FILES = []
@@ -39,7 +41,7 @@ DATA_FILES += [(_CONFIGDIR, ['entree_autocomplete'])]
 
 setup(
     name='entree',
-    version='2.1',
+    version='2.2',
     description='',
     long_description='''
     Simple module to create files and directory structure necessary to
