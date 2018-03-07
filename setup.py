@@ -81,5 +81,5 @@ setup(
         'Werkzeug==0.14.1'
     ],
     license='Free for non-commercial use',
-    download_url='https://github.com/frenetic-be/entree/archive/2.3.tar.gz'
+    download_url='https://github.com/frenetic-be/entree/archive/2.3.1.tar.gz'
 )
