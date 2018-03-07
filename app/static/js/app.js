@@ -45,16 +45,13 @@ function getFiles(){
 
         var dirs = data.dirs;
         var files = data.files;
-        var cdirs = data.common_dirs;
-        var cfiles = data.common_files;
+
         var filesAndDirs = [];
         // Transform object to array of files/dirs and their template names
         $.each(Object.assign({}, dirs, files), function(key, value){
             filesAndDirs.push([key, value]);
         });
-        $.each(cdirs.concat(cfiles), function(index, value){
-            filesAndDirs.push([value, value]);
-        });
+
         filesAndDirs.sort(function(left, right){
             return left[1] < right[1] ? -1 : 1;
         });
@@ -96,9 +93,7 @@ function getFiles(){
             }
 
             prefix = 'cb_';
-            if (cdirs.indexOf(tname) > -1 || cfiles.indexOf(tname) > -1) {
-                prefix = 'cb_common_';
-            }
+
             id = prefix + tname;
             div += '<div class="form-check">\n';
             div += '<input type="checkbox" class="form-check-input' + otherclass + '" id="' + id + '" name="' + id + '" checked>\n';

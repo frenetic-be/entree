@@ -15,7 +15,7 @@ import entree.projects
 import entree.utils
 import six
 
-__version__ = '2.1'
+__version__ = '2.2'
 
 CLASSES = entree.projects.CLASSES
 
@@ -39,12 +39,6 @@ def main():
             msg += "            - {0}: type `entree {0} -h`".format(submodule)
             msg += " for help\n"
         msg += "\nOPTIONS:\n\n"
-        msg += "    -c, --common-files: creates all general files common\n"
-        msg += "                to all types of projects (README.md, \n"
-        msg += "                License.md, ...).\n\n"
-        msg += "    -d, --dir: Specifies the directory where to create\n"
-        msg += "               the project files. By default, it is the\n"
-        msg += "               current directory.\n\n"
         msg += "    -m, --modules: list available project types.\n\n"
         msg += "    -v, --version: diplays the version number.\n\n"
         msg += "PROJECT_OPTIONS:\n\n"
@@ -56,8 +50,6 @@ def main():
     # Parse command line options/arguments
     options = [
         ('h', 'help'),
-        ('c', 'common-files'),
-        ('d:', 'dir='),
         ('m', 'modules'),
         ('v', 'version')
     ]
@@ -70,13 +62,7 @@ def main():
     except getopt.GetoptError:
         usage(3)
 
-    rootdir = './'
-    common_files = False
-    for opt, arg in opts:
-        if opt in ("-c", "--common-files"):
-            common_files = True
-        if opt in ("-d", "--dir"):
-            rootdir = arg
+    for opt, _ in opts:
         if opt in ("-h", "--help"):
             usage(0)
         if opt in ("-m", "--module"):
@@ -91,14 +77,6 @@ def main():
 
     if not args:
         usage(4)
-
-    if common_files:
-        if len(args) > 1:
-            usage(6)
-        modname = args[0]
-        entree.projects.ProjectBase.create_common_files(rootdir, modname,
-                                                        add_to_existing=True)
-        sys.exit(0)
 
     submodule = args[0]
 

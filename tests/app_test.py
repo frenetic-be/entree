@@ -75,18 +75,15 @@ class TestFileStructure(unittest.TestCase):
         '''
         url = BASE_URL + '/filestructure/Python?projectname=blahblah'
         expected = {
-            'common_dirs': [],
-            'common_files': [
-                '.gitignore',
-                'License.md',
-                'README.md',
-                'requirements.txt'
-            ],
             'dirs': {
                 'src': 'blahblah',
                 'tests': 'tests'
             },
             'files': {
+                '.gitignore': '.gitignore',
+                'License.md': 'License.md',
+                'README.md': 'README.md',
+                'requirements.txt': 'requirements.txt',
                 'setup_py.template': 'setup.py',
                 'src/__init___py.template': 'blahblah/__init__.py',
                 'tests/unittest_py.template': 'tests/test_blahblah.py'

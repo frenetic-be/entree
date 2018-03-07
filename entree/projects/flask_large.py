@@ -30,8 +30,6 @@ class FlaskLarge(ProjectBase):
         project_long_name (str): long name for a project (e.g. 'Large Flask')
         template_dir (str): path to the project template directory relative to
             the template root directory
-        common_dir (str): path to the common template directory relative to
-            the template root directory
         single_file (str): path to a single file that you want to create in
             single-file mode relative to the template root directory
         replace (dict, default=None): dictionary mapping template file

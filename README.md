@@ -101,23 +101,15 @@ In that config file, you can specify your name, email and url:
 }
 ```
 
-You can specify a list of files to ignore when creating a project or a list of files common to all project types:
+You can specify a list of files to ignore when creating a project:
 
 ```json
 {
     "files_to_ignore": [
         ".DS_Store"
     ],
-    "general_files": [
-        ".gitignore",
-        "License.md",
-        "README.md",
-        "requirements.txt"
-    ],
 }
 ```
-
-Note that the general files must match existing template files in the `templates` directory.
 
 All of this can be configured per project type. For example, if you never want to have `License.md` and `requirements.txt` in your Python projects, you can use the following configuration:
 
@@ -128,7 +120,7 @@ All of this can be configured per project type. For example, if you never want t
         "Flask": {},
 
         "Python": {
-            "general_files": [
+            "files_to_ignore": [
                 ".gitignore",
                 "README.md",
             ]
@@ -166,10 +158,10 @@ Note that the files must match existing template files in the project `templates
 This partial build can then be used with the following command:
 
 ```
-entree flask -n -p tmpl foo
+entree flask -p tmpl foo
 ```
 
-where `-n` is used to skip the creation of the general files (`License.md`, `README.md`, ...) and `-p` allows to specify a partial build. The argument of the `-p` option is the name of the partial build you specified in the config file (`tmpl` in this case).
+where `-p` allows to specify a partial build. The argument of the `-p` option is the name of the partial build you specified in the config file (`tmpl` in this case).
 
 
 ## Auto-completion
@@ -217,9 +209,6 @@ We'd love to expand our project types to other types and programming languages. 
 
     - template_dir (str): path to the project template directory relative to
             the template root directory (e.g. `'python-django'`)
-
-    - common_dir (str): path to the common template directory relative to
-            the template root directory (usually no need to override)
 
     - single_file (str): path to a single file that you want to create in
             single-file mode relative to the template root directory

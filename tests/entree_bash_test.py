@@ -81,18 +81,6 @@ class TestStatusSimple(unittest.TestCase):
             code = run_command('entree {0} -v'.format(project_cls))
             self.assertEqual(code, 0)
 
-    def test_no_common(self):
-        '''check status code of `entree python -n blah`
-        '''
-        for project_cls in CLASSES:
-            clsname = project_cls.__name__.lower()
-            modname = random_string(16)
-            cmd = 'entree {0} -n {1}'.format(clsname, modname)
-            code = run_command(cmd)
-            self.assertEqual(code, 0)
-            if os.path.exists(modname):
-                shutil.rmtree(modname)
-
     def test_single(self):
         '''check status code of `entree python -s blah`
         '''
@@ -158,14 +146,6 @@ class TestStatusMainSimple(unittest.TestCase):
         '''
         code = run_command('entree -m')
         self.assertEqual(code, 0)
-
-    def test_common(self):
-        '''check status code of `entree -c`
-        '''
-        with TMPFile() as rootdir:
-            modname = random_string(16)
-            code = run_command('entree -c -d {0} {1}'.format(rootdir, modname))
-            self.assertEqual(code, 0)
 
     def test_default_projtype(self):
         '''check status code of `entree blah`
@@ -292,19 +272,6 @@ class TestStatusMainError(unittest.TestCase):
         code = run_command('entree -z')
         self.assertEqual(code, 3)
 
-    # def test_wrong_argument(self):
-    #     '''check status code of `entree pythonz`
-    #     '''
-    #     code = run_command('entree pythonz')
-    #     self.assertEqual(code, 5)
-
-    def test_toomany_args(self):
-        '''check status code of `entree -c -d blah blah blah`
-        '''
-        with TMPFile() as rootdir:
-            code = run_command('entree -c -d {0} blah blah'.format(rootdir))
-            self.assertEqual(code, 6)
-
 
 class TestOutputSimple(unittest.TestCase):
     '''Testing output os simple commands
@@ -356,31 +323,6 @@ class TestOutputSimple(unittest.TestCase):
             for name in files:
                 self.assertTrue(os.path.exists(os.path.join(rootdir, name)))
 
-    def test_python_no_common(self):
-        '''check output of `entree python -n blah`
-        '''
-        self.modname = random_string(16)
-        run_command('entree python -n {0}'.format(self.modname))
-        files = [
-            self.modname,
-            os.path.join(self.modname, self.modname),
-            os.path.join(self.modname, self.modname, '__init__.py'),
-            os.path.join(self.modname, 'tests'),
-            os.path.join(self.modname, 'tests',
-                         'test_{0}.py'.format(self.modname)),
-            os.path.join(self.modname, 'setup.py'),
-        ]
-        for name in files:
-            self.assertTrue(os.path.exists(name))
-        files = [
-            os.path.join(self.modname, 'License.md'),
-            os.path.join(self.modname, 'requirements.txt'),
-            os.path.join(self.modname, 'README.md'),
-            os.path.join(self.modname, '.gitignore')
-        ]
-        for name in files:
-            self.assertFalse(os.path.exists(name))
-
     def test_python_single(self):
         '''check output of `entree python -s blah`
         '''
@@ -402,21 +344,6 @@ class TestOutputSimple(unittest.TestCase):
                 'tests',
                 os.path.join('tests', 'test_{0}.py'.format(self.modname)),
                 'setup.py',
-                'License.md',
-                'requirements.txt',
-                'README.md',
-                '.gitignore'
-            ]
-            for name in files:
-                self.assertTrue(os.path.exists(os.path.join(rootdir, name)))
-
-    def test_common(self):
-        '''check status code of `entree -c -d Blah MODNAME`
-        '''
-        with TMPFile() as rootdir:
-            modname = random_string(16)
-            run_command('entree -c -d {0} {1}'.format(rootdir, modname))
-            files = [
                 'License.md',
                 'requirements.txt',
                 'README.md',

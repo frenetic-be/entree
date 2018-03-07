@@ -440,6 +440,10 @@ class TestGetAllDirsAndFiles(unittest.TestCase):
         dirs = ['src', 'src/static', 'src/static/css', 'src/static/js',
                 'src/templates', 'tests']
         files = [
+            '.gitignore',
+            'License.md',
+            'README.md',
+            'requirements.txt',
             'setup_py.template',
             'src/__init___py.template',
             'src/models_py.template',
@@ -459,6 +463,10 @@ class TestGetAllDirsAndFiles(unittest.TestCase):
         '''
         dirs = ['src', 'tests']
         files = [
+            '.gitignore',
+            'License.md',
+            'README.md',
+            'requirements.txt',
             'setup_py.template',
             'src/__init___py.template',
             'tests/unittest_py.template'
