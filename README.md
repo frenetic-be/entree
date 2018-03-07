@@ -237,7 +237,15 @@ We'd love to expand our project types to other types and programming languages. 
 
 Releases:
 
-- version 2.1: Created the web service and added support for Python, Flask and SQLAlchemy project types
+- version 2.1:
+
+    - Created the web service
+    - Added support for Python, Flask and SQLAlchemy project types
+
+- version 2.2:
+
+    - Replaced common file functionality by simple symlinks (treated as regular files)
+    - Added support for HTML5
 
 ## Authors
 
