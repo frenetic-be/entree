@@ -1,0 +1,37 @@
+{
+    "author": "Julien Spronck",
+    "author_email_prefix": "github",
+    "author_email_suffix": "frenetic.be",
+    "author_url": "https://frenetic.be",
+    "default_project_type": "python",
+    "files_to_ignore": [
+        ".DS_Store"
+    ],
+    "project_config": {
+        "Flask": {
+            "files_to_ignore": [
+                ".DS_Store",
+                "static/css/style.css",
+                "app.js"
+            ]
+        },
+        "Python": {
+            "files_to_ignore": [
+                ".DS_Store",
+                "src/__init___py.template"
+            ]
+        },
+        "SQLAlchemy": {
+            "files_to_ignore": [
+                ".DS_Store",
+                "models"
+            ]
+        },
+        "FlaskLarge": {
+            "files_to_ignore": [
+                ".DS_Store",
+                "*.*s"
+            ]
+        }
+    }
+}

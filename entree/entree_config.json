@@ -6,12 +6,6 @@
     "files_to_ignore": [
         ".DS_Store"
     ],
-    "general_files": [
-        ".gitignore",
-        "License.md",
-        "README.md",
-        "requirements.txt"
-    ],
     "project_config": {
         "Flask": {},
         "Python": {},

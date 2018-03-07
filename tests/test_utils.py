@@ -476,6 +476,137 @@ class TestGetAllDirsAndFiles(unittest.TestCase):
         self.assertEqual(dirs, sorted(fldirs))
         self.assertEqual(files, sorted(flfiles))
 
+    def test_get_all_files_ignore(self):
+        '''Testing entree.utils.get_all_dirs_and_files
+        with files_to_ignore
+        '''
+        dirs = ['src', 'tests']
+        files = [
+            '.gitignore',
+            'License.md',
+            'README.md',
+            'requirements.txt',
+            'setup_py.template',
+            'src/__init___py.template',
+            'tests/unittest_py.template'
+        ]
+        files_to_ignore = ['.DS_Store']
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = entree.utils.get_all_dirs_and_files(
+            tpath,
+            files_to_ignore=files_to_ignore
+        )
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
+    def test_get_all_files_ignore2(self):
+        '''Testing entree.utils.get_all_dirs_and_files
+        with files_to_ignore
+        '''
+        dirs = ['src', 'tests']
+        files = [
+            '.gitignore',
+            'README.md',
+            'requirements.txt',
+            'setup_py.template',
+            'src/__init___py.template',
+            'tests/unittest_py.template'
+        ]
+        files_to_ignore = ['.DS_Store', 'License.md']
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = entree.utils.get_all_dirs_and_files(
+            tpath,
+            files_to_ignore=files_to_ignore
+        )
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
+    def test_get_all_files_ignore3(self):
+        '''Testing entree.utils.get_all_dirs_and_files
+        with files_to_ignore
+        '''
+        dirs = ['src', 'tests']
+        files = [
+            '.gitignore',
+            'README.md',
+            'setup_py.template',
+            'src/__init___py.template',
+            'tests/unittest_py.template'
+        ]
+        files_to_ignore = ['.DS_Store', 'License.md', 'req*']
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = entree.utils.get_all_dirs_and_files(
+            tpath,
+            files_to_ignore=files_to_ignore
+        )
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
+    def test_get_all_files_ignore4(self):
+        '''Testing entree.utils.get_all_dirs_and_files
+        with files_to_ignore
+        '''
+        dirs = ['src', 'tests']
+        files = [
+            '.gitignore',
+            'requirements.txt',
+            'setup_py.template',
+            'src/__init___py.template',
+            'tests/unittest_py.template'
+        ]
+        files_to_ignore = ['.DS_Store', '*.md']
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = entree.utils.get_all_dirs_and_files(
+            tpath,
+            files_to_ignore=files_to_ignore
+        )
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
+    def test_get_all_files_ignore5(self):
+        '''Testing entree.utils.get_all_dirs_and_files
+        with files_to_ignore
+        '''
+        dirs = ['src', 'tests']
+        files = [
+            '.gitignore',
+            'License.md',
+            'README.md',
+            'requirements.txt',
+            'setup_py.template',
+            'tests/unittest_py.template'
+        ]
+        files_to_ignore = ['.DS_Store', 'src/*']
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = entree.utils.get_all_dirs_and_files(
+            tpath,
+            files_to_ignore=files_to_ignore
+        )
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
+    def test_get_all_files_ignore6(self):
+        '''Testing entree.utils.get_all_dirs_and_files
+        with files_to_ignore
+        '''
+        dirs = ['tests']
+        files = [
+            '.gitignore',
+            'License.md',
+            'README.md',
+            'requirements.txt',
+            'setup_py.template',
+            'tests/unittest_py.template'
+        ]
+        files_to_ignore = ['.DS_Store', 'src']
+        tpath = entree.projects.Python.template_path()
+        fldirs, flfiles = entree.utils.get_all_dirs_and_files(
+            tpath,
+            files_to_ignore=files_to_ignore
+        )
+        self.assertEqual(dirs, sorted(fldirs))
+        self.assertEqual(files, sorted(flfiles))
+
 
 class TestCopyFileStructure(unittest.TestCase):
     '''Testing copy_file_structure
@@ -503,14 +634,14 @@ class TestCopyFileStructure(unittest.TestCase):
                                          "I'm {{ blah['age'] }} years old.")
 
     def test_cfs_missing_dictionary(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             with self.assertRaises(UndefinedError):
                 entree.utils.copy_file_structure(rootdir, self.template_dir)
 
     def test_cfs_with_blah_dictionary(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
@@ -538,7 +669,7 @@ class TestCopyFileStructure(unittest.TestCase):
                 self.assertEqual(content, "I'm 19 years old.")
 
     def test_cfs_with_blah_and_name(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
@@ -567,7 +698,7 @@ class TestCopyFileStructure(unittest.TestCase):
                 self.assertEqual(content, "I'm 19 years old.")
 
     def test_cfs_with_replace(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
@@ -597,7 +728,7 @@ class TestCopyFileStructure(unittest.TestCase):
                 self.assertEqual(content, "I'm 19 years old.")
 
     def test_cfs_with_replace_dir(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
@@ -628,7 +759,7 @@ class TestCopyFileStructure(unittest.TestCase):
                 self.assertEqual(content, "I'm 19 years old.")
 
     def test_cfs_with_replace_dir_templ(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
@@ -659,7 +790,7 @@ class TestCopyFileStructure(unittest.TestCase):
                 self.assertEqual(content, "I'm 19 years old.")
 
     def test_cfs_partial(self):
-        '''Test create_dirs()
+        '''Test copy_file_structure()
         '''
         with TMPFile() as rootdir:
             path_a = os.path.join(rootdir, 'a')
@@ -682,6 +813,90 @@ class TestCopyFileStructure(unittest.TestCase):
             with open(file_a) as fil:
                 content = fil.read()
                 self.assertEqual(content, "My name is")
+
+    def test_cfs_ignore(self):
+        '''Test copy_file_structure()
+        '''
+        with TMPFile() as rootdir:
+            path_a = os.path.join(rootdir, 'a')
+            path_b = os.path.join(rootdir, 'b')
+            path_c = os.path.join(rootdir, 'c')
+            file_a = os.path.join(path_a, 'a.txt')
+            file_b = os.path.join(path_b, 'b.md')
+            file_c = os.path.join(path_c, 'c.py')
+            ignore = ['a.txt']
+            entree.utils.copy_file_structure(rootdir, self.template_dir,
+                                             files_to_ignore=ignore,
+                                             blah={'age': 19})
+            self.assertTrue(os.path.exists(path_a))
+            self.assertTrue(os.path.exists(path_b))
+            self.assertTrue(os.path.exists(path_c))
+            self.assertFalse(os.path.exists(file_a))
+            self.assertTrue(os.path.exists(file_b))
+            self.assertTrue(os.path.exists(file_c))
+
+    def test_cfs_ignore2(self):
+        '''Test copy_file_structure()
+        '''
+        with TMPFile() as rootdir:
+            path_a = os.path.join(rootdir, 'a')
+            path_b = os.path.join(rootdir, 'b')
+            path_c = os.path.join(rootdir, 'c')
+            file_a = os.path.join(path_a, 'a.txt')
+            file_b = os.path.join(path_b, 'b.md')
+            file_c = os.path.join(path_c, 'c.py')
+            ignore = ['*.txt']
+            entree.utils.copy_file_structure(rootdir, self.template_dir,
+                                             files_to_ignore=ignore,
+                                             blah={'age': 19})
+            self.assertTrue(os.path.exists(path_a))
+            self.assertTrue(os.path.exists(path_b))
+            self.assertTrue(os.path.exists(path_c))
+            self.assertFalse(os.path.exists(file_a))
+            self.assertTrue(os.path.exists(file_b))
+            self.assertTrue(os.path.exists(file_c))
+
+    def test_cfs_ignore3(self):
+        '''Test copy_file_structure()
+        '''
+        with TMPFile() as rootdir:
+            path_a = os.path.join(rootdir, 'a')
+            path_b = os.path.join(rootdir, 'b')
+            path_c = os.path.join(rootdir, 'c')
+            file_a = os.path.join(path_a, 'a.txt')
+            file_b = os.path.join(path_b, 'b.md')
+            file_c = os.path.join(path_c, 'c.py')
+            ignore = ['a/*.txt']
+            entree.utils.copy_file_structure(rootdir, self.template_dir,
+                                             files_to_ignore=ignore,
+                                             blah={'age': 19})
+            self.assertTrue(os.path.exists(path_a))
+            self.assertTrue(os.path.exists(path_b))
+            self.assertTrue(os.path.exists(path_c))
+            self.assertFalse(os.path.exists(file_a))
+            self.assertTrue(os.path.exists(file_b))
+            self.assertTrue(os.path.exists(file_c))
+
+    def test_cfs_ignore4(self):
+        '''Test copy_file_structure()
+        '''
+        with TMPFile() as rootdir:
+            path_a = os.path.join(rootdir, 'a')
+            path_b = os.path.join(rootdir, 'b')
+            path_c = os.path.join(rootdir, 'c')
+            file_a = os.path.join(path_a, 'a.txt')
+            file_b = os.path.join(path_b, 'b.md')
+            file_c = os.path.join(path_c, 'c.py')
+            ignore = ['a']
+            entree.utils.copy_file_structure(rootdir, self.template_dir,
+                                             files_to_ignore=ignore,
+                                             blah={'age': 19})
+            self.assertFalse(os.path.exists(path_a))
+            self.assertTrue(os.path.exists(path_b))
+            self.assertTrue(os.path.exists(path_c))
+            self.assertFalse(os.path.exists(file_a))
+            self.assertTrue(os.path.exists(file_b))
+            self.assertTrue(os.path.exists(file_c))
 
     def tearDown(self):
         '''Get rid of the temporary file structure

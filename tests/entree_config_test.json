@@ -1,0 +1,36 @@
+{
+    "author": "Julien Spronck",
+    "author_email_prefix": "github",
+    "author_email_suffix": "frenetic.be",
+    "author_url": "https://frenetic.be",
+    "default_project_type": "python",
+    "files_to_ignore": [
+        ".DS_Store"
+    ],
+    "project_config": {
+        "Flask": {
+            "partial_builds": {
+                "templates": [
+                    "static",
+                    "static/css",
+                    "static/css/style.css",
+                    "static/js",
+                    "static/js/app.js",
+                    "templates",
+                    "templates/index.html"
+                ]
+            }
+        },
+        "Python": {},
+        "SQLAlchemy": {
+            "partial_builds": {
+                "models": [
+                    "models",
+                    "models/__init___py.template",
+                    "models/statuses_py.template",
+                    "models/users_py.template"
+                ]
+            }
+        }
+    }
+}

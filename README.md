@@ -90,6 +90,8 @@ We hope to support more project types in the future. If there is a project type 
 
 The `entree` shell script and python package can be configured and customized. During installation, the following config file was created: `~/.config/entree_config.json`. The information in this file is used every time you run the `entree` command.
 
+### Author information
+
 In that config file, you can specify your name, email and url:
 
 ```json
@@ -101,6 +103,8 @@ In that config file, you can specify your name, email and url:
 }
 ```
 
+### Files to ignore
+
 You can specify a list of files to ignore when creating a project:
 
 ```json
@@ -110,6 +114,8 @@ You can specify a list of files to ignore when creating a project:
     ],
 }
 ```
+
+### Project-specific configuration
 
 All of this can be configured per project type. For example, if you never want to have `License.md` and `requirements.txt` in your Python projects, you can use the following configuration:
 
@@ -121,8 +127,8 @@ All of this can be configured per project type. For example, if you never want t
 
         "Python": {
             "files_to_ignore": [
-                ".gitignore",
-                "README.md",
+                "License.md",
+                "requirements.txt",
             ]
         },
 
@@ -131,7 +137,9 @@ All of this can be configured per project type. For example, if you never want t
 }
 ```
 
-You can also create custom partial builts if you often use a specific configuration. For example,
+#### Partial builts
+
+You can also create custom partial builts for a given project if you often use a specific configuration. For example,
 
 ```json
 {
@@ -237,7 +245,19 @@ We'd love to expand our project types to other types and programming languages. 
 
 Releases:
 
-- version 2.1: Created the web service and added support for Python, Flask and SQLAlchemy project types
+- version 2.1:
+
+    - Created the web service
+    - Added support for Python, Flask and SQLAlchemy project types
+
+- version 2.2:
+
+    - Replaced common file functionality by simple symlinks (treated as regular files)
+    - Added support for HTML5
+
+- version 2.3:
+
+    - Full path and file patterns are now supported for files_to_ignore per project type
 
 ## Authors
 

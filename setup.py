@@ -41,7 +41,7 @@ DATA_FILES += [(_CONFIGDIR, ['entree_autocomplete'])]
 
 setup(
     name='entree',
-    version='2.2',
+    version='2.3',
     description='',
     long_description='''
     Simple module to create files and directory structure necessary to
