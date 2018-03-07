@@ -15,7 +15,7 @@ import entree.projects
 import entree.utils
 import six
 
-__version__ = '2.3'
+__version__ = '2.3.1'
 
 CLASSES = entree.projects.CLASSES
 
