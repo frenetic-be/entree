@@ -90,7 +90,7 @@ input#projectname:invalid {
 }
 
 label.dirs {
-  font-weight: normal;
+  font-weight: 600;
 }
 
 .dirgroup {
