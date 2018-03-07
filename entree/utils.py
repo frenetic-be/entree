@@ -8,6 +8,7 @@
 
 Simple module to create files and directories in a programming project
 """
+import fnmatch
 import json
 import os
 import time
@@ -17,11 +18,14 @@ import six
 from jinja2 import Template
 
 CONFIG_FILE_NAME = 'entree_config.json'
+CONFIG_DIR = ''
 
 
 def get_config_dir():
     '''Returns path for the config directory.
     '''
+    if CONFIG_DIR:
+        return CONFIG_DIR
     username = os.getenv("SUDO_USER") or os.getenv("USER")
     homedir = os.path.expanduser('~'+username)
     return os.path.join(homedir, ".config")
@@ -163,7 +167,8 @@ def render_template(filename, **kwargs):
 
 
 def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
-                        partial=None, zipf=None, **kwargs):
+                        partial=None, zipf=None, template_root=None,
+                        **kwargs):
     '''Walks through the file structure and copy all directories and files.
 
     Args:
@@ -177,6 +182,8 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
         partial (list, default=None): list of paths for a partial build.
             Only the paths in the lists will be created.
         zipf (zipfile.ZipFile, default=None)
+        template_root (str, default=None): the path to the project template
+        directory
         **kwargs: dictionary containing the variables for templating
     '''
     if not os.path.exists(rootdir) and zipf is None:
@@ -185,12 +192,25 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
     if not files_to_ignore:
         files_to_ignore = get_config_param('files_to_ignore', [])
 
+    if template_root is None:
+        template_root = path
+
     for fname in os.listdir(path):
         src = os.path.join(path, fname)
-
+        relpath = os.path.relpath(src, start=template_root)
         if partial and src not in partial:
             # Partial build: only files and dirs in the partial list
             # will be created
+            continue
+        ignoring = False
+        for pat in files_to_ignore:
+            if (fnmatch.fnmatch(fname, pat) or
+                    fnmatch.fnmatch(relpath, pat)):
+                ignoring = True
+                break
+        if ignoring:
+            # file path is in the list of files to ignore
+            six.print_('File ignored: `{0}`'.format(src))
             continue
         if replace and fname in replace:
             fname = Template(replace[fname]).render(**kwargs)
@@ -203,13 +223,11 @@ def copy_file_structure(rootdir, path, replace=None, files_to_ignore=None,
                 os.makedirs(dst)
             copy_file_structure(dst, src, replace=replace, partial=partial,
                                 files_to_ignore=files_to_ignore, zipf=zipf,
+                                template_root=template_root,
                                 **kwargs)
         elif os.path.isfile(src):
-            if fname not in files_to_ignore:
-                file_content = render_template(src, **kwargs)
-                create_general_file(dst, file_content, zipf=zipf)
-            else:
-                six.print_('File ignored: `{0}`'.format(fname))
+            file_content = render_template(src, **kwargs)
+            create_general_file(dst, file_content, zipf=zipf)
 
 
 def create_single_file(rootdir, newfilename, template_path, zipf=None,
@@ -247,6 +265,14 @@ def get_all_dirs_and_files(rootdir, basename='', files_to_ignore=None):
     for fname in os.listdir(rootdir):
         subpath = os.path.join(rootdir, fname)
         newbasename = os.path.join(basename, fname)
+        ignoring = False
+        for pat in files_to_ignore:
+            if (fnmatch.fnmatch(fname, pat) or
+                    fnmatch.fnmatch(newbasename, pat)):
+                ignoring = True
+                break
+        if ignoring:
+            continue
         if os.path.isdir(subpath):
             dirs.append(newbasename)
             newdirs, newfiles = get_all_dirs_and_files(
@@ -256,8 +282,7 @@ def get_all_dirs_and_files(rootdir, basename='', files_to_ignore=None):
             )
             dirs += newdirs
             files += newfiles
-        elif (os.path.isfile(subpath) and
-              fname not in files_to_ignore):
+        elif os.path.isfile(subpath):
             files.append(newbasename)
     return dirs, files
 

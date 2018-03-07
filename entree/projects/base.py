@@ -179,10 +179,15 @@ class ProjectBase(object):
             partial = [os.path.join(cls.template_path(), path)
                        for path in partial]
 
+        files_to_ignore = []
+        if 'files_to_ignore' in config:
+            files_to_ignore = config['files_to_ignore']
+
         # Copy entire file structure from template directory to the project
         # directory
         copy_file_structure(projectdir, cls.template_path(),
                             replace=cls.replace, partial=partial,
+                            files_to_ignore=files_to_ignore,
                             modname=modname, config=config,
                             creation_date=creation_date)
 
