@@ -9,6 +9,7 @@ Module for all projects
 from entree.projects.base import ProjectBase
 from entree.projects.flask import Flask
 from entree.projects.flask_large import FlaskLarge
+from entree.projects.html5 import HTML5
 from entree.projects.python import Python
 from entree.projects.sqlalchemy import SQLAlchemy
 
