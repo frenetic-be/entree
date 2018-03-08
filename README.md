@@ -38,7 +38,7 @@ If the installation was successful, you should now have an `entree` shell script
 entree --version
 ```
 
-The version number (for example `entree 2.1`) should then appear on the next line.
+The version number (for example `entree 2.3.3`) should then appear on the next line.
 
 ### How to use **entree**
 
@@ -87,6 +87,7 @@ Finally, hit `Submit` and your download should start automatically.
 
 The following list contains the project types that are currently supported:
 
+* HTML5
 * Python
 * Python - Flask
 * Python - Large Flask App
@@ -110,6 +111,23 @@ In that config file, you can specify your name, email and url:
     "author_url": "<UNDEFINED>",
 }
 ```
+### Default project type
+
+You can specify a default project type:
+
+```json
+{
+    "default_project_type": "python"
+}
+```
+
+This default project type allows the shell script to run without a project type. For example,
+
+```
+entree foo
+```
+
+will create a Python project called `foo` if `"default_project_type": "python"`.
 
 ### Files to ignore
 

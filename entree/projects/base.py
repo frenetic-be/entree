@@ -19,7 +19,7 @@ from entree.utils import (
     read_config,
 )
 
-__version__ = '0.0'
+__version__ = '0.1'
 
 PROJECTS_PATH = os.path.split(__file__)[0]
 # Path to the template root directory (directory containing all templates)
@@ -65,27 +65,36 @@ class ProjectBase(object):
         '''
         Displays the usage/help for this project
         '''
-        msg = "\nSets up a project by creating the "
-        msg += "directories and starter files.\n"
-        msg += "\nUsage: \n\n"
-        msg += "    entree {0} ".format(cls.project_type)
-        msg += "[OPTIONS] <modname>\n\n"
-        msg += "Arguments:\n\n"
-        msg += "    modname: the name of the project you want to start or "
-        msg += "modify\n\n"
-        msg += "Options:\n\n"
-        msg += "    -h, --help: prints the usage of the program with possible"
-        msg += "\n                options.\n\n"
-        msg += "    -a, --add: adds the files to the directory specified \n"
-        msg += "                with the -d option or current directory\n"
-        msg += "                without creating a project directory.\n\n"
-        msg += "    -d, --dir: Specifies the directory where to create\n"
-        msg += "               the project files. By default, it is the\n"
-        msg += "               current directory.\n\n"
+        msg = ''
+        if exit_status == 3:
+            msg += '\nERROR: Unknown option\n\n'
+        elif exit_status == 4:
+            msg += '\nERROR: No project name was specified\n\n'
+        elif exit_status == 6:
+            msg += '\nERROR: Too many arguments\n\n'
+        msg += '\nHelp:\n'
+        msg += '-----\n\n'
+        msg += 'Sets up a project by creating the '
+        msg += 'directories and starter files.\n'
+        msg += '\nUsage: \n\n'
+        msg += '    entree {0} '.format(cls.project_type)
+        msg += '[OPTIONS] <modname>\n\n'
+        msg += 'Arguments:\n\n'
+        msg += '    modname: the name of the project you want to start or '
+        msg += 'modify\n\n'
+        msg += 'Options:\n\n'
+        msg += '    -h, --help: prints the usage of the program with possible'
+        msg += '\n                options.\n\n'
+        msg += '    -a, --add: adds the files to the directory specified \n'
+        msg += '                with the -d option or current directory\n'
+        msg += '                without creating a project directory.\n\n'
+        msg += '    -d, --dir: Specifies the directory where to create\n'
+        msg += '               the project files. By default, it is the\n'
+        msg += '               current directory.\n\n'
         if cls.single_file:
-            msg += "    -s, --single-file: creates a single file instead of\n"
-            msg += "                       a complete package.\n\n"
-        msg += "    -v, --version: diplays the version number.\n\n"
+            msg += '    -s, --single-file: creates a single file instead of\n'
+            msg += '                       a complete package.\n\n'
+        msg += '    -v, --version: diplays the version number.\n\n'
 
         six.print_(msg)
         sys.exit(exit_status)
@@ -225,17 +234,17 @@ class ProjectBase(object):
         single_file = False
         partial = None
         for opt, arg in opts:
-            if opt in ("-h", "--help"):
+            if opt in ('-h', '--help'):
                 cls.usage(0)
-            elif opt in ("-a", "--add"):
+            elif opt in ('-a', '--add'):
                 add_to_existing = True
-            elif opt in ("-d", "--dir"):
+            elif opt in ('-d', '--dir'):
                 rootdir = arg
-            elif opt in ("-p", "--partial"):
+            elif opt in ('-p', '--partial'):
                 partial = arg
-            elif opt in ("-s", "--single-file"):
+            elif opt in ('-s', '--single-file'):
                 single_file = True
-            elif opt in ("-v", "--version"):
+            elif opt in ('-v', '--version'):
                 six.print_('entree.projects.{0} {1}'.format(cls.project_type,
                                                             cls.version))
                 sys.exit()
@@ -243,7 +252,7 @@ class ProjectBase(object):
         if not args:
             if not modname:
                 cls.usage(4)
-        elif len(args) > 1:
+        elif len(args) > 1 or (args and modname):
             cls.usage(6)
         else:
             modname = args[0]

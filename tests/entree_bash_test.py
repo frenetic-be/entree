@@ -220,6 +220,15 @@ class TestStatusError(unittest.TestCase):
             if os.path.exists(modname):
                 shutil.rmtree(modname)
 
+    def test_default_projtype_toomany_args(self):
+        '''check status code of `entree blah blah`
+        '''
+        modname = random_string(16)
+        code = run_command('entree {0} {0}'.format(modname))
+        self.assertEqual(code, 6)
+        if os.path.exists(modname):
+            shutil.rmtree(modname)
+
     def test_partial(self):
         '''check status code of `entree python -d dir -p partial blah`
         Status should be 1 if there is no `partial_builds` in the project
@@ -227,7 +236,7 @@ class TestStatusError(unittest.TestCase):
         should be 0 otherwise.
         '''
         for project_cls in CLASSES:
-            clsname = project_cls.__name__
+            clsname = project_cls.__name__.lower()
             modname = random_string(16)
             with TMPFile() as rootdir:
                 config = project_cls.get_config()
@@ -245,7 +254,7 @@ class TestStatusError(unittest.TestCase):
         should be 0 otherwise.
         '''
         for project_cls in CLASSES:
-            clsname = project_cls.__name__
+            clsname = project_cls.__name__.lower()
             modname = random_string(16)
             with TMPFile() as rootdir:
                 config = project_cls.get_config()

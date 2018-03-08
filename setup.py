@@ -40,18 +40,24 @@ else:
 DATA_FILES += [(_CONFIGDIR, ['entree_autocomplete'])]
 
 setup(
+    # Package information
     name='entree',
-    version='2.3.2',
-    description='',
+    version='2.3.3',
+    description='Tool to create skeleton files to start a programming project',
     long_description='''
     Simple module to create files and directory structure necessary to
     start a programming project.
 
-    Supported project types: HTML5, Python, Flask, Large Flask App, SQLAlchemy
+    Supported project types: HTML5, Python, Flask, Large Flask App, SQLAlchemy.
     ''',
+    license='MIT',
+
+    # Author information
     author='Julien Spronck',
     author_email='github@frenetic.be',
     url='http://frenetic.be/',
+
+    # Installation information
     packages=find_packages(),
     entry_points={
         'console_scripts': ['entree = entree:main']
@@ -75,6 +81,24 @@ setup(
         'urllib3==1.22',
         'Werkzeug==0.14.1'
     ],
-    license='Free for non-commercial use',
-    download_url='https://github.com/frenetic-be/entree/archive/2.3.2.tar.gz'
+    download_url='https://github.com/frenetic-be/entree/archive/2.3.3.tar.gz',
+
+    # See https://PyPI.python.org/PyPI?%3Aaction=list_classifiers
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+
+        'Intended Audience :: Developers',
+
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Code Generators',
+        'Topic :: Utilities',
+
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6'
+    ],
+
+    # What does your project relate to?
+    keywords='software development productivity skeleton starter',
+
 )
