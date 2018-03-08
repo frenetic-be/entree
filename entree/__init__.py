@@ -6,7 +6,7 @@
 .. moduleauthor:: Julien Spronck
 .. created:: Apr 2015
 
-Simple module to create files and directories in a python project
+Simple module to create skeleton files and directories in a programming project
 '''
 import getopt
 import sys

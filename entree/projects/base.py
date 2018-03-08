@@ -162,6 +162,9 @@ class ProjectBase(object):
             modname (str): the module name
 
         Keyword args:
+            partial (str, default=None): name of the partial build that you
+                want to use. Partial build names are defined in the config
+                file
             add_to_existing (bool, default=False): True if you want to add
                 files without creating a project directory (add to existing
                 project)

@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+ <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,300italic" rel="stylesheet" type="text/css">
+ <title>Python Documentation: entree.utils</title>
+ <link href="docu.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+ <div class="back-title">
+  <h1 class="title">Python Documentation: entree.utils</h1>
+ </div>
+ <div class="back-main">
+ <div class="main">
+ <div class="frame" id="nameframe">
+  <h4 class="frame-title">module name</h4>
+  <div class="frame-content">entree.utils</div>
+ </div>
+ <div class="frame" id="descriptionframe">
+  <h4 class="frame-title">DESCRIPTION</h4>
+  <pre class="frame-content">.. module:: entree.utils</br>.. moduleauthor:: Julien Spronck</br>.. created:: Feb 2018</br></br>Simple module to create files and directories in a programming project</pre>
+ </div>
+ <div class="frame" id="modulesframe">
+  <h4 class="frame-title">dependent modules</h4>
+  <div class="frame-content">
+   <ul class="modules">
+    <li class="modules">fnmatch</li>
+    <li class="modules">jinja2</li>
+    <li class="modules">json</li>
+    <li class="modules">os</li>
+    <li class="modules">six</li>
+    <li class="modules">time</li>
+    <li class="modules">zipfile</li>
+   </ul>
+  </div>
+ </div>
+ <div class="frame" id="variablesframe">
+  <h4 class="frame-title">variables</h4>
+  <div class="frame-content">
+   <ul class="variables-names">
+    <li class="variables"><span class="variable-name">CONFIG_DIR</span></li>
+    <li class="variables"><span class="variable-name">CONFIG_FILE_NAME</span></li>
+   </ul>
+   <ul class="variables-comments">
+    <li class="variables"><span class="variable-comment">&nbsp;</span></li>
+    <li class="variables"><span class="variable-comment">&nbsp;</span></li>
+   </ul>
+  </div>
+ </div>
+ <div class="frame" id="functionsframe">
+  <h4 class="frame-title">functions</h4>
+  <div class="frame-content">
+   <ul class="functions">
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">copy_file_structure</span>(<span class="function-args">rootdir</span>, <span class="function-args">path</span>, <span class="function-kw">replace</span>=<span class="function-kwdef">None</span>, <span class="function-kw">files_to_ignore</span>=<span class="function-kwdef">None</span>, <span class="function-kw">partial</span>=<span class="function-kwdef">None</span>, <span class="function-kw">zipf</span>=<span class="function-kwdef">None</span>, <span class="function-kw">template_root</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Walks through the file structure and copy all directories and files.</br></br>Args:</br>    rootdir (str): the root directory where the files will be copied to</br>    path (str): the path to walk through and reproduce</br></br>Keyword args:</br>    replace (dict, default=None): dictionary for file name replacement.</br>        Keys are old file names and values are new file names.</br>    files_to_ignore (list, default=None): list of file names to ignore.</br>    partial (list, default=None): list of paths for a partial build.</br>        Only the paths in the lists will be created.</br>    zipf (zipfile.ZipFile, default=None)</br>    template_root (str, default=None): the path to the project template</br>    directory</br>    **kwargs: dictionary containing the variables for templating</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_dirs</span>(<span class="function-args">rootdir</span>)</div>
+      <pre class="function-docstring">Creates directories</br></br>Args:</br>    rootdir (str): the root directory</br>    dirs (str): directories to create</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_general_file</span>(<span class="function-args">fname</span>, <span class="function-args">file_content</span>, <span class="function-kw">zipf</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Creates a file.</br></br>Args:</br>    fname (str): file name</br>    file_content (iterator): generator/iterator containing</br>        the file content.</br></br>Keyword args:</br>    zipf (zipfile.ZipFile, default=None)</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">create_single_file</span>(<span class="function-args">rootdir</span>, <span class="function-args">newfilename</span>, <span class="function-args">template_path</span>, <span class="function-kw">zipf</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Creates a single file from a template.</br></br>Args:</br>    rootdir (str): the root directory where the file will be created</br>    newfilename (str): name of the new file</br>    template_path (str): the path for the template file</br></br>Keyword args:</br>    zipf (zipfile.ZipFile, default=None)</br>    **kwargs: dictionary containing the variables for templating</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">filemap</span>(<span class="function-args">files</span>, <span class="function-kw">replace</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Mapping between file/dir names and their template</br>for testing purposes.</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">get_all_dirs_and_files</span>(<span class="function-args">rootdir</span>, <span class="function-kw">basename</span>=<span class="function-kwdef">''</span>, <span class="function-kw">files_to_ignore</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Get all path names for template directories</br>    </pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">get_config_dir</span>()</div>
+      <pre class="function-docstring">Returns path for the config directory.</br>    </pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">get_config_file</span>()</div>
+      <pre class="function-docstring">Returns path of the config file.</br>    </pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">get_config_param</span>(<span class="function-args">param</span>, <span class="function-kw">value</span>=<span class="function-kwdef">None</span>, <span class="function-kw">project_type</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Gets a specific parameter from the config file</br></br>Args:</br>    param: the name of the parameter to get from the config file</br></br>Keyword Args:</br>    value (default=None): default value for the parameter if not found</br>        in the config file</br>    project_type (str, default=None): project type for project-specific</br>        configuration</br></br>Returns:</br>    config parameter</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">read_config</span>()</div>
+      <pre class="function-docstring">Reads the config file</br></br>Returns:</br>    config: dict containing the configuration</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">render_template</span>(<span class="function-args">filename</span>)</div>
+      <pre class="function-docstring">Renders a template file given the variables defined in kwargs</br></br>Args:</br>    filename (str): the filename</br></br>Keyword args:</br>    **kwargs: dictionary containing the variables needed in the template</br></br>Returns:</br>    string containing the content of the file after templating</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">replace_pathname</span>(<span class="function-args">pathname</span>, <span class="function-kw">replace</span>=<span class="function-kwdef">None</span>)</div>
+      <pre class="function-docstring">Replaces a directory name based on patterns defined in a dictionary</br></br>Args:</br>    replace (dict, default=None): dictionary with replacement patterns</br></br>Returns:</br>    new directory name (str)</pre>
+     </div>
+    </li>
+    <li class="functions">
+     <div class="function">
+      <div class="function-name"><span class="function-name">set_config</span>(<span class="function-kw">overwrite</span>=<span class="function-kwdef">False</span>)</div>
+      <pre class="function-docstring">Sets the config parameters</br></br>Keyword Args:</br>    overwrite (bool, default=False): Set to True to overwrite an existing</br>        config file.</br>    **config: all other keyword args will be used</br>        as config parameters in the config file.</pre>
+     </div>
+    </li>
+   </ul>
+  </div>
+ </div> 
+ <div class="index">
+    <div class="index-top">Index</div>
+    <div class="index-content">
+        <ul class="index">
+            <li class="index"><a href="entree.html" class="index not-selected">entree</a></li>
+            <li class="index sub-1"><a href="projects.html" class="index not-selected">projects</a></li>
+            <li class="index sub-2"><a href="base.html" class="index not-selected">base</a></li>
+            <li class="index sub-2"><a href="flask.html" class="index not-selected">flask</a></li>
+            <li class="index sub-2"><a href="flask_large.html" class="index not-selected">flask_large</a></li>
+            <li class="index sub-2"><a href="html5.html" class="index not-selected">html5</a></li>
+            <li class="index sub-2"><a href="python.html" class="index not-selected">python</a></li>
+            <li class="index sub-2"><a href="sqlalchemy.html" class="index not-selected">sqlalchemy</a></li>
+            <li class="index sub-1"><a class="index selected">utils</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

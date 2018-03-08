@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+ <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,300italic" rel="stylesheet" type="text/css">
+ <title>Python Documentation: entree.projects.base</title>
+ <link href="docu.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+ <div class="back-title">
+  <h1 class="title">Python Documentation: entree.projects.base</h1>
+ </div>
+ <div class="back-main">
+ <div class="main">
+ <div class="frame" id="nameframe">
+  <h4 class="frame-title">module name</h4>
+  <div class="frame-content">entree.projects.base</div>
+ </div>
+ <div class="frame" id="nameframe">
+  <h4 class="frame-title">version</h4>
+  <div class="frame-content">0.1</div>
+ </div>
+ <div class="frame" id="descriptionframe">
+  <h4 class="frame-title">DESCRIPTION</h4>
+  <pre class="frame-content">.. module:: entree.projects.base</br>.. moduleauthor:: Julien Spronck</br>.. created:: Feb 2018</br></br>Module creating a base class for all projects</pre>
+ </div>
+ <div class="frame" id="modulesframe">
+  <h4 class="frame-title">dependent modules</h4>
+  <div class="frame-content">
+   <ul class="modules">
+    <li class="modules">datetime</li>
+    <li class="modules">entree.utils</li>
+    <li class="modules">getopt</li>
+    <li class="modules">os</li>
+    <li class="modules">six</li>
+    <li class="modules">sys</li>
+   </ul>
+  </div>
+ </div>
+ <div class="frame" id="variablesframe">
+  <h4 class="frame-title">variables</h4>
+  <div class="frame-content">
+   <ul class="variables-names">
+    <li class="variables"><span class="variable-name">PROJECTS_PATH</span></li>
+    <li class="variables"><span class="variable-name">TEMPLATE_ROOT</span></li>
+   </ul>
+  </div>
+ </div>
+ <div class="frame" id="classesframe">
+  <h4 class="frame-title">classes</h4>
+  <div class="frame-content">
+   <ul class="classes">
+    <li class="classes">
+     <div class="class">
+      <div class="class-name"><span class="class-name">ProjectBase</span>(<span class="class-arg">object</span>)</div>
+       <div class="class-main">
+      <pre class="class-docstring">Class for each project.
+
+Class attributes:
+    project_type (str): project type (e.g. flask)
+    project_long_name (str): long name for a project (e.g. 'Large Flask')
+    template_dir (str): path to the project template directory relative to
+        the template root directory
+    single_file (str): path to a single file that you want to create in
+        single-file mode relative to the template root directory
+    replace (dict, default=None): dictionary mapping template file
+        names that should be replaced when creating the files. For
+        example, {'unittest_py.template': 'test_project.py'}
+    version (str): version number</pre>
+      <div class="class-variables">
+       <h5 class="class-title">class attributes</h5>
+       <div class="class-content">
+   <ul class="class-variables-names">
+    <li class="class-variables"><span class="class-variable-name">project_long_name</span></li>
+    <li class="class-variables"><span class="class-variable-name">project_type</span></li>
+    <li class="class-variables"><span class="class-variable-name">replace</span></li>
+    <li class="class-variables"><span class="class-variable-name">single_file</span></li>
+    <li class="class-variables"><span class="class-variable-name">template_dir</span></li>
+    <li class="class-variables"><span class="class-variable-name">version</span></li>
+   </ul>
+       </div>
+      </div>
+      <div class="class-functions">
+       <h5 class="class-title">methods</h5>
+       <div class="class-content">
+        <ul class="class-functions">
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">usage</span>(<span class="function-args">cls</span>, <span class="function-args">exit_status</span>)</div>
+      <pre class="class-function-docstring">Displays the usage/help for this project</pre>
+     </div>
+    </li>
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">template_path</span>(<span class="function-args">cls</span>)</div>
+      <pre class="class-function-docstring">Builds the template path based on the template root directory and the</br>project template directory</br></br>Returns:</br>    A string containing the full template path</pre>
+     </div>
+    </li>
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">single_file_path</span>(<span class="function-args">cls</span>)</div>
+      <pre class="class-function-docstring">Builds the single-file path based on the template root directory and</br>the project relative single-file path</br></br>Returns:</br>    A string containing the full singe-file path</pre>
+     </div>
+    </li>
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">get_config</span>(<span class="function-args">cls</span>)</div>
+      <pre class="class-function-docstring">Gets project-specific configuration</br>        </pre>
+     </div>
+    </li>
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">create_one</span>(<span class="function-args">cls</span>, <span class="function-args">rootdir</span>, <span class="function-args">filename</span>)</div>
+      <pre class="class-function-docstring">Creates a single-file project</br></br>Args:</br>    rootdir (str): the root directory</br>    filename (str): the file name</pre>
+     </div>
+    </li>
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">create_all</span>(<span class="function-args">cls</span>, <span class="function-args">rootdir</span>, <span class="function-args">modname</span>, <span class="function-kw">partial</span>=<span class="function-kwdef">None</span>, <span class="function-kw">add_to_existing</span>=<span class="function-kwdef">False</span>)</div>
+      <pre class="class-function-docstring">Creates all project files and directories</br></br>Args:</br>    rootdir (str): the root directory</br>    modname (str): the module name</br></br>Keyword args:</br>    partial (str, default=None): name of the partial build that you</br>        want to use. Partial build names are defined in the config</br>        file</br>    add_to_existing (bool, default=False): True if you want to add</br>        files without creating a project directory (add to existing</br>        project)</pre>
+     </div>
+    </li>
+    <li class="class-functions">
+     <div class="class-function">
+      <div class="class-function-name"><span class="class-function-name">main</span>(<span class="function-args">cls</span>, <span class="function-kw">modname</span>=<span class="function-kwdef">''</span>)</div>
+      <pre class="class-function-docstring">Main program</br></br>Keyword args:</br>    modname (str, default=''): module/project name</pre>
+     </div>
+    </li>
+        </ul>
+       </div> 
+      </div>
+     </div>
+     </div>
+    </li>
+   </ul>
+  </div>
+ </div>
+ <div class="credits">This page was made with <a href="">pytree 1.0</a>
+ </div>
+ </div>
+ </div>
+ <div class="index">
+    <div class="index-top">Index</div>
+    <div class="index-content">
+        <ul class="index">
+            <li class="index"><a href="entree.html" class="index not-selected">entree</a></li>
+            <li class="index sub-1"><a href="projects.html" class="index not-selected">projects</a></li>
+            <li class="index sub-2"><a class="index selected">base</a></li>
+            <li class="index sub-2"><a href="flask.html" class="index not-selected">flask</a></li>
+            <li class="index sub-2"><a href="flask_large.html" class="index not-selected">flask_large</a></li>
+            <li class="index sub-2"><a href="html5.html" class="index not-selected">html5</a></li>
+            <li class="index sub-2"><a href="python.html" class="index not-selected">python</a></li>
+            <li class="index sub-2"><a href="sqlalchemy.html" class="index not-selected">sqlalchemy</a></li>
+            <li class="index sub-1"><a href="utils.html" class="index not-selected">utils</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
