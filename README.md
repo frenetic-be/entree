@@ -2,6 +2,8 @@
 
 **entree** is a tool to jump start a programming project by creating all the files necessary to get started. **entree** can be used as a shell script, a [web service](http://entree.frenetic.be) or as a python package.
 
+Here is the link to the [**entree** project on Pypi.org](https://pypi.org/project/entree/) and here is a link to the documentation for the [`entree` python package](http://frenetic-be.github.io/entree/).
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine.
