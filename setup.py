@@ -79,7 +79,7 @@ setup(
         'requests==2.18.4',
         'six==1.11.0',
         'urllib3==1.22',
-        'Werkzeug==0.14.1'
+        'Werkzeug==0.15.3'
     ],
     download_url='https://github.com/frenetic-be/entree/archive/2.3.3.tar.gz',
 
