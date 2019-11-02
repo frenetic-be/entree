@@ -78,7 +78,7 @@ setup(
         'MarkupSafe==1.0',
         'requests==2.18.4',
         'six==1.11.0',
-        'urllib3==1.22',
+        'urllib3==1.24.2',
         'Werkzeug==0.14.1'
     ],
     download_url='https://github.com/frenetic-be/entree/archive/2.3.3.tar.gz',
