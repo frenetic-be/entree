@@ -74,7 +74,7 @@ setup(
         'gunicorn==19.7.1',
         'idna==2.6',
         'itsdangerous==0.24',
-        'Jinja2==2.10',
+        'Jinja2==2.11.3',
         'MarkupSafe==1.0',
         'requests==2.18.4',
         'six==1.11.0',
