@@ -75,7 +75,6 @@ setup(
         "Jinja2==2.10",
         "MarkupSafe==1.0",
         "requests==2.18.4",
-        "six==1.11.0",
         "urllib3==1.22",
         "Werkzeug==0.14.1",
     ],
