@@ -30,7 +30,7 @@ Then install the package with
 python setup.py install
 ```
 
-**entree** was tested with Python 2.7 and Python 3.6.
+**entree** was tested with Python 3.12.
 
 ### Testing the installation
 
@@ -89,11 +89,11 @@ Finally, hit `Submit` and your download should start automatically.
 
 The following list contains the project types that are currently supported:
 
-* HTML5
-* Python
-* Python - Flask
-* Python - Large Flask App
-* Python - SQLAlchemy
+- HTML5
+- Python
+- Python - Flask
+- Python - Large Flask App
+- Python - SQLAlchemy
 
 We hope to support more project types in the future. If there is a project type that you know well and you wish to add to the supported types, we'd love to hear from you. See below to see how you can contribute to this project.
 
@@ -107,19 +107,20 @@ In that config file, you can specify your name, email and url:
 
 ```json
 {
-    "author": "<UNDEFINED>",
-    "author_email_prefix": "<UNDEFINED>",
-    "author_email_suffix": "<UNDEFINED>",
-    "author_url": "<UNDEFINED>",
+  "author": "<UNDEFINED>",
+  "author_email_prefix": "<UNDEFINED>",
+  "author_email_suffix": "<UNDEFINED>",
+  "author_url": "<UNDEFINED>"
 }
 ```
+
 ### Default project type
 
 You can specify a default project type:
 
 ```json
 {
-    "default_project_type": "python"
+  "default_project_type": "python"
 }
 ```
 
@@ -137,9 +138,7 @@ You can specify a list of files to ignore when creating a project:
 
 ```json
 {
-    "files_to_ignore": [
-        ".DS_Store"
-    ],
+  "files_to_ignore": [".DS_Store"]
 }
 ```
 
@@ -149,19 +148,15 @@ All of this can be configured per project type. For example, if you never want t
 
 ```json
 {
-    "project_config": {
+  "project_config": {
+    "Flask": {},
 
-        "Flask": {},
+    "Python": {
+      "files_to_ignore": ["License.md", "requirements.txt"]
+    },
 
-        "Python": {
-            "files_to_ignore": [
-                "License.md",
-                "requirements.txt",
-            ]
-        },
-
-        "SQLAlchemy": {}
-    }
+    "SQLAlchemy": {}
+  }
 }
 ```
 
@@ -171,21 +166,21 @@ You can also create custom partial builts for a given project if you often use a
 
 ```json
 {
-    "project_config": {
-        "Flask": {
-            "partial_builds": {
-                "tmpl": [
-                    "static",
-                    "static/css",
-                    "static/css/style.css",
-                    "static/js",
-                    "static/js/app.js",
-                    "templates",
-                    "templates/index.html"
-                ]
-            }
-        }
+  "project_config": {
+    "Flask": {
+      "partial_builds": {
+        "tmpl": [
+          "static",
+          "static/css",
+          "static/css/style.css",
+          "static/js",
+          "static/js/app.js",
+          "templates",
+          "templates/index.html"
+        ]
+      }
     }
+  }
 }
 ```
 
@@ -198,7 +193,6 @@ entree flask -p tmpl foo
 ```
 
 where `-p` allows to specify a partial build. The argument of the `-p` option is the name of the partial build you specified in the config file (`tmpl` in this case).
-
 
 ## Auto-completion
 
@@ -214,14 +208,14 @@ fi
 
 The **entree** Python package and shell script were created using
 
-* [Jinja2](http://jinja.pocoo.org/docs/2.10/)
+- [Jinja2](http://jinja.pocoo.org/docs/2.10/)
 
 The online tool was created using
 
-* [Bootstrap](http://getbootstrap.com)
-* [Flask](http://flask.pocoo.org)
-* [gunicorn](http://gunicorn.org)
-* [Heroku](heroku.com)
+- [Bootstrap](http://getbootstrap.com)
+- [Flask](http://flask.pocoo.org)
+- [gunicorn](http://gunicorn.org)
+- [Heroku](heroku.com)
 
 ## Contributing
 
@@ -229,41 +223,41 @@ We'd love to expand our project types to other types and programming languages. 
 
 1. Fork the repo.
 
-2. In the `entree/projects/templates/` directory, add a directory for your new project type (e.g. `python-django`). Inside that directory, put all files that you want to see in the output. The file structure will be identical to what you put in this directory. 
+2. In the `entree/projects/templates/` directory, add a directory for your new project type (e.g. `python-django`). Inside that directory, put all files that you want to see in the output. The file structure will be identical to what you put in this directory.
 
-    `.py` files should be renamed to end with `_py.template` to avoid confusion when installing the package (e.g. `setup.py` should be named `setup_py.template`).
+   `.py` files should be renamed to end with `_py.template` to avoid confusion when installing the package (e.g. `setup.py` should be named `setup_py.template`).
 
-    All files will be rendered using Jinja2 (see [Jinja2 cocumentation](http://jinja.pocoo.org/docs/2.10/)). This means that you can add strings like `'{{ modname }}'` to reference the project name and `'{{ config['somevariable'] }}'` to reference a variable defined in the config file.
+   All files will be rendered using Jinja2 (see [Jinja2 cocumentation](http://jinja.pocoo.org/docs/2.10/)). This means that you can add strings like `'{{ modname }}'` to reference the project name and `'{{ config['somevariable'] }}'` to reference a variable defined in the config file.
 
 3. Create a new project-specific module in the `projects` directory (e.g. `entree/projects/django.py`).
 
-4. In this file, create a class that inherits from `entree.projects.base.ProjectBase` and that optionally redefines the following class attributes: 
+4. In this file, create a class that inherits from `entree.projects.base.ProjectBase` and that optionally redefines the following class attributes:
 
-    - project_type (str): project type (e.g. `'django'`)
+   - project_type (str): project type (e.g. `'django'`)
 
-    - project_long_name (str): long name for a project (e.g. `'Django App'`)
+   - project_long_name (str): long name for a project (e.g. `'Django App'`)
 
-    - template_dir (str): path to the project template directory relative to
-            the template root directory (e.g. `'python-django'`)
+   - template_dir (str): path to the project template directory relative to
+     the template root directory (e.g. `'python-django'`)
 
-    - single_file (str): path to a single file that you want to create in
-            single-file mode relative to the template root directory
+   - single_file (str): path to a single file that you want to create in
+     single-file mode relative to the template root directory
 
-    - replace (dict, default=None): dictionary mapping template file
-            names that should be replaced when creating the files. For
-            example, 
-            
-        ```
-        {
-            'sometemplatefile.md': 'newname.md',
-            'src': {{ modname }},
-            'unittest_py.template': 'test_{{ modname }}.py'
-        }
-        ```
+   - replace (dict, default=None): dictionary mapping template file
+     names that should be replaced when creating the files. For
+     example,
 
-    - version (str): version number
+     ```
+     {
+         'sometemplatefile.md': 'newname.md',
+         'src': {{ modname }},
+         'unittest_py.template': 'test_{{ modname }}.py'
+     }
+     ```
 
-    See existing templates for examples.
+   - version (str): version number
+
+   See existing templates for examples.
 
 5. Test or run unit tests to make sure the right files are created.
 
@@ -275,21 +269,21 @@ Releases:
 
 - version 2.1:
 
-    - Created the web service
-    - Added support for Python, Flask and SQLAlchemy project types
+  - Created the web service
+  - Added support for Python, Flask and SQLAlchemy project types
 
 - version 2.2:
 
-    - Replaced common file functionality by simple symlinks (treated as regular files)
-    - Added support for HTML5
+  - Replaced common file functionality by simple symlinks (treated as regular files)
+  - Added support for HTML5
 
 - version 2.3:
 
-    - Full path and file patterns are now supported for files_to_ignore per project type
+  - Full path and file patterns are now supported for files_to_ignore per project type
 
 ## Authors
 
-* **Julien Spronck** - *Initial work* - [frenetic.be](http://frenetic.be)
+- **Julien Spronck** - _Initial work_ - [frenetic.be](http://frenetic.be)
 
 ## License
 
