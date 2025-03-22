@@ -15,7 +15,7 @@ import sys
 import entree.projects
 import entree.utils
 
-__version__ = "2.3.3"
+__version__ = "2.4.0"
 
 CLASSES = entree.projects.CLASSES
 

@@ -44,7 +44,7 @@ DATA_FILES += [(_CONFIGDIR, ["entree_autocomplete"])]
 setup(
     # Package information
     name="entree",
-    version="2.3.3",
+    version="2.4.0",
     description="Tool to create skeleton files to start a programming project",
     long_description="""
     Simple module to create files and directory structure necessary to
@@ -78,7 +78,7 @@ setup(
         "urllib3==2.3.0",
         "Werkzeug==3.1.3",
     ],
-    download_url="https://github.com/frenetic-be/entree/archive/2.3.3.tar.gz",
+    download_url="https://github.com/frenetic-be/entree/archive/2.4.0.tar.gz",
     # See https://PyPI.python.org/PyPI?%3Aaction=list_classifiers
     classifiers=[
         "Development Status :: 5 - Production/Stable",
