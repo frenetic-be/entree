@@ -40,7 +40,7 @@ If the installation was successful, you should now have an `entree` shell script
 entree --version
 ```
 
-The version number (for example `entree 2.4.0`) should then appear on the next line.
+The version number (for example `entree 2.4.2`) should then appear on the next line.
 
 ### How to use **entree**
 
